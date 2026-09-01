@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,6 +15,10 @@ namespace SubastaYa.Domain.Entities
 
         [Required]
         public int EntidadId { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string Accion { get; set; } = string.Empty;
 
         [ForeignKey("Usuario_Id")]
         public int? UsuarioId { get; set; }

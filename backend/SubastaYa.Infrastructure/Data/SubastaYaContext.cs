@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SubastaYa.Domain.Entities;
 
 namespace SubastaYa.Data
@@ -115,6 +115,9 @@ namespace SubastaYa.Data
                         "CK_Subastas_Estado",
                         "[Estado] IN ('PROGRAMADA', 'ACTIVA', 'FINALIZADA', 'DESIERTA')"
                     ));
+
+            // --- Carga de Datos Semilla Obligatorios (Seed Data) ---
+            modelBuilder.Seed();
         }
     }
 }
