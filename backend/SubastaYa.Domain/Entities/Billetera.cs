@@ -11,18 +11,24 @@ namespace SubastaYa.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int Usuario_Id { get; set; }
+        [ForeignKey("Usuario_Id")]
+        public int UsuarioId { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Saldo_Total { get; set; }
+        public decimal SaldoTotal { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Saldo_Retenido { get; set; }
+        public decimal SaldoRetenido { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Saldo_Disponible { get; set; }
+        public decimal SaldoDisponible { get; set; }
 
         [Timestamp]
         public byte[] Version { get; set; }
+
+        // navigators 
+        public Usuario Usuario { get; set; } = null!;
+        
+        public ICollection<TransaccionLedger> TransaccionesLedger { get; set; } = new List<TransaccionLedger>();
     }
 }

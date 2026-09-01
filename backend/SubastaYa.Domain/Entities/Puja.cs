@@ -11,18 +11,19 @@ namespace SubastaYa.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int Subasta_Id { get; set; }
+        public int SubastaId { get; set; }
 
         [Required]
-        public int Comprador_Id { get; set; }
+        [ForeignKey("Usuario_Id")]
+        public int CompradorId { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Monto { get; set; }
 
-        public DateTime Fecha_Puja { get; set; }
+        public DateTime Fecha { get; set; }
 
-        // Propiedad de navegación
-        [ForeignKey("Subasta_Id")]
-        public Subasta Subasta { get; set; }
+        // Navigators
+        public Subasta Subasta { get; set; } = null!;
+        public Usuario Comprador { get; set; } = null!;
     }
 }

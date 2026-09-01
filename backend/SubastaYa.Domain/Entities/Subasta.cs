@@ -11,10 +11,12 @@ namespace SubastaYa.Domain.Entities
         public int Id { get; set; }
 
         [Required]
-        public int Vendedor_Id { get; set; }
+        [ForeignKey("Usuario_Id")]
+        public int VendedorId { get; set; }
 
         [Required]
-        public int Categoria_Id { get; set; }
+        [ForeignKey("Categoria_Id")]
+        public int CategoriaId { get; set; }
 
         [Required]
         [MaxLength(150)]
@@ -22,17 +24,17 @@ namespace SubastaYa.Domain.Entities
 
         public string Descripcion { get; set; } = string.Empty;
 
-        public string Url_Imagen { get; set; } = string.Empty;
+        public string UrlImagen { get; set; } = string.Empty;
 
         // Se usa decimal(18,2) para evitar errores de redondeo en cálculos financieros
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Precio_Base { get; set; }
+        public decimal PrecioBase { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Incremento_Minimo { get; set; }
+        public decimal IncrementoMinimo { get; set; }
 
-        public DateTime Fecha_Inicio { get; set; }
-        public DateTime Fecha_Fin { get; set; }
+        public DateTime FechaInicio { get; set; }
+        public DateTime FechaFin { get; set; }
 
         [Required]
         [MaxLength(20)]
@@ -42,6 +44,10 @@ namespace SubastaYa.Domain.Entities
         [Timestamp]
         public byte[] Version { get; set; }
 
+        // navigators
         public ICollection<Puja> Pujas { get; set; } = new List<Puja>();
+        public ICollection<TransaccionLedger> TransaccionesLedger { get; set; } = new List<TransaccionLedger>();
+        public Usuario Vendedor { get; set; } = null!;
+        public Categoria Categoria { get; set; } = null!;
     }
 }
