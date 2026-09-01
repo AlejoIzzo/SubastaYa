@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SubastaYa.Entities;
+using SubastaYa.Domain.Entities;
 
 namespace SubastaYa.Data
 {

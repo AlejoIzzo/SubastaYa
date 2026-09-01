@@ -16,9 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
+    <ProjectReference Include="..\SubastaYa.Application\SubastaYa.Application.csproj" />
+    <ProjectReference Include="..\SubastaYa.Infrastructure\SubastaYa.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
