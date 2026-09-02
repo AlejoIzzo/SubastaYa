@@ -27,9 +27,9 @@ namespace SubastaYa.Application.Services
             return await _subastaRepository.GetSubastaCatalog();
         }
 
-        public Task<SubastaDTO?> GetByIdAsync(int id)
+        public async Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit)
         {
-            throw new NotImplementedException();
+            return await _subastaRepository.GetByIdAsync(id, ultimasPujasLimit);
         }
     }
 }

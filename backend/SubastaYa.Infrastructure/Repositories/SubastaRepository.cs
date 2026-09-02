@@ -35,9 +35,38 @@ namespace SubastaYa.Infrastructure.Repositories
             return await _context.Subastas.ToListAsync(); 
         }
 
-        public Task<Subasta?> GetByIdAsync(int id)
+        public async Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit = 5)
         {
-            throw new NotImplementedException();
+            return await _context.Subastas
+                .Where(s => s.Id == id)
+                .Select(s => new SubastaDetalleDTO
+                {
+                    Id = s.Id,
+                    Titulo = s.Titulo,
+                    Descripcion = s.Descripcion,
+                    PrecioBase = s.PrecioBase,
+                    UrlImagen = s.UrlImagen,
+                    FechaInicio = s.FechaInicio,
+                    FechaFin = s.FechaFin,
+                    Estado = s.Estado,
+                    IncrementoMinimo = s.IncrementoMinimo,
+
+                    VendedorNombre = s.Vendedor.Nombre,
+
+                    PujaActual = s.Pujas.Select(p => (decimal?)p.Monto).Max() ?? s.PrecioBase,
+                    CantidadPujas = s.Pujas.Count(),
+                    UltimasPujas = s.Pujas
+                        .OrderByDescending(p => p.Fecha)
+                        .Take(ultimasPujasLimit)
+                        .Select(p => new PujaDTO
+                        {
+                            Id = p.Id,
+                            Monto = p.Monto,
+                            Fecha = p.Fecha,
+                            CompradorNombre = p.Comprador.Nombre
+                        }).ToList()
+                }).FirstOrDefaultAsync();
+            
         }
 
         // devolver DTO directamente desde el repositorio para que SQL haga la agregación

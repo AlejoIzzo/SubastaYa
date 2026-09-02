@@ -28,5 +28,16 @@ namespace SubastaYa.API.Controllers
             return Ok(subastas);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<IEnumerable<SubastaDTO>>> GetSubastaById(int id)
+        {
+            var subasta = await _service.GetByIdAsync(id, ultimasPujasLimit: 5);
+
+            if (subasta == null)
+                return NotFound();
+
+            return Ok(subasta);
+        }
+
     }
 }

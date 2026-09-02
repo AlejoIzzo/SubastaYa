@@ -10,7 +10,7 @@ namespace SubastaYa.Application.Interfaces
 {
     public interface ISubastaRepository
     {
-        Task<Subasta?> GetByIdAsync(int id);
+        Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit = 5);
         Task<IEnumerable<Subasta>> GetAllAsync();
         Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog();
         Task AddAsync(Subasta subasta);
