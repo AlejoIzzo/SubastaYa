@@ -12,6 +12,7 @@ namespace SubastaYa.Application.Services
     {
         Task<Subasta> CreateAsync(SubastaDTO subasta);
         Task<SubastaDTO?> GetByIdAsync(int id);
-        Task<IEnumerable<SubastaDTO>> GetAllAsync();
+        Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog();
+
     }
 }

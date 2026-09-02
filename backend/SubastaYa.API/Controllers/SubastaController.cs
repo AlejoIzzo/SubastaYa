@@ -21,11 +21,12 @@ namespace SubastaYa.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SubastaDTO>>> GetAll()
+        public async Task<ActionResult<IEnumerable<SubastaDTO>>> GetSubastaCatalog()
         {
-            var subastas = await _service.GetAllAsync();
+            var subastas = await _service.GetSubastaCatalog();
 
             return Ok(subastas);
         }
+
     }
 }

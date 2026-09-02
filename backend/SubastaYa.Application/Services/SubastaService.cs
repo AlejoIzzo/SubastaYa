@@ -22,25 +22,10 @@ namespace SubastaYa.Application.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<SubastaDTO>> GetAllAsync()
+        public async Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog()
         {
-            var subastas =  await _subastaRepository.GetAllAsync();
-
-            if (subastas == null)
-                return null;
-
-            return subastas.Select(s => new SubastaDTO
-            {
-                Id = s.Id,
-                Titulo = s.Titulo,
-                Descripcion = s.Descripcion,
-                PrecioBase = s.PrecioBase,
-                UrlImagen = s.UrlImagen,
-                Estado = s.Estado,
-                FechaInicio = s.FechaInicio,
-                FechaFin = s.FechaFin
-            }).ToList();
-        }   
+            return await _subastaRepository.GetSubastaCatalog();
+        }
 
         public Task<SubastaDTO?> GetByIdAsync(int id)
         {
