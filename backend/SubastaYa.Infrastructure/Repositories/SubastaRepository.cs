@@ -20,9 +20,10 @@ namespace SubastaYa.Infrastructure.Repositories
             _context = context;
         }
 
-        public Task AddAsync(Subasta subasta)
+        public async Task CrearAsync(Subasta subasta)
         {
-            throw new NotImplementedException();
+            await _context.AddAsync(subasta);
+            await _context.SaveChangesAsync();
         }
 
         public void Delete(Subasta subasta)
@@ -51,6 +52,7 @@ namespace SubastaYa.Infrastructure.Repositories
                     Estado = s.Estado,
                     IncrementoMinimo = s.IncrementoMinimo,
 
+                    CategoriaNombre = s.Categoria.Nombre,
                     VendedorNombre = s.Vendedor.Nombre,
 
                     PujaActual = s.Pujas.Select(p => (decimal?)p.Monto).Max() ?? s.PrecioBase,

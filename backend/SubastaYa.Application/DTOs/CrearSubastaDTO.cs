@@ -1,26 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SubastaYa.Application.DTOs
 {
-    public class SubastaDetalleDTO
+    public class CrearSubastaDTO
     {
-        public int Id { get; set; }
+        [Required]
         public string Titulo { get; set; } = string.Empty;
+        [Required]
         public string Descripcion { get; set; } = string.Empty;
+        [Required]
+        public int CategoriaId { get; set; }
+        [Required]
+        [Range(0.01, double.MaxValue)]
         public decimal PrecioBase { get; set; }
-        public decimal PujaActual { get; set; }
-        public int CantidadPujas { get; set; }
+        [Required]
         public string UrlImagen { get; set; } = string.Empty;
-        public DateTime FechaInicio { get; set; }
+        public DateTime? FechaInicio { get; set; }
+        [Required]
         public DateTime FechaFin { get; set; }
-        public string Estado { get; set; } = string.Empty;
-        public string VendedorNombre { get; set; } = string.Empty;
-        public ICollection<PujaDTO> UltimasPujas { get; set; } = new List<PujaDTO>();
+        [Required]
+        public int VendedorId { get; set; }
+        [Required]
+        [Range(0.01, double.MaxValue)]
         public decimal IncrementoMinimo { get; set; }
-        public string CategoriaNombre { get; set; } = string.Empty;
     }
 }

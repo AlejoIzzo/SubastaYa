@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SubastaYa.Application.DTOs;
+using SubastaYa.Application.Exceptions;
 using SubastaYa.Application.Services;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace SubastaYa.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<SubastaDTO>>> GetSubastaById(int id)
+        public async Task<ActionResult<IEnumerable<SubastaDetalleDTO>>> GetSubastaById(int id)
         {
             var subasta = await _service.GetByIdAsync(id, ultimasPujasLimit: 5);
 
@@ -39,5 +40,25 @@ namespace SubastaYa.API.Controllers
             return Ok(subasta);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<SubastaCreadaDTO>> CrearSubasta(CrearSubastaDTO dto)
+        {
+            try
+            {
+                var subastaCreadaDTO = await _service.CrearAsync(dto);
+
+                return CreatedAtAction(
+                    actionName: "CrearSubasta",
+                    routeValues: new { id = subastaCreadaDTO.Id },
+                    value: subastaCreadaDTO
+                ); 
+            } catch (DominioException ex)
+            {
+                return BadRequest(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
     }
 }
