@@ -1,4 +1,4 @@
-﻿using SubastaYa.Application.DTOs;
+using SubastaYa.Application.DTOs;
 using SubastaYa.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace SubastaYa.Application.Interfaces
     {
         Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit = 5);
         Task<IEnumerable<Subasta>> GetAllAsync();
-        Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog();
+        Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog(SubastaFiltroDTO? filtro = null);
         Task CrearAsync(Subasta subasta);
         void Update(Subasta subasta);
         void Delete(Subasta subasta);

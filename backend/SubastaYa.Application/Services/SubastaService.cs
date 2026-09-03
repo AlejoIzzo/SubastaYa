@@ -1,4 +1,4 @@
-﻿using SubastaYa.Application.DTOs;
+using SubastaYa.Application.DTOs;
 using SubastaYa.Application.Exceptions;
 using SubastaYa.Application.Interfaces;
 using SubastaYa.Domain.Entities;
@@ -22,28 +22,23 @@ namespace SubastaYa.Application.Services
         {
             DateTime now = DateTime.UtcNow;
 
-            // si no se envía FechaInicio, asumir activa y empezar ahora
+            // Si no se envía FechaInicio, asumir que la subasta inicia inmediatamente como ACTIVA
             DateTime fechaInicio = dto.FechaInicio ?? now;
-            string estado = fechaInicio <= now 
-                ? "ACTIVA" 
-                : "PROGRAMADA";
+            string estado = fechaInicio <= now ? "ACTIVA" : "PROGRAMADA";
 
-            if (fechaInicio < now)
-                throw new DominioException("FechaInicio debe estar en el futuro");
+            if (dto.FechaInicio.HasValue && dto.FechaInicio.Value < now.AddMinutes(-5))
+                throw new DominioException("FechaInicio no puede ser anterior a la fecha y hora actual");
 
             if (dto.FechaFin <= now)
                 throw new DominioException("FechaFin debe estar en el futuro");
 
             if (dto.FechaFin <= fechaInicio)
                 throw new DominioException("FechaFin debe ser posterior a FechaInicio");
-            
-            if (dto.FechaFin - fechaInicio < TimeSpan.FromMinutes(30))
-                throw new DominioException("La subasta debe durar un mínimo de 30 minutos");
 
-            if (dto.IncrementoMinimo < 1000)
-                throw new DominioException("IncrementoMinimo debe ser mayor o igual a 5000");
+            if (dto.IncrementoMinimo <= 0)
+                throw new DominioException("IncrementoMinimo debe ser mayor a 0");
 
-            if (dto.PrecioBase < 0)
+            if (dto.PrecioBase <= 0)
                 throw new DominioException("PrecioBase debe ser mayor a 0");
 
 
@@ -71,12 +66,12 @@ namespace SubastaYa.Application.Services
             };
         }
 
-        public async Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog()
+        public async Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog(SubastaFiltroDTO? filtro = null)
         {
-            return await _subastaRepository.GetSubastaCatalog();
+            return await _subastaRepository.GetSubastaCatalog(filtro);
         }
 
-        public async Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit)
+        public async Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit = 5)
         {
             return await _subastaRepository.GetByIdAsync(id, ultimasPujasLimit);
         }

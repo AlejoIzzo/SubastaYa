@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using SubastaYa.Application.DTOs;
 using SubastaYa.Application.Exceptions;
 using SubastaYa.Application.Services;
@@ -22,15 +22,15 @@ namespace SubastaYa.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SubastaDTO>>> GetSubastaCatalog()
+        public async Task<ActionResult<IEnumerable<SubastaCatalogDTO>>> GetSubastaCatalog([FromQuery] SubastaFiltroDTO? filtro)
         {
-            var subastas = await _service.GetSubastaCatalog();
+            var subastas = await _service.GetSubastaCatalog(filtro);
 
             return Ok(subastas);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<IEnumerable<SubastaDetalleDTO>>> GetSubastaById(int id)
+        public async Task<ActionResult<SubastaDetalleDTO>> GetSubastaById(int id)
         {
             var subasta = await _service.GetByIdAsync(id, ultimasPujasLimit: 5);
 
@@ -48,7 +48,7 @@ namespace SubastaYa.API.Controllers
                 var subastaCreadaDTO = await _service.CrearAsync(dto);
 
                 return CreatedAtAction(
-                    actionName: "CrearSubasta",
+                    actionName: nameof(GetSubastaById),
                     routeValues: new { id = subastaCreadaDTO.Id },
                     value: subastaCreadaDTO
                 ); 
