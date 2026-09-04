@@ -22,6 +22,8 @@ builder.Services.AddScoped<ISubastaRepository, SubastaRepository>();
 builder.Services.AddScoped<ISubastaService, SubastaService>();
 builder.Services.AddScoped<IBilleteraRepository, BilleteraRepository>();
 builder.Services.AddScoped<IBilleteraService, BilleteraService>();
+builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 
 var app = builder.Build();
 
