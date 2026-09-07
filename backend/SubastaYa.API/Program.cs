@@ -24,6 +24,10 @@ builder.Services.AddScoped<IBilleteraRepository, BilleteraRepository>();
 builder.Services.AddScoped<IBilleteraService, BilleteraService>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+builder.Services.AddScoped<IPujaRepository, PujaRepository>();
+builder.Services.AddScoped<IPujaService, PujaService>();
 
 var app = builder.Build();
 

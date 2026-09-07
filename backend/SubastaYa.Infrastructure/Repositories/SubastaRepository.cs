@@ -63,9 +63,12 @@ namespace SubastaYa.Infrastructure.Repositories
                         .Select(p => new PujaDTO
                         {
                             Id = p.Id,
+                            SubastaId = p.SubastaId,
+                            SubastaTitulo = s.Titulo,
+                            CompradorId = p.CompradorId,
+                            CompradorNombre = p.Comprador.Nombre,
                             Monto = p.Monto,
-                            Fecha = p.Fecha,
-                            CompradorNombre = p.Comprador.Nombre
+                            Fecha = p.Fecha
                         }).ToList()
                 }).FirstOrDefaultAsync();
             

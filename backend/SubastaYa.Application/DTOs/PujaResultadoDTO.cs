@@ -1,20 +1,17 @@
-using SubastaYa.Domain.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SubastaYa.Application.DTOs
 {
-    public class PujaDTO
+    public class PujaResultadoDTO
     {
         public int Id { get; set; }
         public int SubastaId { get; set; }
-        public string? SubastaTitulo { get; set; }
         public int CompradorId { get; set; }
         public string CompradorNombre { get; set; } = string.Empty;
         public decimal Monto { get; set; }
         public DateTime Fecha { get; set; }
+        public bool AntiSnipingActivado { get; set; }
+        public DateTime FechaFinSubasta { get; set; }
+        public string Mensaje { get; set; } = string.Empty;
     }
 }
