@@ -1,0 +1,15 @@
+export type SubastaCatalogoDTO = {
+    id: number,
+    titulo: string,
+    descripcion: string,
+    precioBase: number,
+    pujaActual: number,
+    cantidadPujas: number,
+    urlImagen: string,
+    fechaInicio: Date, 
+    fechaFin: Date, 
+    estado: string,
+    categoriaId: number,
+    categoriaNombre: string,
+    vendedorNombre: string,
+}

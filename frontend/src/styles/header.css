@@ -1,0 +1,40 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: .5rem 1rem;
+}
+
+.header-right-container {
+    /* remover espacio vacio debajo de iconos */
+    line-height: 0;
+}
+
+.logo {
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.searchbar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: .5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    
+    flex: 1;
+    max-width: 500px;
+}
+
+#search-input {
+    flex: 1;
+    outline: none;
+    border: none;
+    font-family: Inter, sans-serif;
+
+    background-color: var(--surface);
+    width: 100%;
+}
