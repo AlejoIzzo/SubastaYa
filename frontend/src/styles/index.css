@@ -4,6 +4,11 @@ main {
     gap: 1rem;
 }
 
+.catalogo-container {
+    flex: 1;
+    min-width: 0;
+}
+
 .catalogo-cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -23,8 +28,9 @@ main {
 
 .categorias-container {
     display: flex;
-    gap: .25rem;
     flex-direction: column;
+    gap: .25rem;
+    justify-content: center;
 
     & .categoria-container {
         display: flex;

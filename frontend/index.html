@@ -18,25 +18,31 @@
     <header id="header" class="header">
     </header>
     <main>
-        <section class="filtros-container">
+        <form class="filtros-container" id="filtros-form">
             <h2>Filtros</h3>
             <h3 class="filtro-titulo">Categorías</h3>
             <div class="categorias-container">
-                
+                <div class="categoria-container button" data-id="">
+                    <input type="radio" name="categoriaId" value="all" checked>
+                    <ion-icon class="categoria-icon" name="cube-outline"></ion-icon>
+                    <p class="categoria-nombre">Todas</p>
+                </div>
             </div>
             <h3 class="filtro-titulo">Estado</h3>
             <div class="estados-container">
-                <span class="estado-checkbox"><input type="checkbox"><p>Activa</p></span>
-                <span class="estado-checkbox"><input type="checkbox"><p>Finalizada</p></span>
-                <span class="estado-checkbox"><input type="checkbox"><p>Programada</p></span>
+                <span class="estado-checkbox"><input type="radio" name="estado" value="all" checked><p>Todos</p></span>
+                <span class="estado-checkbox"><input type="radio" name="estado" value="ACTIVA"><p>Activa</p></span>
+                <span class="estado-checkbox"><input type="radio" name="estado" value="FINALIZADA"><p>Finalizada</p></span>
+                <span class="estado-checkbox"><input type="radio" name="estado" value="PROGRAMADA"><p>Programada</p></span>
             </div>
             <h3 class="filtro-titulo">Rango de precio</h3>
             <div class="rango-precio-container">
-                <input type="number" id="precio-min-input" placeholder="Mínimo">
+                <input type="number" id="precio-min-input" name="precioMin" placeholder="Mínimo">
                 <span> - </span>
-                <input type="number" id="precio-max-input" placeholder="Máximo">
+                <input type="number" id="precio-max-input" name="precioMax" placeholder="Máximo">
             </div>
-        </section>
+            <button class="text-button" type="submit"><p>Aplicar Filtros</p></button>
+        </form>
         <section class='catalogo-container'>
             <div class="catalogo-header">
                 <h1>Subastas</h1>
@@ -51,39 +57,4 @@
     <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
   </body>
 
-<template id="subasta-card-template">
-    <div class="card-container" data-id="1">
-        <div class="card-img-container">
-            <img src="" alt="" id="img">
-        </div>
-        <div class="card-info">
-            <div class="card-info-header">
-                <p class="categoria">Categoria</p>
-                <p class="puja-contador"></p>
-            </div>
-            <div class="card-info-body">
-                <p class="titulo">Título</p>
-            </div>
-            <hr>
-            <div class="card-info-footer">
-                <div>
-                    <p>Puja actual</p>
-                    <span class="puja-actual-monto">$ 0</span>
-                </div>
-                <div class="card-tiempo-container">
-                    <p class="tiempo-label"></p>
-                    <span class="tiempo"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
-<template id="categoria-template">
-    <div class="categoria-container" data-id="">
-        <ion-icon name="cube-outline"></ion-icon>
-        <p class="categoria-nombre"></p>
-    </div>
-</template>
-
- </html>
+</html>

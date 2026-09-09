@@ -1,23 +1,21 @@
-import { getCategorias } from "../api/categorias";
-import { getSubastaCatalogo } from "../api/subasta";
+import { getCategorias } from "../api/categoriasApi";
+import { getSubastaCatalogo } from "../api/subastaApi";
+import { createCategoriaElement } from "../components/categoria";
 import { renderHeader } from "../components/header";
 import { createSubastaCard } from "../components/subastaCard";
-import type { categoriaDTO } from "../models/categoriaTypes";
-import { type SubastaCatalogoDTO } from "../models/subastaTypes";
 
 const headerContainer = document.getElementById("header")!
 renderHeader(headerContainer)
 
-async function renderSubastaCatalogo() {
+async function renderSubastaCatalogo(filtroFormData?: FormData) {
     const cardsContainer = document.querySelector(".catalogo-cards-container")!
-    const subastas = await getSubastaCatalogo()
+    cardsContainer.replaceChildren()
+    const subastas = await getSubastaCatalogo(filtroFormData)
 
     for (let s of subastas) {
         cardsContainer.appendChild(createSubastaCard(s))
     }
 }
-
-renderSubastaCatalogo()
 
 async function renderCategoriaList(){
     const categoriasContainer = document.querySelector(".categorias-container")!
@@ -28,18 +26,34 @@ async function renderCategoriaList(){
     }
 }
 
-function createCategoriaElement(dto: categoriaDTO) {
-    const template = document.getElementById("categoria-template")! as HTMLTemplateElement
+renderSubastaCatalogo()
+renderCategoriaList()
 
-    const clone = template.content.cloneNode(true) as DocumentFragment
+let filtrosFormData = new FormData()
 
-    const container = clone.querySelector('.categoria-container')! as HTMLElement
-    const categoriaNombre = clone.querySelector('.categoria-nombre')!
+const filtrosForm = document.getElementById("filtros-form") as HTMLFormElement
+const searchForm = document.getElementById("search-form") as HTMLFormElement
 
-    container.dataset.id = String(dto.id)
-    categoriaNombre.textContent = dto.nombre
-
-    return clone
+function updateFiltroFormData() {
+    const filtroFormData = new FormData(filtrosForm);
+    for (const [key, value] of filtroFormData.entries()) {
+        if (value != null) {
+            filtrosFormData.set(key, value.toString());
+        }
+    }
+    
+    const searchFormData = new FormData(searchForm);
+    filtrosFormData.set("busqueda", searchFormData.get("busqueda") ?? "")
 }
 
-renderCategoriaList()
+filtrosForm.addEventListener("submit", async (event) => {
+    event.preventDefault()
+    updateFiltroFormData()
+    await renderSubastaCatalogo(filtrosFormData)
+})
+
+searchForm.addEventListener("submit", async (event) => {
+    event.preventDefault()
+    updateFiltroFormData()
+    await renderSubastaCatalogo(filtrosFormData)
+})

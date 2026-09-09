@@ -2,17 +2,45 @@
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     overflow: hidden;
+    cursor: pointer;
+    position: relative;
+
+    width: 100%;
+    max-width: 400px;
+    /* justify-self: center; */
+
+    transition: 
+        transform  200ms ease,
+        box-shadow 200ms ease,
+        border 200ms ease;
 }
 
 .card-img-container {
     width: 100%;
     aspect-ratio: 4 / 3;
+    overflow: hidden; 
 
     & img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
+
+        overflow: hidden;
+        transition: 
+            transform 300ms ease;
+    }
+}
+
+.card-container:hover {
+    /* the zoom in + card moves up feels like too much, keep one */
+    /* transform: translateY(-3px); */
+
+    box-shadow: 0 0px 15px var(--primary-shadow);
+    border: 1px solid var(--primary);
+
+    & img {
+        transform: scale(1.05);
     }
 }
 
@@ -46,7 +74,7 @@
 .card-info-footer {
     display: flex;
     justify-content: space-between;
-
+    
     & p {
         color: var(--secondary-text);
     }

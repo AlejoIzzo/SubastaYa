@@ -6,6 +6,7 @@
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-active: #1e40af;
+    --primary-shadow: rgba(37, 99, 235, 0.25);
 
     --surface: #f5f5f5;
     --surface-secondary: #b8b8b89a;
@@ -79,7 +80,7 @@ input[type=number] {
     }
 }
 
-.button {
+.icon-button {
     transition: .25s;
     border: none;
     outline: none;
@@ -98,4 +99,26 @@ input[type=number] {
     /* remover espacio vacio debajo de icono */
     display: inline-block;
     line-height: 0;
+}
+
+.text-button {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+
+    border: 1px solid var(--primary);
+    border-radius: var(--border-radius);
+    padding: .5rem;
+    font-family: "Inter", sans-serif;
+    transition: .25s;
+    color: var(--primary);
+
+    &:hover {
+        color: white;
+        background-color: var(--primary)
+    }
+    &:active {
+        background-color: var(--primary-active);
+    }
 }
