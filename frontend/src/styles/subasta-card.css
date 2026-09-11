@@ -13,6 +13,9 @@
         transform  200ms ease,
         box-shadow 200ms ease,
         border 200ms ease;
+
+    text-decoration: none;
+    color: var(--text);
 }
 
 .card-img-container {

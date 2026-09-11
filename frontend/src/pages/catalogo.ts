@@ -57,3 +57,36 @@ searchForm.addEventListener("submit", async (event) => {
     updateFiltroFormData()
     await renderSubastaCatalogo(filtrosFormData)
 })
+
+function updateTimers() {
+    const timers = document.querySelectorAll<HTMLElement>('.tiempo[data-timer-activo="true"]')
+
+    for (let timer of timers) {
+        const objetivo = timer.dataset.estado == "ACTIVA" 
+                            ? new Date(timer.dataset.fin as string).getTime() 
+                            : new Date(timer.dataset.inicio as string).getTime();
+        const remaining = objetivo - Date.now();
+
+        const totalSegundos = Math.floor(remaining / 1000);
+
+        if (remaining <= 0) {
+            timer.dataset.timerActivo = "false"
+            
+            timer.textContent = timer.dataset.estado == "ACTIVA" ? "Finalizada" : "Comenzando..."
+            continue
+        }
+
+        const dias = Math.floor(totalSegundos / 86400);
+        const horas = String(Math.floor((totalSegundos % 86400) / 3600)).padStart(2, "0");
+        const minutos = String(Math.floor((totalSegundos % 3600) / 60)).padStart(2, "0");
+        const segundos = String(totalSegundos % 60).padStart(2, "0");
+
+        const timerText = dias > 0 
+                    ? `${dias}d ${horas}:${minutos}:${segundos}` 
+                    : `${horas}:${minutos}:${segundos}` 
+        
+        timer.textContent = timerText
+    }
+}
+
+window.setInterval(updateTimers, 1000)

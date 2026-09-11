@@ -24,15 +24,26 @@
   padding: 0;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     font-family: Inter, sans-serif;
     background-color: var(--surface);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth; /* Enables smooth page scrolling */
   }
+}
+
+input, button {
+    font-family: Inter, sans-serif;
 }
 
 /* Ocultar spin buttons de input type number */
@@ -117,6 +128,28 @@ input[type=number] {
     &:hover {
         color: white;
         background-color: var(--primary)
+    }
+    &:active {
+        background-color: var(--primary-active);
+    }
+}
+
+.primary-text-button {
+    border: none;
+    outline: none;
+    background: none;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+    transition: .25s;
+
+    border-radius: var(--border-radius);
+    padding: .5rem;
+    background-color: var(--primary);
+    color: var(--surface);
+    font-weight: 600;
+
+    &:hover {
+        background-color: var(--primary-hover);
     }
     &:active {
         background-color: var(--primary-active);

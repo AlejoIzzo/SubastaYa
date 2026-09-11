@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>SubastaYa - Subasta</title>
+
+    <link rel="stylesheet" href="/src/styles/style.css">
+    <link rel="stylesheet" href="/src/styles/header.css">
+    <link rel="stylesheet" href="/src/styles/subasta.css">
+  </head>
+  <body>
+    <header id="header" class="header">
+    </header>
+    <main>
+        <section class="producto-section">
+            <div class="title-container">
+                <h2 id="titulo"></h2>
+                <p>Subastado por: <span id="vendedor-nombre"></span></p>
+            </div>
+            <div class="img-container">
+                <img src="" alt="" id="subasta-img">
+            </div>
+            <div class="info-container">
+                <h3>Descripción</h3>
+                <p id="descripcion">
+                    
+                </p>
+            </div>
+        </section>
+        <section class="puja-section">
+            <div class="timer-container">
+                <p class="timer-label">TIEMPO RESTANTE</p>
+                <p id="timer">00:00:00</p>
+            </div>
+            <hr>
+            <div class="puja-lider-container">
+                <p class="puja-lider-label">PUJA LÍDER</p>
+                <p id="puja-lider-monto"></p>
+            </div>
+            <hr>
+            <div id="puja-list">
+                
+            </div>
+            <hr>
+            <form id="puja-form">
+                <div class="form-header">
+                    <p>Incremento mínimo: $ <span id="incremento-minimo"></span></p>
+                    <p>Tu saldo: $ <span id="usuario-saldo"></span></p>
+                </div>
+                <div class="form-body">
+                    <input type="number" id="puja-input" name="monto">
+                    <button type="submit" class="primary-text-button puja-button">Pujar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+    <script type="module" src="/src/pages/subasta.ts"></script>
+    <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
+  </body>
+
+</html>

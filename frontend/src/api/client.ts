@@ -1,3 +1,6 @@
+import type { PujaResultadoDTO } from "../models/pujaTypes";
+import type { CrearSubastaDTO } from "../models/subastaTypes";
+
 const API_URL = "https://localhost:7282/api"
 
 
@@ -9,4 +12,21 @@ export async function get<T>(endpoint: string, params: URLSearchParams | null = 
         throw new Error(`HTTP error: ${response.status}`);
     }
     return response.json()
+}
+
+export async function post<T>(endpoint: string, object: {}) : Promise<T> {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(object)
+    });
+
+    if (!response.ok) {
+        const error = await response.text();
+        throw new Error(error);
+    }
+
+    return await response.json();
 }
