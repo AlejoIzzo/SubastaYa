@@ -38,6 +38,11 @@ builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IPujaRepository, PujaRepository>();
 builder.Services.AddScoped<IPujaService, PujaService>();
+builder.Services.AddScoped<ISubastaClosingRepository, SubastaClosingRepository>();
+builder.Services.AddScoped<ISubastaClosingService, SubastaClosingService>();
+
+// Worker en segundo plano para cierre automático, liquidación y activación de subastas
+builder.Services.AddHostedService<SubastaYa.API.Workers.SubastaClosingWorker>();
 
 var app = builder.Build();
 

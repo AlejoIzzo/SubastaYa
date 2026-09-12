@@ -10,5 +10,6 @@ namespace SubastaYa.Application.DTOs
         public decimal? PrecioMin { get; set; }
         public decimal? PrecioMax { get; set; }
         public string? Orden { get; set; } // "tiempo_asc", "tiempo_desc", "puja_desc", "puja_asc", "recientes"
+        public int? VendedorId { get; set; } // Para filtrar "Mis Publicaciones" del vendedor
     }
 }

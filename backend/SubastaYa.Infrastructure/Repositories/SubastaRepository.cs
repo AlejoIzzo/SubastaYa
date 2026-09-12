@@ -94,6 +94,12 @@ namespace SubastaYa.Infrastructure.Repositories
                     query = query.Where(s => s.CategoriaId == filtro.CategoriaId.Value);
                 }
 
+                // Filtro por Vendedor (Mis Publicaciones)
+                if (filtro.VendedorId.HasValue && filtro.VendedorId.Value > 0)
+                {
+                    query = query.Where(s => s.VendedorId == filtro.VendedorId.Value);
+                }
+
                 // Búsqueda por texto en título o descripción
                 if (!string.IsNullOrWhiteSpace(filtro.Busqueda))
                 {
