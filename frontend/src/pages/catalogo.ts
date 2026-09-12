@@ -1,7 +1,7 @@
 import { getCategorias } from "../api/categoriasApi";
 import { getSubastaCatalogo } from "../api/subastaApi";
-import { createCategoriaElement } from "../components/categoria";
 import { renderHeader } from "../components/header";
+import { createRadioButton } from "../components/radio-button";
 import { createSubastaCard } from "../components/subastaCard";
 
 const headerContainer = document.getElementById("header")!
@@ -17,19 +17,43 @@ async function renderSubastaCatalogo(filtroFormData?: FormData) {
     }
 }
 
-async function renderCategoriaList(){
+async function renderFilterSection(){
     const categoriasContainer = document.querySelector(".categorias-container")!
-
     const categorias = await getCategorias()
+
+    const iconMap: any = {
+        "Tecnología": "laptop-outline",
+        "Coleccionables": "watch-outline",
+        "Indumentaria": "shirt-outline",
+        "Vehículos": "car-sport-outline",
+    }
     for (let c of categorias) {
-        categoriasContainer.appendChild(createCategoriaElement(c))
+        categoriasContainer.appendChild(createRadioButton({
+            inputFormName: "categoriaId",
+            inputFormValue: c.id,
+            icon: iconMap[c.nombre],
+            label: c.nombre
+        }))
+    }
+
+    const estadosContainer = document.querySelector(".estados-container")!
+    const estados = ["Activa", "Finalizada", "Programada"]
+    
+    for (let e of estados) {
+        estadosContainer.appendChild(createRadioButton({
+            inputFormName: "estado",
+            inputFormValue: e,
+            label: e
+        }))
     }
 }
 
 renderSubastaCatalogo()
-renderCategoriaList()
+renderFilterSection()
 
 let filtrosFormData = new FormData()
+
+// --- manejo de filtros ---
 
 const filtrosForm = document.getElementById("filtros-form") as HTMLFormElement
 const searchForm = document.getElementById("search-form") as HTMLFormElement
@@ -56,6 +80,14 @@ searchForm.addEventListener("submit", async (event) => {
     event.preventDefault()
     updateFiltroFormData()
     await renderSubastaCatalogo(filtrosFormData)
+})
+
+filtrosForm.addEventListener("reset", async (event) => {
+    // esperar un frame a que browser resetee los valores del form, si no se espera los filtros quedan un estado por detras
+    requestAnimationFrame(async () => {
+        updateFiltroFormData();
+        await renderSubastaCatalogo(filtrosFormData);
+    });
 })
 
 function updateTimers() {

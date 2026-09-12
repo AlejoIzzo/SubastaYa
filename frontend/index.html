@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="/src/styles/style.css">
     <link rel="stylesheet" href="/src/styles/subasta-card.css">
+    <link rel="stylesheet" href="/src/styles/radio-button.css">
     <link rel="stylesheet" href="/src/styles/header.css">
     <link rel="stylesheet" href="/src/styles/index.css">
   </head>
@@ -19,21 +20,28 @@
     </header>
     <main>
         <form class="filtros-container" id="filtros-form">
-            <h2>Filtros</h3>
+            <div class="filtros-header">
+                <h2>Filtros</h3>
+                <button type="reset" class="icon-button" title="Restablecer filtros" id="reset-filtros-button">
+                    <ion-icon name="refresh-outline"></ion-icon>
+                </button>
+            </div>
             <h3 class="filtro-titulo">Categorías</h3>
             <div class="categorias-container">
-                <div class="categoria-container button" data-id="">
-                    <input type="radio" name="categoriaId" value="all" checked>
-                    <ion-icon class="categoria-icon" name="cube-outline"></ion-icon>
-                    <p class="categoria-nombre">Todas</p>
-                </div>
+                <label class="radio-button-label">
+                    <span class="radio-circle"></span>
+                    <input type="radio" name="categoriaId" class="radio-input" value="all" checked>
+                    <ion-icon class="radio-button-icon" name="cube-outline"></ion-icon>
+                    <span class="radio-button-text">Todas</span>
+                </label>
             </div>
             <h3 class="filtro-titulo">Estado</h3>
             <div class="estados-container">
-                <span class="estado-checkbox"><input type="radio" name="estado" value="all" checked><p>Todos</p></span>
-                <span class="estado-checkbox"><input type="radio" name="estado" value="ACTIVA"><p>Activa</p></span>
-                <span class="estado-checkbox"><input type="radio" name="estado" value="FINALIZADA"><p>Finalizada</p></span>
-                <span class="estado-checkbox"><input type="radio" name="estado" value="PROGRAMADA"><p>Programada</p></span>
+                <label class="radio-button-label">
+                    <span class="radio-circle"></span>
+                    <input type="radio" name="estado" class="radio-input" value="all" checked>
+                    <span class="radio-button-text">Todos</span>
+                </label>
             </div>
             <h3 class="filtro-titulo">Rango de precio</h3>
             <div class="rango-precio-container">
