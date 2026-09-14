@@ -1,70 +1,103 @@
 import { getSubasta } from "../api/subastaApi";
-import { postPuja, getPujas } from "../api/pujaApi";
 import { renderHeader } from "../components/header";
-import { createPujaCardElement } from "../components/puja-card";
-import type { CrearPujaDTO } from "../models/pujaTypes";
+import { getSaldoDisponible, getUsuario } from "../api/usuariosApi";
+import { validatePujaForm } from "../validation/pujaValidation";
+import { setupPujaForm } from "../formHandlers/pujaFormHandler";
+import type { SubastaDetalleDTO } from "../models/subastaTypes";
+import { 
+    updatePujaLider, 
+    setSaldoUsuario, 
+    renderPujaList, 
+    renderSubasta, 
+    sugerirPuja, 
+    updatePujaEstadoTag, 
+    renderUserDependentState, 
+    toggleErrorDisplay, 
+    renderSubastaDependentState, 
+    updateTimer 
+} from "../views/subastaView";
+import { refreshPujasDates, refreshUserPujas } from "../components/pujaCard";
 
 const params = new URLSearchParams(window.location.search);
 const subastaId = params.get("id");
-const subasta = await getSubasta(Number(subastaId))
+if (!subastaId)
+    throw new Error("Error al obtener ID de subasta desde url")
 
-async function renderSubasta()  {
-    const titulo = document.getElementById("titulo")!
-    const vendedorNombre = document.getElementById("vendedor-nombre")!
-    const descripcion = document.getElementById("descripcion")!
-    const img = document.getElementById("subasta-img")!
-    const timer = document.getElementById("timer")!
-    const pujaLiderMonto = document.getElementById("puja-lider-monto")!
-    const incrementoMinimo = document.getElementById("incremento-minimo")!
-
-    titulo.textContent = subasta.titulo
-    vendedorNombre.textContent = subasta.vendedorNombre
-    descripcion.textContent = subasta.descripcion
-    img.setAttribute("src", subasta.urlImagen)
-    incrementoMinimo.textContent = String(subasta.incrementoMinimo)
-    pujaLiderMonto.textContent = `$${subasta.pujaActual}`
+async function init() {
+    let subasta = await getSubasta(Number(subastaId))
+    let usuario = await getLoggedUsuario()
     
-    renderPujaList()
+    const headerContainer = document.getElementById("header")!
+    renderHeader(headerContainer)
 
-    sugerirPuja(subasta.pujaActual, subasta.incrementoMinimo)
+    renderUserDependentState(subasta, usuario)
+    renderSubasta(subasta)
+    renderPujaList(subasta.ultimasPujas, usuario)
+
+    setSaldoUsuario(await getSaldoDisponible(usuario.id))
+    updatePujaEstadoTag(subasta, usuario)
+    sugerirPuja(subasta.pujaActual!, subasta.incrementoMinimo)
+
+    setupPujaForm({
+        getCurrentSubasta,
+        getLoggedUsuario,
+        onPujaCreated: async (subastaUpdated: SubastaDetalleDTO) => {
+            subasta = subastaUpdated
+
+            updatePujaLider(subasta.pujaActual!.monto)
+            setSaldoUsuario(await getSaldoDisponible(usuario.id))
+            renderPujaList(subasta.ultimasPujas, usuario)
+            updatePujaEstadoTag(subasta, usuario)
+            renderUserDependentState(subasta, usuario)
+            sugerirPuja(subasta.pujaActual!, subasta.incrementoMinimo)
+        }
+    })
+
+    // actualizar variable y elementos al cambiar de usuario
+    document.addEventListener("usuarioChanged", async () => {
+        usuario = await getLoggedUsuario()
+
+        setSaldoUsuario(await getSaldoDisponible(usuario.id))
+        updatePujaEstadoTag(subasta, usuario)
+        renderUserDependentState(subasta, usuario)
+        renderSubastaDependentState(subasta)
+        refreshUserPujas(usuario)
+    });
+    
+    // eventos a los que escuchar para mostrar errores (además de form submit)
+    const montoInput = document.getElementById("puja-input") as HTMLInputElement
+    ["input", "focus"].forEach(evento => montoInput.addEventListener(evento, async () => {
+        const monto = Number(montoInput.value)
+        const usuarioSaldoDisponible = await getSaldoDisponible(usuario.id)
+
+        const errorMesage = validatePujaForm({
+            monto,
+            usuarioSaldoDisponible,
+            usuario,
+            subasta
+        })
+
+        toggleErrorDisplay(errorMesage)
+    }))
+
+    // timer de subasta
+    window.setInterval(() => updateTimer(subasta), 1000)
+
+    // "hace x" de pujas
+    window.setInterval(() => refreshPujasDates(), 60000)
 }
 
-async function renderPujaList() {
-    const pujas = await getPujas(Number(subastaId))
+init()
 
-    const pujasListContainer = document.getElementById("puja-list")!
-    pujasListContainer.replaceChildren()
-    
-    for (let puja of pujas) {
-        pujasListContainer.appendChild(createPujaCardElement(puja))
+// helpers
+async function getLoggedUsuario() { 
+    const usuario = await getUsuario(Number(localStorage.getItem("usuarioId")))
+    if (usuario == null) {
+        throw new Error("Error al obtener usuario desde localStorage")
     }
+    return usuario
 }
 
-function sugerirPuja(pujaLider: number, incrementoMinimo: number) {
-    const pujaInput = document.getElementById("puja-input") as HTMLInputElement
-    pujaInput.value = String(pujaLider + incrementoMinimo)
+async function getCurrentSubasta() {
+    return await getSubasta(Number(subastaId))
 }
-
-const headerContainer = document.getElementById("header")!
-renderHeader(headerContainer)
-renderSubasta()
-
-const pujaForm = document.getElementById("puja-form") as HTMLFormElement
-pujaForm.addEventListener("submit", async (event) => {
-    event.preventDefault()
-
-    const formData = new FormData(pujaForm)
-    
-    const crearPujaDTO: CrearPujaDTO = {
-        compradorId: 2, // hardcoded for the moment
-        monto: Number(formData.get("monto"))
-    }
-    try {
-        const resultado = await postPuja(Number(subastaId), crearPujaDTO)
-        
-        renderPujaList()
-    } catch (err: any) {
-        alert(`Ocurrió un error al registrar puja: ${err}`)
-        console.error(err)
-    }
-})

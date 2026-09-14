@@ -1,3 +1,5 @@
+import type { SubastaDetalleDTO } from "./subastaTypes"
+
 export type PujaDTO = {
     id: number
     subastaId: number
@@ -5,7 +7,7 @@ export type PujaDTO = {
     compradorId: number
     compradorNombre: string
     monto: number
-    fecha: Date
+    fecha: string
 }
 
 export type CrearPujaDTO = {
@@ -23,4 +25,5 @@ export type PujaResultadoDTO = {
     antiSnipingActivado : boolean
     fechaFinSubasta: Date
     mensaje: string
+    subastaDetalle: SubastaDetalleDTO
 }

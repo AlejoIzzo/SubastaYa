@@ -83,7 +83,7 @@ searchForm.addEventListener("submit", async (event) => {
 })
 
 filtrosForm.addEventListener("reset", async (event) => {
-    // esperar un frame a que browser resetee los valores del form, si no se espera los filtros quedan un estado por detras
+    // esperar un frame a que browser resetee los valores del form, si no se espera los filtros quedan un estado por detras y se repite la query con los filtros activos
     requestAnimationFrame(async () => {
         updateFiltroFormData();
         await renderSubastaCatalogo(filtrosFormData);

@@ -71,7 +71,7 @@ main {
     align-items: center;
     justify-content: center;
 
-    & .timer-label {
+    & #timer-label {
 
         color: var(--secondary-text);
     }
@@ -80,27 +80,78 @@ main {
         font-size: 40px;
         font-weight: 800;
         letter-spacing: 2px;
-        color: red;
+        color: var(--primary);
+    }
+
+    & #estado-label {
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: 2px;
+        color: var(--secondary-text);;
     }
 }
 
 
-.puja-lider-container {
+#puja-lider-container,
+#subasta-resultado-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: .25rem;
 
-    & .puja-lider-label {
+    & #puja-lider-label,
+    & #subasta-resultado-label {
         color: var(--secondary-text);
     }
-    & #puja-lider-monto {
+    & #puja-lider-monto,
+    & #puja-ganadora-monto {
         font-size: 40px;
         font-weight: 800;
         letter-spacing: 1px;
-        color: var(--primary);
+        /* color: var(--primary); */
     }
 }
+
+#usuario-puja-estado {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .25rem .5rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        border-color 200ms ease;
+
+    & ion-icon {
+        font-size: 1.25rem;
+    }
+}
+
+.puja-estado.lider {
+    background-color: rgba(29, 78, 216, .15);
+    border: 1px solid rgba(29, 78, 216, 1);
+    color: rgba(29, 78, 216, 1);
+}
+.puja-estado.superado {
+    background-color: rgba(225, 0, 14, 0.15);
+    border: 1px solid rgb(225, 0, 14);
+    color: rgb(225, 0, 14)
+}
+.puja-estado.otro-lider {
+    background-color: rgba(225, 118, 0, 0.15);
+    border: 1px solid rgb(225, 118, 0);
+    color: rgb(225, 118, 0)
+}
+.puja-estado.sin-pujas {
+    background-color: rgba(151, 151, 151, 0.15);
+    border: 1px solid rgb(151, 151, 151);
+    color: rgb(151, 151, 151)
+
+}
+
 .pujas-container {
     display: flex;
     flex-direction: column;
@@ -115,33 +166,90 @@ main {
     overflow-y: auto;
     & > *:not(:last-child) {
         border-bottom: 1px solid var(--border-color);
+    };
+    & :first-child .puja-monto {
+        font-size: 1.75rem;
+        font-weight: 700;
     }
-
 }
 
 .puja-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: .5rem 0;
+    padding: .5rem .5rem;
 
-    & .puja-comprador {
-
-    }
     & .puja-fecha {
         color: var(--secondary-text);
     }
+    & .puja-monto {
+        font-weight: 600;
+        font-size: 1.25rem;
+    }
+}
+
+.puja-comprador {
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+
+.puja-card.of-user {
+    background-color: rgba(29, 78, 216, .10);
+    color: var(--primary);
+}
+.puja-card .user-icon {
+    opacity: 0;
+    transition: 
+        opacity 250ms ease;
+
+}
+.puja-card.of-user .user-icon {
+    opacity: 1;
 }
 
 #puja-form {
+    position: relative;
+}
+
+#form-tooltip-text {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    bottom: 110%; 
+    left: 50%;
+    transform: translateX(-50%); /* centrar */
     
+    background-color: rgb(51, 51, 51);
+    color: white;
+    text-align: center;
+    border-radius: var(--border-radius);
+    padding: .5rem;
+    
+    opacity: 0;
+    transition: opacity 250ms ease;
+}
+
+#puja-form.disabled {
+    & input, & button {
+        opacity: .5;
+        cursor: not-allowed;
+    }
+    & button:hover {
+        /* sobre escribir hover effect */
+        background-color: var(--primary) !important; 
+    }
+    &:hover #form-tooltip-text {
+        /* Mostrar tooltip cuando el formulario esta desactivado y se hace hover */
+        opacity: 1;    
+    }
 }
 
 .form-header {
     display: flex;
     justify-content: space-between;
     color: var(--secondary-text);
-    margin-bottom: .75rem;
+    margin: .75rem 0;
 }
 
 .form-body {
@@ -167,6 +275,12 @@ main {
 .puja-button {
     flex: 1;
     font-size: 20px;
+}
+
+.form-error-container {
+    margin-top: .5rem;
+    color: red;
+
 }
 
 @media screen and (max-width: 768px) {

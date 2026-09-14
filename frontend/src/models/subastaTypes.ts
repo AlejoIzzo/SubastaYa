@@ -20,13 +20,14 @@ export type SubastaDetalleDTO = {
     titulo: string 
     descripcion: string 
     precioBase: number 
-    pujaActual: number 
+    pujaActual?: PujaDTO 
     cantidadPujas: number 
     urlImagen: string 
     fechaInicio: Date 
     fechaFin: Date 
     estado: string  
     vendedorNombre: string 
+    vendedorId: number 
     ultimasPujas: PujaDTO[]
     incrementoMinimo: number 
     categoriaNombre: string 

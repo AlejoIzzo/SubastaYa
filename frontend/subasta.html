@@ -34,27 +34,40 @@
         </section>
         <section class="puja-section">
             <div class="timer-container">
-                <p class="timer-label">TIEMPO RESTANTE</p>
+                <p id="timer-label"></p>
                 <p id="timer">00:00:00</p>
+                <p id="estado-label" class="hidden"></p>
             </div>
             <hr>
-            <div class="puja-lider-container">
-                <p class="puja-lider-label">PUJA LÍDER</p>
+            <div id="subasta-resultado-container" class="hidden">
+                <p id="subasta-resultado-label"></p>
+                <p id="puja-ganadora-monto"></p>
+            </div>
+            <div id="puja-lider-container">
+                <p id="puja-lider-label"></p>
                 <p id="puja-lider-monto"></p>
+                <div id="usuario-puja-estado" class="puja-estado lider">
+                    <ion-icon name="alert-circle-outline" id="puja-estado-icon"></ion-icon>
+                    <p id="puja-estado-texto"></p>
+                </div>
             </div>
             <hr>
             <div id="puja-list">
                 
             </div>
-            <hr>
             <form id="puja-form">
+                <hr>
+                <span id="form-tooltip-text"></span>
                 <div class="form-header">
                     <p>Incremento mínimo: $ <span id="incremento-minimo"></span></p>
                     <p>Tu saldo: $ <span id="usuario-saldo"></span></p>
                 </div>
                 <div class="form-body">
-                    <input type="number" id="puja-input" name="monto">
+                    <input type="number" id="puja-input" name="monto" required>
                     <button type="submit" class="primary-text-button puja-button">Pujar</button>
+                </div>
+                <div class="form-error-container hidden">
+                    <p class="form-error-message"></p>
                 </div>
             </form>
         </section>
