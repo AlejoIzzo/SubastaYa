@@ -1,13 +1,24 @@
-<div class="header-left-container">
-    <a href="/" class="logo text-link">SubastaYa</a>
-</div>
-<form class="searchbar" id="search-form">
-    <input type="text" placeholder="Buscar subastas..." id="search-input" name="busqueda">
-    <button id="search-button" class="icon-button" type="submit">
-        <ion-icon name="search-outline"></ion-icon>
-    </button>
-</form>
-<div class="header-right-container">
-    <a href="/" class="icon-link"><ion-icon name="wallet-outline"></ion-icon></a>
-    <a href="/" class="icon-link"><ion-icon name="person-circle-outline"></ion-icon></a>
-</div>
+<template id="header-template">
+
+    <div class="header-left-container">
+        <a href="/" class="logo text-link">SubastaYa</a>
+    </div>
+    <form class="searchbar" id="search-form">
+        <input type="text" placeholder="Buscar subastas..." id="search-input" name="busqueda">
+        <button id="search-button" class="icon-button" type="submit">
+            <ion-icon name="search-outline"></ion-icon>
+        </button>
+    </form>
+    <div class="header-right-container">
+        <a href="/" class="icon-link"><ion-icon name="wallet-outline"></ion-icon></a>
+        <div class="usuario-container">
+            <a href="/" class="icon-link"><ion-icon name="person-circle-outline"></ion-icon></a>
+            <!-- <button class="icon-button" id="user-select-button"> -->
+                <select name="usuario" id="usuario-select">
+                    <ion-icon name="caret-down-outline"></ion-icon>
+                    
+                </select>
+            <!-- </button> -->
+        </div>
+    </div>
+</template>

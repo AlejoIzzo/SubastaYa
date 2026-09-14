@@ -7,6 +7,9 @@
 }
 
 .header-right-container {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
     /* remover espacio vacio debajo de iconos */
     line-height: 0;
 }
@@ -37,4 +40,18 @@
 
     background-color: var(--surface);
     width: 100%;
+}
+
+.usuario-container {
+    align-items: center;
+    display: flex;
+    gap: .5rem;
+}
+
+#usuario-select {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: transparent;
+    cursor: pointer;
 }

@@ -8,6 +8,7 @@
     --primary-active: #1e40af;
     --primary-shadow: rgba(37, 99, 235, 0.25);
 
+    --primary-soft: rgba(29, 78, 216, .50);
     --primary-soft-hover: rgba(29, 78, 216, .15);
     --primary-soft-active: rgba(29, 78, 216, .35);
 
@@ -45,7 +46,7 @@ body {
   }
 }
 
-input, button {
+input, button, select, option {
     font-family: Inter, sans-serif;
 }
 
@@ -71,6 +72,10 @@ input[type=number] {
 
 
 /* === custom utility classes === */
+
+.hidden {
+    display: none !important;
+}
 
 .icon-link {
     text-decoration: none;
