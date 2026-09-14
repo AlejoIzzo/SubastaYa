@@ -36,7 +36,7 @@ namespace SubastaYa.Infrastructure.Repositories
             return await _context.Subastas.ToListAsync(); 
         }
 
-        public async Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit = 5)
+        public async Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit = 15)
         {
             return await _context.Subastas
                 .Where(s => s.Id == id)
@@ -54,8 +54,22 @@ namespace SubastaYa.Infrastructure.Repositories
 
                     CategoriaNombre = s.Categoria.Nombre,
                     VendedorNombre = s.Vendedor.Nombre,
+                    VendedorId = s.VendedorId,
 
-                    PujaActual = s.Pujas.Select(p => (decimal?)p.Monto).Max() ?? s.PrecioBase,
+                    PujaActual = s.Pujas
+                        .OrderByDescending(p => p.Monto)
+                        .Select(p => new PujaDTO
+                        {
+                            Id = p.Id,
+                            SubastaId = p.SubastaId,
+                            SubastaTitulo = s.Titulo,
+                            CompradorId = p.CompradorId,
+                            CompradorNombre = p.Comprador.Nombre,
+                            Monto = p.Monto,
+                            // construir fecha especificando utc para que no se pierda la zona horaria en la serialización a JSON
+                            Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
+                        }).FirstOrDefault(),
+
                     CantidadPujas = s.Pujas.Count(),
                     UltimasPujas = s.Pujas
                         .OrderByDescending(p => p.Fecha)
@@ -68,7 +82,7 @@ namespace SubastaYa.Infrastructure.Repositories
                             CompradorId = p.CompradorId,
                             CompradorNombre = p.Comprador.Nombre,
                             Monto = p.Monto,
-                            Fecha = p.Fecha
+                            Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
                         }).ToList()
                 }).FirstOrDefaultAsync();
             

@@ -13,10 +13,12 @@ namespace SubastaYa.Application.Services
     public class PujaService : IPujaService
     {
         private readonly IPujaRepository _pujaRepository;
+        private readonly ISubastaRepository _subastaRepository;
 
-        public PujaService(IPujaRepository pujaRepository)
+        public PujaService(IPujaRepository pujaRepository, ISubastaRepository subastaRepository)
         {
             _pujaRepository = pujaRepository;
+            _subastaRepository = subastaRepository;
         }
 
         public async Task<IEnumerable<PujaDTO>> GetPujasBySubastaIdAsync(int subastaId)
@@ -178,6 +180,9 @@ namespace SubastaYa.Application.Services
             );
 
             //Construir y retornar el resultado
+
+            SubastaDetalleDTO subastaDetalle = await _subastaRepository.GetByIdAsync(subasta.Id);
+            
             return new PujaResultadoDTO
             {
                 Id = nuevaPuja.Id,
@@ -190,7 +195,8 @@ namespace SubastaYa.Application.Services
                 FechaFinSubasta = subasta.FechaFin,
                 Mensaje = antiSnipingActivado
                     ? "Puja líder registrada con éxito. ¡Se extendió el tiempo de la subasta por 2 minutos!"
-                    : "Puja líder registrada con éxito."
+                    : "Puja líder registrada con éxito.",
+                SubastaDetalle = subastaDetalle
             };
         }
     }

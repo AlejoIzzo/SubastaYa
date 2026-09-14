@@ -32,7 +32,7 @@ namespace SubastaYa.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<SubastaDetalleDTO>> GetSubastaById(int id)
         {
-            var subasta = await _service.GetByIdAsync(id, ultimasPujasLimit: 5);
+            var subasta = await _service.GetByIdAsync(id, ultimasPujasLimit: 15);
 
             if (subasta == null)
                 return NotFound();

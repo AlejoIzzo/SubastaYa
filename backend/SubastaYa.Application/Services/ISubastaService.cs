@@ -11,7 +11,7 @@ namespace SubastaYa.Application.Services
     public interface ISubastaService
     {
         Task<SubastaCreadaDTO> CrearAsync(CrearSubastaDTO dto);
-        Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit = 5);
+        Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit = 15);
         Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog(SubastaFiltroDTO? filtro = null);
     }
 }

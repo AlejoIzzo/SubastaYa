@@ -13,5 +13,7 @@ namespace SubastaYa.Application.DTOs
         public bool AntiSnipingActivado { get; set; }
         public DateTime FechaFinSubasta { get; set; }
         public string Mensaje { get; set; } = string.Empty;
+        
+        public SubastaDetalleDTO SubastaDetalle { get; set; }
     }
 }
