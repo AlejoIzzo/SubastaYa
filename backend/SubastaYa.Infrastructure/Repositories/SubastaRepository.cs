@@ -134,6 +134,13 @@ namespace SubastaYa.Infrastructure.Repositories
                 query = query.OrderBy(s => s.FechaFin);
             }
 
+            // Paginación opcional
+            if (filtro != null && filtro.Pagina.HasValue && filtro.Pagina.Value > 0 && filtro.TamanioPagina.HasValue && filtro.TamanioPagina.Value > 0)
+            {
+                int skip = (filtro.Pagina.Value - 1) * filtro.TamanioPagina.Value;
+                query = query.Skip(skip).Take(filtro.TamanioPagina.Value);
+            }
+
             return await query
                 .Select(s => new SubastaCatalogDTO
                 {

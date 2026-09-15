@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SubastaYa.API.Hubs;
 using SubastaYa.Application.Interfaces;
 using SubastaYa.Application.Services;
 using SubastaYa.Data;
@@ -7,7 +8,7 @@ using SubastaYa.Infrastructure.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddSignalR();
 builder.Services.AddDbContext<SubastaYaContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -20,6 +21,7 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins("http://localhost:5173")
             .AllowAnyHeader()
+            .AllowCredentials() //Para el handshake, lo necesita el signalR
             .AllowAnyMethod();
     });
 });
@@ -60,5 +62,7 @@ app.UseCors("Frontend");
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<SubastaHub>("/hubs/subastas");
 
 app.Run();
