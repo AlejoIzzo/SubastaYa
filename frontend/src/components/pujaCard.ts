@@ -5,9 +5,6 @@ const template = new DOMParser().parseFromString(htmlTemplate, "text/html").getE
 
 export function createPujaCardElement(dto: PujaDTO, usuario: UsuarioDTO) {
     const clone = template.content.cloneNode(true) as DocumentFragment
-
-    console.log(dto.fecha)
-    console.log(new Date(dto.fecha))
     
     // const container = clone.querySelector('.puja-card')! as HTMLElement
     const pujaContainer = clone.querySelector('.puja-card')! as HTMLElement

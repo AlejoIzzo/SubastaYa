@@ -1,8 +1,8 @@
 import { postSubasta } from "../api/subastaApi";
+import { formatLocalDateTime } from "../helpers/dateHelpers";
 import type { CrearSubastaDTO } from "../models/subastaTypes";
 import type { UsuarioDTO } from "../models/usuarioTypes";
 import { validateSubastaForm, type SubastaValidationErrors } from "../validation/subastaValidation";
-import { toggleErrorDisplay } from "../views/subastaView";
 
 type Args = {
     getLoggedUsuario: () => Promise<UsuarioDTO>
@@ -51,7 +51,6 @@ export function setupSubastaForm({getLoggedUsuario} : Args) {
         const crearSubastaDTO: CrearSubastaDTO = {
             vendedorId: usuario.id,
             fechaInicio: fechaInicio,
-            
             
             titulo: formData.get("titulo")!.toString(),
             descripcion: formData.get("descripcion")!.toString(),
@@ -109,22 +108,4 @@ function clearFieldError(fieldName: string) {
     field.classList.remove("error")
     errorTextEl.classList.add("hidden");
     errorTextEl.textContent = "";
-}
-
-
-// helpers
-
-/**
- * 
- * Devuelve la fecha en formato YYYY-MM-DDTHH:mm 
- */
-function formatLocalDateTime(date: Date) {
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
 }

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>SubastaYa - Publicar Subasta</title>
+
+    <link rel="stylesheet" href="/src/styles/style.css">
+    <link rel="stylesheet" href="/src/styles/header.css">
+    <link rel="stylesheet" href="/src/styles/billetera.css">
+  </head>
+  <body>
+    <header id="header" class="header">
+    </header>
+    <main>
+        <h1 class="pagina-titulo">Billetera</h1>
+        <div class="top-container">
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-header">
+                        <p class="card-title">Saldo total</p>
+                        <ion-icon name="stats-chart-outline"></ion-icon>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-value" id="saldo-total">$ </p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <p class="card-title">Saldo retenido</p>
+                        <ion-icon name="lock-closed-outline"></ion-icon>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-value" id="saldo-retenido">$ </p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <p class="card-title">Saldo Disponible</p>
+                        <ion-icon name="checkmark-outline"></ion-icon>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-value" id="saldo-disponible">$ </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-container">
+            <div class="form-container">
+                <form id="deposito-form">
+                    <div class="form-section">
+                        <div class="form-header">
+                            <h2>Cargar saldo</h2>
+                            <ion-icon name="card-outline"></ion-icon>    
+                        </div>
+                        <div class="form-field">
+                            <label for="monto" class="form-label">Monto</label>
+                            <input type="number" step="0.01" id="monto" name="monto" class="form-input" required min="1">
+                            <p class="field-error" id="montoError" class="hidden"></p>
+                        </div>
+                        <button type="submit" form="deposito-form" class="primary-text-button" id="submit-button">Depositar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="tabla-section">
+                <div class="tabla-section-header">
+                    <!-- <ion-icon name="cash-outline"></ion-icon> -->
+                    <h2>Historial de transacciones</h2>
+                    <ion-icon name="file-tray-full-outline"></ion-icon>
+                </div>
+                <div class="tabla-section-body">
+                    <div class="tabla-container">
+                        <table class="tabla">
+                            <thead>
+                                <tr>
+                                    <th>Fecha y hora</th>
+                                    <th>Descripción</th>
+                                    <th>Subasta</th>
+                                    <th>Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transacciones-tabla-body">
+                            </tbody>
+                        </table>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <template id="transaccion-row-template">
+        <tr>
+            <td class="row-fecha"></td>
+            <td class="row-descripcion"></td>
+            <td class="row-subasta"></td>
+            <td class="row-monto"></td>
+        </tr>
+    </template>
+
+    <script type="module" src="/src/pages/billeteraController.ts"></script>
+    <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
+  </body>
+
+</html>

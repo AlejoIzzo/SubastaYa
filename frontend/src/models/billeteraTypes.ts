@@ -9,3 +9,14 @@ export type BilleteraDTO = {
     saldoDisponible: number,
     transacciones: TransaccionDTO[]
 }
+
+export type CargarSaldoDTO = {
+    monto: number
+}
+
+export type DepositoResultadoDTO = {
+    saldoTotal: number,
+    saldoDisponible: number,
+    saldoRetenido: number,
+    transaccion: TransaccionDTO
+}

@@ -1,3 +1,4 @@
+import { getBilletera } from "../api/billeteraApi"
 import { getUsuario } from "../api/usuariosApi"
 
 export async function getLoggedUsuario() { 
@@ -6,4 +7,9 @@ export async function getLoggedUsuario() {
         throw new Error("Error al obtener usuario desde localStorage")
     }
     return usuario
+}
+
+export async function getLoggedUsuarioBilletera() {
+    const loggedUsuario = await getLoggedUsuario()
+    return await getBilletera(loggedUsuario.billeteraId)
 }
