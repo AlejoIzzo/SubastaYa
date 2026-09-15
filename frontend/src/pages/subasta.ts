@@ -17,6 +17,7 @@ import {
     updateTimer 
 } from "../views/subastaView";
 import { refreshPujasDates, refreshUserPujas } from "../components/pujaCard";
+import { getLoggedUsuario } from "../helpers/usuarioHelpers";
 
 const params = new URLSearchParams(window.location.search);
 const subastaId = params.get("id");
@@ -90,13 +91,7 @@ async function init() {
 init()
 
 // helpers
-async function getLoggedUsuario() { 
-    const usuario = await getUsuario(Number(localStorage.getItem("usuarioId")))
-    if (usuario == null) {
-        throw new Error("Error al obtener usuario desde localStorage")
-    }
-    return usuario
-}
+
 
 async function getCurrentSubasta() {
     return await getSubasta(Number(subastaId))

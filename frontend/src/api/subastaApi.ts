@@ -1,5 +1,5 @@
-import { get } from "./client";
-import { type SubastaCatalogoDTO, type SubastaDetalleDTO } from "../models/subastaTypes";
+import { get, post } from "./client";
+import { type CrearSubastaDTO, type SubastaCatalogoDTO, type SubastaCreadaDTO, type SubastaDetalleDTO } from "../models/subastaTypes";
 
 export async function getSubastaCatalogo(filtroFormData?: FormData) {
     // this should convert the filter form data into url params
@@ -18,4 +18,8 @@ export async function getSubastaCatalogo(filtroFormData?: FormData) {
 
 export async function getSubasta(id: number) {
     return await get<SubastaDetalleDTO>(`/subastas/${id}`)
+}
+
+export async function postSubasta(dto: CrearSubastaDTO) {
+    return await post<SubastaCreadaDTO>(`/subastas`, dto)
 }

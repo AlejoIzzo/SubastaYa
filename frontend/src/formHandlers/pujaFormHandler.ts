@@ -29,7 +29,7 @@ export function setupPujaForm({getCurrentSubasta, getLoggedUsuario, onPujaCreate
         const usuario = await getLoggedUsuario()
         
         const usuarioSaldoDisponible = await getSaldoDisponible(usuario.id)
-        console.log(usuario)
+        
         const error = validatePujaForm({
             usuario,
             usuarioSaldoDisponible,

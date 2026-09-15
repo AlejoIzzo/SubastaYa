@@ -39,8 +39,13 @@ export type CrearSubastaDTO = {
     categoriaId: number
     precioBase: number
     urlImagen: string
-    fechaInicio?: Date
+    fechaInicio?: Date | null
     fechaFin: Date
     vendedorId: number
     incrementoMinimo: number
+}
+
+export type SubastaCreadaDTO = {
+    id: number
+    titulo: string
 }

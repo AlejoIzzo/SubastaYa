@@ -9,6 +9,23 @@ main {
     min-width: 0;
 }
 
+.catalogo-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.publicar-subasta-button {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    & ion-icon {
+        font-size: 1.25rem;
+    }
+}
+
 .catalogo-cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
