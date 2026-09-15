@@ -174,34 +174,110 @@ namespace SubastaYa.Infrastructure.Repositories
                 }).ToListAsync();
         }
 
-        public Task<int> GetSubastasActivasUsuario(int usuarioId)
+        public async Task<int> GetSubastasActivasUsuario(int usuarioId)
         {
-            throw new NotImplementedException();
+            return await _context.Subastas
+                .CountAsync(s => s.VendedorId == usuarioId && s.Estado == "ACTIVA");
         }
 
-        public Task<IEnumerable<UsuarioSubastaDTO>> GetSubastasDeUsuario(int usuarioId)
+        public async Task<IEnumerable<UsuarioSubastaDTO>> GetSubastasDeUsuario(int usuarioId)
         {
-            throw new NotImplementedException();
+            return await _context.Subastas
+                .Where(s => s.VendedorId == usuarioId)
+                .OrderByDescending(s => s.FechaInicio)
+                .Select(s => new UsuarioSubastaDTO
+                {
+                    Id = s.Id,
+                    Titulo = s.Titulo,
+                    UrlImagen = s.UrlImagen,
+                    PrecioBase = s.PrecioBase,
+                    CantidadPujas = s.Pujas.Count(),
+                    FechaInicio = s.FechaInicio,
+                    FechaFin = s.FechaFin,
+                    Estado = s.Estado,
+                    VendedorId = s.VendedorId,
+                    PujaLider = s.Pujas
+                        .OrderByDescending(p => p.Monto)
+                        .Select(p => new PujaDTO
+                        {
+                            Id = p.Id,
+                            SubastaId = p.SubastaId,
+                            SubastaTitulo = s.Titulo,
+                            CompradorId = p.CompradorId,
+                            CompradorNombre = p.Comprador.Nombre,
+                            Monto = p.Monto,
+                            Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
+                        })
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
         }
 
-        public Task<int> GetSubastasGanadasUsuario(int usuarioId)
+        public async Task<int> GetSubastasGanadasUsuario(int usuarioId)
         {
-            throw new NotImplementedException();
+            var ganadas = await _context.Subastas
+                .Where(s => s.Estado == "FINALIZADA" && s.Pujas.Any())
+                .Select(s => s.Pujas.OrderByDescending(p => p.Monto).Select(p => p.CompradorId).FirstOrDefault())
+                .ToListAsync();
+
+            return ganadas.Count(compradorId => compradorId == usuarioId);
         }
 
-        public Task<IEnumerable<UsuarioParticipacionSubastaDTO>> GetSubastasParticipacionesDeUsuario(int usuarioId)
+        public async Task<IEnumerable<UsuarioParticipacionSubastaDTO>> GetSubastasParticipacionesDeUsuario(int usuarioId)
         {
-            throw new NotImplementedException();
+            return await _context.Subastas
+                .Where(s => s.Pujas.Any(p => p.CompradorId == usuarioId))
+                .OrderByDescending(s => s.Pujas.Where(p => p.CompradorId == usuarioId).Max(p => p.Fecha))
+                .Select(s => new UsuarioParticipacionSubastaDTO
+                {
+                    Id = s.Id,
+                    Titulo = s.Titulo,
+                    UrlImagen = s.UrlImagen,
+                    FechaInicio = s.FechaInicio,
+                    FechaFin = s.FechaFin,
+                    Estado = s.Estado,
+                    VendedorId = s.VendedorId,
+                    PujaLider = s.Pujas
+                        .OrderByDescending(p => p.Monto)
+                        .Select(p => new PujaDTO
+                        {
+                            Id = p.Id,
+                            SubastaId = p.SubastaId,
+                            SubastaTitulo = s.Titulo,
+                            CompradorId = p.CompradorId,
+                            CompradorNombre = p.Comprador.Nombre,
+                            Monto = p.Monto,
+                            Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
+                        })
+                        .FirstOrDefault(),
+                    UltimaPujaUsuario = s.Pujas
+                        .Where(p => p.CompradorId == usuarioId)
+                        .OrderByDescending(p => p.Fecha)
+                        .Select(p => new PujaDTO
+                        {
+                            Id = p.Id,
+                            SubastaId = p.SubastaId,
+                            SubastaTitulo = s.Titulo,
+                            CompradorId = p.CompradorId,
+                            CompradorNombre = p.Comprador.Nombre,
+                            Monto = p.Monto,
+                            Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
+                        })
+                        .First()
+                })
+                .ToListAsync();
         }
 
-        public Task<decimal> GetTotalRecaudadoUsuario(int usuarioId)
+        public async Task<decimal> GetTotalRecaudadoUsuario(int usuarioId)
         {
-            throw new NotImplementedException();
+            return await _context.TransaccionLedger
+                .Where(t => t.Billetera.UsuarioId == usuarioId && t.Tipo == "COBRO")
+                .SumAsync(t => (decimal?)t.Monto) ?? 0m;
         }
 
         public void Update(Subasta subasta)
         {
-            throw new NotImplementedException();
+            _context.Subastas.Update(subasta);
         }
     }
 }

@@ -138,9 +138,11 @@ namespace SubastaYa.Infrastructure.Repositories
             }
         }
 
-        public Task<decimal> GetTotalPujadoUsuario(int usuarioId)
+        public async Task<decimal> GetTotalPujadoUsuario(int usuarioId)
         {
-            throw new NotImplementedException();
+            return await _context.Pujas
+                .Where(p => p.CompradorId == usuarioId)
+                .SumAsync(p => (decimal?)p.Monto) ?? 0m;
         }
     }
 }
