@@ -24,6 +24,14 @@ builder.Services.AddCors(options =>
             .AllowCredentials() //Para el handshake, lo necesita el signalR
             .AllowAnyMethod();
     });
+    // politica para http requests comunes
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
