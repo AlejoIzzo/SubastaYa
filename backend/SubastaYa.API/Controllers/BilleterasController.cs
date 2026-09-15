@@ -46,12 +46,12 @@ namespace SubastaYa.API.Controllers
             return Ok(transacciones);
         }
 
-        [HttpPost("usuario/{usuarioId}/depositos")]
-        public async Task<ActionResult<BilleteraDTO>> Depositar(int usuarioId, [FromBody] CargarSaldoDTO dto)
+        [HttpPost("{billeteraId}/depositos")]
+        public async Task<ActionResult<BilleteraDTO>> Depositar(int billeteraId, [FromBody] CargarSaldoDTO dto)
         {
             try
             {
-                var billeteraActualizada = await _billeteraService.CargarSaldoAsync(usuarioId, dto.Monto);
+                var billeteraActualizada = await _billeteraService.CargarSaldoAsync(billeteraId, dto.Monto);
                 return Ok(billeteraActualizada);
             }
             catch (DominioException ex)

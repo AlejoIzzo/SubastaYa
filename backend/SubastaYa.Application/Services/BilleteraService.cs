@@ -32,15 +32,14 @@ namespace SubastaYa.Application.Services
         {
             return await _billeteraRepository.GetTransaccionesByUsuarioIdAsync(usuarioId);
         }
-
-        public async Task<BilleteraDTO> CargarSaldoAsync(int usuarioId, decimal monto)
+        public async Task<BilleteraDTO> CargarSaldoAsync(int billeteraId, decimal monto)
         {
             if (monto <= 0)
                 throw new DominioException("El monto a depositar debe ser mayor a cero");
 
-            var billetera = await _billeteraRepository.GetByUsuarioIdAsync(usuarioId);
+            Billetera? billetera = await _billeteraRepository.GetByIdAsync(billeteraId);
             if (billetera == null)
-                throw new DominioException($"No se encontró la billetera asociada al usuario {usuarioId}");
+                throw new DominioException($"No se encontró la billetera con id ${billeteraId}");
 
             // Actualización de saldos
             billetera.SaldoTotal += monto;
@@ -63,7 +62,7 @@ namespace SubastaYa.Application.Services
                 Entidad = "BILLETERA",
                 EntidadId = billetera.Id,
                 Accion = "ACREDITACION_MANUAL",
-                UsuarioId = usuarioId,
+                UsuarioId = billetera.UsuarioId,
                 Fecha = DateTime.UtcNow,
                 DetalleJson = JsonSerializer.Serialize(new
                 {
@@ -76,7 +75,7 @@ namespace SubastaYa.Application.Services
 
             await _billeteraRepository.GuardarCambiosAsync();
 
-            var dto = await _billeteraRepository.GetDtoByUsuarioIdAsync(usuarioId);
+            var dto = await _billeteraRepository.GetDtoByUsuarioIdAsync(billetera.UsuarioId);
             return dto!;
         }
     }
