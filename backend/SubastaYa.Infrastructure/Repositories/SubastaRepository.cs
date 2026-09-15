@@ -174,6 +174,31 @@ namespace SubastaYa.Infrastructure.Repositories
                 }).ToListAsync();
         }
 
+        public Task<int> GetSubastasActivasUsuario(int usuarioId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<UsuarioSubastaDTO>> GetSubastasDeUsuario(int usuarioId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> GetSubastasGanadasUsuario(int usuarioId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<UsuarioParticipacionSubastaDTO>> GetSubastasParticipacionesDeUsuario(int usuarioId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<decimal> GetTotalRecaudadoUsuario(int usuarioId)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(Subasta subasta)
         {
             throw new NotImplementedException();

@@ -32,5 +32,7 @@ namespace SubastaYa.Application.Interfaces
             TransaccionLedger? transaccionLiberacion,
             AuditoriaLog? logAntiSniping
         );
+
+        Task<decimal> GetTotalPujadoUsuario(int usuarioId);
     }
 }

@@ -43,5 +43,12 @@ namespace SubastaYa.API.Controllers
             var pujas = await pujaService.GetAllPujasAsync(id);
             return Ok(pujas);
         }
+
+        [HttpGet("{id}/dashboard")]
+        public async Task<ActionResult<UsuarioDashboardDTO>> GetUsuarioDashboard(int id)
+        {
+            var dashboard = await _usuarioService.GetUsuarioDashboard(id);
+            return Ok(dashboard);
+        }
     }
 }

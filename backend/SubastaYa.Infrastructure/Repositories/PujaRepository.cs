@@ -137,5 +137,10 @@ namespace SubastaYa.Infrastructure.Repositories
                 throw;
             }
         }
+
+        public Task<decimal> GetTotalPujadoUsuario(int usuarioId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

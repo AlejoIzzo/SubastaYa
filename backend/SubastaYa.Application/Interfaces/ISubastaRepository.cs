@@ -16,5 +16,10 @@ namespace SubastaYa.Application.Interfaces
         Task CrearAsync(Subasta subasta);
         void Update(Subasta subasta);
         void Delete(Subasta subasta);
+        Task<IEnumerable<UsuarioSubastaDTO>> GetSubastasDeUsuario(int usuarioId);
+        Task<IEnumerable<UsuarioParticipacionSubastaDTO>> GetSubastasParticipacionesDeUsuario(int usuarioId);
+        Task<decimal> GetTotalRecaudadoUsuario(int usuarioId);
+        Task<int> GetSubastasGanadasUsuario(int usuarioId);
+        Task<int> GetSubastasActivasUsuario(int usuarioId);
     }
 }
