@@ -5,6 +5,8 @@ using SubastaYa.Application.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
+using SubastaYa.API.Hubs;
 
 namespace SubastaYa.API.Workers
 {
@@ -12,11 +14,13 @@ namespace SubastaYa.API.Workers
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<SubastaClosingWorker> _logger;
+        private readonly IHubContext<SubastaHub> _hubContext;
 
-        public SubastaClosingWorker(IServiceProvider serviceProvider, ILogger<SubastaClosingWorker> logger)
+        public SubastaClosingWorker(IServiceProvider serviceProvider, ILogger<SubastaClosingWorker> logger, IHubContext<SubastaHub> hubContext)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
+            _hubContext = hubContext;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,6 +38,11 @@ namespace SubastaYa.API.Workers
                     if (cerradas > 0)
                     {
                         _logger.LogInformation("[SubastaClosingWorker] Se procesaron y liquidaron {Count} subastas vencidas.", cerradas);
+
+                        await _hubContext.Clients.All.SendAsync("SubastaFinalizada", new
+                        {
+                            mensaje = "Se han actualizado subastas finalizadas por el sistema."
+                        }); //Avisamos al hub sobre las subastas finalizadas
                     }
 
                     int iniciadas = await closingService.IniciarSubastasProgramadasAsync();
