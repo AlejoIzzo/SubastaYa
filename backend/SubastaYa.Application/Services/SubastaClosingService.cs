@@ -1,4 +1,5 @@
 using SubastaYa.Application.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,10 +14,10 @@ namespace SubastaYa.Application.Services
             _closingRepository = closingRepository;
         }
 
-        public async Task<int> ProcesarSubastasVencidasAsync()
+        public async Task<List<int>> ProcesarSubastasVencidasAsync()
         {
             var vencidas = await _closingRepository.GetSubastasVencidasAsync();
-            int procesadas = 0;
+            var idsProcesadas = new List<int>();
 
             foreach (var subasta in vencidas)
             {
@@ -38,24 +39,24 @@ namespace SubastaYa.Application.Services
                     await _closingRepository.FinalizarSubastaDesiertaAsync(subasta.Id);
                 }
 
-                procesadas++;
+                idsProcesadas.Add(subasta.Id);
             }
 
-            return procesadas;
+            return idsProcesadas;
         }
 
-        public async Task<int> IniciarSubastasProgramadasAsync()
+        public async Task<List<int>> IniciarSubastasProgramadasAsync()
         {
             var programadas = await _closingRepository.GetSubastasProgramadasParaIniciarAsync();
-            int iniciadas = 0;
+            var idsIniciadas = new List<int>();
 
             foreach (var subasta in programadas)
             {
                 await _closingRepository.ActivarSubastaProgramadaAsync(subasta.Id);
-                iniciadas++;
+                idsIniciadas.Add(subasta.Id);
             }
 
-            return iniciadas;
+            return idsIniciadas;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace SubastaYa.Application.Interfaces
 {
     public interface ISubastaClosingService
     {
-        Task<int> ProcesarSubastasVencidasAsync();
-        Task<int> IniciarSubastasProgramadasAsync();
+        Task<System.Collections.Generic.List<int>> ProcesarSubastasVencidasAsync();
+        Task<System.Collections.Generic.List<int>> IniciarSubastasProgramadasAsync();
     }
 }
