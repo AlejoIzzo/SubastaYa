@@ -25,13 +25,13 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
     // politica para http requests comunes
-    options.AddPolicy("Frontend", policy =>
-    {
-        policy
-            .WithOrigins("http://localhost:5173")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
+    //options.AddPolicy("Frontend", policy =>
+    //{
+    //    policy
+    //        .WithOrigins("http://localhost:5173")
+    //        .AllowAnyHeader()
+    //        .AllowAnyMethod();
+    //});
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
