@@ -14,11 +14,19 @@ namespace SubastaYa.Application.Services
     {
         private readonly IPujaRepository _pujaRepository;
         private readonly ISubastaRepository _subastaRepository;
+        private readonly IBilleteraRepository _billeteraRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
 
-        public PujaService(IPujaRepository pujaRepository, ISubastaRepository subastaRepository)
+        public PujaService(
+            IPujaRepository pujaRepository,
+            ISubastaRepository subastaRepository,
+            IBilleteraRepository billeteraRepository,
+            IUsuarioRepository usuarioRepository)
         {
             _pujaRepository = pujaRepository;
             _subastaRepository = subastaRepository;
+            _billeteraRepository = billeteraRepository;
+            _usuarioRepository = usuarioRepository;
         }
 
         public async Task<IEnumerable<PujaDTO>> GetPujasBySubastaIdAsync(int subastaId)
@@ -50,7 +58,7 @@ namespace SubastaYa.Application.Services
                 throw new DominioException("La subasta ya ha finalizado.");
 
             //Validaciones del Usuario Comprador
-            var comprador = await _pujaRepository.GetUsuarioByIdAsync(dto.CompradorId);
+            var comprador = await _usuarioRepository.GetByIdAsync(dto.CompradorId);
             if (comprador == null)
                 throw new DominioException($"Usuario comprador con ID {dto.CompradorId} no encontrado.");
 
@@ -79,7 +87,7 @@ namespace SubastaYa.Application.Services
             }
 
             //Validación de Fondos Disponibles en la Billetera
-            var billeteraComprador = await _pujaRepository.GetBilleteraByUsuarioIdAsync(dto.CompradorId);
+            var billeteraComprador = await _billeteraRepository.GetByUsuarioIdAsync(dto.CompradorId);
             if (billeteraComprador == null)
                 throw new DominioException("El comprador no posee una billetera registrada en el sistema.");
 
@@ -111,7 +119,7 @@ namespace SubastaYa.Application.Services
 
             if (pujaLiderActual != null)
             {
-                billeteraAnterior = await _pujaRepository.GetBilleteraByUsuarioIdAsync(pujaLiderActual.CompradorId);
+                billeteraAnterior = await _billeteraRepository.GetByUsuarioIdAsync(pujaLiderActual.CompradorId);
                 if (billeteraAnterior != null)
                 {
                     billeteraAnterior.SaldoRetenido -= pujaLiderActual.Monto;
@@ -167,17 +175,30 @@ namespace SubastaYa.Application.Services
                 };
             }
 
-            //Guardar todo en bloque transaccional atómico
-            // Si ocurre concurrencia, el repositorio lanzará ConcurrenciaException
-            await _pujaRepository.GuardarPujaConTransaccionAsync(
-                subasta,
-                nuevaPuja,
-                billeteraComprador,
-                transaccionRetencion,
-                billeteraAnterior,
-                transaccionLiberacion,
-                logAntiSniping
-            );
+            // 1. Manejo de Billeteras y movimientos en Ledger a través de IBilleteraRepository
+            if (billeteraAnterior != null && transaccionLiberacion != null)
+            {
+                await _billeteraRepository.AgregarTransaccionAsync(transaccionLiberacion);
+                _billeteraRepository.Update(billeteraAnterior);
+            }
+
+            await _billeteraRepository.AgregarTransaccionAsync(transaccionRetencion);
+            _billeteraRepository.Update(billeteraComprador);
+
+            // 2. Manejo de la Subasta a través de ISubastaRepository
+            _subastaRepository.Update(subasta);
+
+            // 3. Manejo de Auditoría (si hubo anti-sniping) a través de IBilleteraRepository
+            if (logAntiSniping != null)
+            {
+                await _billeteraRepository.AgregarAuditoriaAsync(logAntiSniping);
+            }
+
+            // 4. Manejo de la Puja a través de IPujaRepository
+            await _pujaRepository.AgregarAsync(nuevaPuja);
+
+            // 5. Commit atómico en la base de datos (manejando ConcurrenciaException)
+            await _pujaRepository.GuardarCambiosAsync();
 
             //Construir y retornar el resultado
 

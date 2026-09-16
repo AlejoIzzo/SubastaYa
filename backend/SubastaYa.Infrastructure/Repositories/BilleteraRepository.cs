@@ -12,10 +12,15 @@ namespace SubastaYa.Infrastructure.Repositories
     public class BilleteraRepository : IBilleteraRepository
     {
         private readonly SubastaYaContext _context;
-
+        
         public BilleteraRepository(SubastaYaContext context)
         {
             _context = context;
+        }
+
+        public void Update(Billetera billetera)
+        {
+            _context.Billeteras.Update(billetera);
         }
 
         public async Task<Billetera?> GetByIdAsync(int id)
