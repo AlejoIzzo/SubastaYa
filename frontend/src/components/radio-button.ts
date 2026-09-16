@@ -5,10 +5,11 @@ type Args = {
     inputFormName: string, 
     inputFormValue: string | number, 
     label?: string, 
-    icon?: string
+    icon?: string,
+    checked?: boolean
 }
 
-export function createRadioButton({inputFormName, inputFormValue, label, icon}: Args) {
+export function createRadioButton({inputFormName, inputFormValue, label, icon, checked}: Args) {
     const clone = template.content.cloneNode(true) as DocumentFragment
     
     // const buttonEl = clone.querySelector(".radio-button")! as HTMLElement
@@ -26,6 +27,9 @@ export function createRadioButton({inputFormName, inputFormValue, label, icon}: 
 
     if (label)
         labelEl.textContent = label
+
+    if (checked)
+        radioInputEl.checked = checked
 
     return clone
 }

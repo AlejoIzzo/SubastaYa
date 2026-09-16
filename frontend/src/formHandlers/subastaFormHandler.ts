@@ -1,19 +1,16 @@
 import { postSubasta } from "../api/subastaApi";
+import { showButtonLoading, showButtonReady } from "../components/spinner";
 import { formatLocalDateTime } from "../helpers/dateHelpers";
-import type { CrearSubastaDTO } from "../models/subastaTypes";
+import type { CrearSubastaDTO, SubastaCreadaDTO } from "../models/subastaTypes";
 import type { UsuarioDTO } from "../models/usuarioTypes";
 import { validateSubastaForm, type SubastaValidationErrors } from "../validation/subastaValidation";
 
 type Args = {
     getLoggedUsuario: () => Promise<UsuarioDTO>
-    /**
-     * Función a ejecutar una vez confirmada la creación de la puja, se pasa el nuevo estado de la subasta recibido del backend
-     */
-    // onPujaCreated: (subastaUpdated: SubastaDetalleDTO) => Promise<void>
+    onSubastaCreated: (subasta: SubastaCreadaDTO) => void
 }
 
-export function setupSubastaForm({getLoggedUsuario} : Args) {
-    
+export function setupSubastaForm({getLoggedUsuario, onSubastaCreated} : Args) {
     const comenzarInmediatoCheckbox = document.getElementById("comenzarInmediato") as HTMLInputElement
     
     const fechaInicio = document.getElementById("fechaInicio") as HTMLInputElement
@@ -34,6 +31,7 @@ export function setupSubastaForm({getLoggedUsuario} : Args) {
     })
 
     const subastaForm = document.getElementById("subasta-form") as HTMLFormElement
+    const submitButton = document.getElementById("submit-button") as HTMLButtonElement
 
     subastaForm.addEventListener("submit", async (event) => {
         event.preventDefault()
@@ -68,13 +66,17 @@ export function setupSubastaForm({getLoggedUsuario} : Args) {
             return
         }
 
+        showButtonLoading(submitButton, "Publicando...");
         try {
             const resultado = await postSubasta(crearSubastaDTO)
-            console.log(resultado)
-            // await onPujaCreated(resultado.subastaDetalle)
+            onSubastaCreated(resultado)
         } catch (err: any) {
             alert(`Ocurrió un error al crear subasta: ${err}`)
             console.error(err)
+        }
+        finally {
+            // no re-habilitar, dejar que redirija a página de subasta
+            // showButtonReady(submitButton, "Publicar");
         }
     })
     

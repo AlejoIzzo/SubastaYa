@@ -19,6 +19,7 @@ import { refreshPujasDates, refreshUserPujas } from "../components/pujaCard";
 import { getLoggedUsuario } from "../helpers/usuarioHelpers";
 import * as signalR from "@microsoft/signalr";
 import type { PujaResultadoDTO } from "../models/pujaTypes";
+import { showLoading } from "../components/spinner";
 
 const params = new URLSearchParams(window.location.search);
 const subastaId = params.get("id");
@@ -26,6 +27,9 @@ if (!subastaId)
     throw new Error("Error al obtener ID de subasta desde url")
 
 async function init() {
+    const pujaListContainer = document.getElementById("puja-list")!
+    showLoading(pujaListContainer)
+    
     let subasta = await getSubasta(Number(subastaId))
     let usuario = await getLoggedUsuario()
     
@@ -41,6 +45,7 @@ async function init() {
     sugerirPuja(subasta.pujaActual!, subasta.incrementoMinimo)
 
     function applySubastaUpdate(updated: SubastaDetalleDTO) {
+        showLoading(pujaListContainer)
         subasta = updated;
 
         if (updated.pujaActual) {
@@ -78,7 +83,7 @@ async function init() {
     
     // eventos a los que escuchar para mostrar errores (además de form submit)
     const montoInput = document.getElementById("puja-input") as HTMLInputElement
-    ["input", "focus"].forEach(evento => montoInput.addEventListener(evento, async () => {
+    ["input", "blur"].forEach(evento => montoInput.addEventListener(evento, async () => {
         const monto = Number(montoInput.value)
         const usuarioSaldoDisponible = await getSaldoDisponible(usuario.id)
 
@@ -98,7 +103,6 @@ async function init() {
     // "hace x" de pujas
     window.setInterval(() => refreshPujasDates(), 60000)
 
-
     // --- websockets config ---
 
     // conexión hacia el backend
@@ -111,7 +115,6 @@ async function init() {
     connection.on("RecibirPuja", (pujaResultado: PujaResultadoDTO) => {
         applySubastaUpdate(pujaResultado.subastaDetalle)
 
-        // i think this ain't needed
         // Si se extendió por anti-sniping:
         if (pujaResultado.antiSnipingActivado) {
             // subasta.fechaFin = puja.fechaFinSubasta; // i think this ain't needed
@@ -131,7 +134,7 @@ async function init() {
         alert("¡La subasta ha finalizado!");
     });
 
-    // 4. Iniciar y unirse a la sala de esta subasta
+    // Iniciar y unirse a la sala de esta subasta
     await connection.start();
     await connection.invoke("UnirseASubasta", Number(subastaId));
 }

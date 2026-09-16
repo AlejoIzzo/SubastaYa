@@ -1,16 +1,21 @@
 import { renderHeader } from "../components/header"
 import { getLoggedUsuarioDashboard } from "../helpers/usuarioHelpers"
-import { renderMisPujasTabla, renderMisSubastasTabla, renderUsuarioDashboard, updateRowTimers } from "../views/usuarioDashboardView"
+import { renderMisPujasTabla, renderMisSubastasTabla, renderTablasLoading, renderUsuarioDashboard, renderUsuarioDashboardLoading, updateRowTimers } from "../views/usuarioDashboardView"
 
 async function init() {
     renderHeader(document.getElementById("header")!)
-    
-    let UsuarioDashboard = await getLoggedUsuarioDashboard()
 
-    renderUsuarioDashboard(UsuarioDashboard)
-    renderMisSubastasTabla(UsuarioDashboard.usuarioSubastas)
-    renderMisPujasTabla(UsuarioDashboard.usuarioParticipacionSubastas)
+    renderUsuarioDashboardLoading()
+    renderTablasLoading()
+    let UsuarioDashboard = await getLoggedUsuarioDashboard()
     
+    function renderAll() {
+        renderUsuarioDashboard(UsuarioDashboard)
+        renderMisSubastasTabla(UsuarioDashboard.usuarioSubastas)
+        renderMisPujasTabla(UsuarioDashboard.usuarioParticipacionSubastas)   
+    }
+    renderAll()
+
     const misSubastasTabla = document.getElementById("mis-subastas-tabla")!
     const misPujasTabla = document.getElementById("mis-pujas-tabla")!
 
@@ -33,15 +38,17 @@ async function init() {
     })
 
     document.addEventListener("usuarioChanged", async () => {
+        renderUsuarioDashboardLoading()
+        renderTablasLoading()
+
         UsuarioDashboard = await getLoggedUsuarioDashboard()
 
-        renderUsuarioDashboard(UsuarioDashboard)
-        renderMisSubastasTabla(UsuarioDashboard.usuarioSubastas)
-        renderMisPujasTabla(UsuarioDashboard.usuarioParticipacionSubastas)
+        renderAll()
     });
 
     window.setInterval((updateRowTimers), 1000)
 }
+
 
 init()
 

@@ -1,33 +1,44 @@
+import { showLoading, showTableLoadingRow } from "../components/spinner"
 import { capitalize } from "../helpers/stringHelpers"
 import type { UsuarioDashboardDTO, UsuarioParticipacionSubastaDTO, UsuarioSubastaDTO } from "../models/usuarioTypes"
 
+const subastasActivas = document.getElementById("subastas-activas")!
+const subastasGanadas = document.getElementById("subastas-ganadas")!
+const totalRecaudado = document.getElementById("total-recaudado")!
+const totalPujado = document.getElementById("total-pujado")!
+
+export function renderUsuarioDashboardLoading()  {
+    showLoading(subastasGanadas)
+    showLoading(subastasActivas)
+    showLoading(totalRecaudado)
+    showLoading(totalPujado)
+}
 export function renderUsuarioDashboard(UsuarioDashboard: UsuarioDashboardDTO)  {
-    const subastasActivas = document.getElementById("subastas-activas")!
-    const subastasGanadas = document.getElementById("subastas-ganadas")!
-    const totalRecaudado = document.getElementById("total-recaudado")!
-    const totalPujado = document.getElementById("total-pujado")!
-    
     subastasGanadas.textContent = `${UsuarioDashboard.usuarioEstadisticas.subastasGanadas}`
     subastasActivas.textContent = `${UsuarioDashboard.usuarioEstadisticas.subastasActivas}`
     totalRecaudado.textContent = `$ ${UsuarioDashboard.usuarioEstadisticas.totalRecaudado}`
     totalPujado.textContent = `$ ${UsuarioDashboard.usuarioEstadisticas.totalPujado}`
 }
 
+const misSubastasTablaBody = document.getElementById("mis-subastas-tabla-body")!
+const misPujasTablaBody = document.getElementById("mis-pujas-tabla-body")!
+export function renderTablasLoading() {
+    showTableLoadingRow(misSubastasTablaBody, 5)
+    showTableLoadingRow(misPujasTablaBody, 5)
+}
 export function renderMisSubastasTabla(usuarioSubatas: UsuarioSubastaDTO[]) {
-    const misSubastasTabla = document.getElementById("mis-subastas-tabla-body")!
 
-    misSubastasTabla.replaceChildren()
+    misSubastasTablaBody.replaceChildren()
     for (let u of usuarioSubatas) {
-        misSubastasTabla.appendChild(createMisSubastasFila(u))
+        misSubastasTablaBody.appendChild(createMisSubastasFila(u))
     }
 }
 
 export function renderMisPujasTabla(usuarioParticipacionSubastas: UsuarioParticipacionSubastaDTO[]) {
-    const misPujasTabla = document.getElementById("mis-pujas-tabla-body")!
 
-    misPujasTabla.replaceChildren()
+    misPujasTablaBody.replaceChildren()
     for (let u of usuarioParticipacionSubastas) {
-        misPujasTabla.appendChild(createMisPujasFila(u))
+        misPujasTablaBody.appendChild(createMisPujasFila(u))
     }
 }
 

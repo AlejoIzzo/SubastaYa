@@ -13,7 +13,10 @@ async function init() {
     renderCategoriaOptions(categorias)
 
     setupSubastaForm({
-        getLoggedUsuario
+        getLoggedUsuario,
+        onSubastaCreated: (subasta) => {
+            window.location.replace(`/subasta.html?id=${subasta.id}`);
+        }
     })
 
     document.getElementById("cancel-button")!.addEventListener("click", () => {

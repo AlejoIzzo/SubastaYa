@@ -1,5 +1,6 @@
 import { postPuja } from "../api/pujaApi";
 import { getSaldoDisponible } from "../api/usuariosApi";
+import { showButtonLoading, showButtonReady } from "../components/spinner";
 import type { CrearPujaDTO } from "../models/pujaTypes";
 import type { SubastaDetalleDTO } from "../models/subastaTypes";
 import type { UsuarioDTO } from "../models/usuarioTypes";
@@ -17,6 +18,7 @@ type Args = {
 
 export function setupPujaForm({getCurrentSubasta, getLoggedUsuario, onPujaCreated} : Args) {
     const pujaForm = document.getElementById("puja-form") as HTMLFormElement
+    const submitButton = document.getElementById("submit-button") as HTMLButtonElement
     pujaForm.addEventListener("submit", async (event) => {
         event.preventDefault()
     
@@ -44,12 +46,16 @@ export function setupPujaForm({getCurrentSubasta, getLoggedUsuario, onPujaCreate
             compradorId: usuario.id,
             monto: monto
         }
+        
+        showButtonLoading(submitButton);
         try {
             const resultado = await postPuja(Number(subasta.id), crearPujaDTO)
             await onPujaCreated(resultado.subastaDetalle)
         } catch (err: any) {
             alert(`Ocurrió un error al registrar puja: ${err}`)
             console.error(err)
+        } finally { 
+            showButtonReady(submitButton, "Pujar");
         }
     })
     

@@ -1,21 +1,30 @@
+import { showLoading, showTableLoadingRow } from "../components/spinner"
 import { formatDateTime } from "../helpers/dateHelpers"
 import type { BilleteraDTO } from "../models/billeteraTypes"
 import type { TransaccionDTO } from "../models/transaccionTypes"
 
-export function renderBilletera(billetera: BilleteraDTO)  {
-    const saldoTotal = document.getElementById("saldo-total")!
-    const saldoDisponible = document.getElementById("saldo-disponible")!
-    const saldoRetenido = document.getElementById("saldo-retenido")!
+const saldoTotal = document.getElementById("saldo-total")!
+const saldoDisponible = document.getElementById("saldo-disponible")!
+const saldoRetenido = document.getElementById("saldo-retenido")!
 
+export function renderBilleteraLoading() {
+    showLoading(saldoTotal)
+    showLoading(saldoDisponible)
+    showLoading(saldoRetenido)
+}
+export function renderBilletera(billetera: BilleteraDTO)  {
     saldoTotal.textContent = `$ ${billetera.saldoTotal}`
     saldoDisponible.textContent = `$ ${billetera.saldoDisponible}`
     saldoRetenido.textContent = `$ ${billetera.saldoRetenido}`
 }
 
+const transaccionesTabla = document.getElementById("transacciones-tabla-body")!
+export function renderTablaTransaccionLoading() {
+    showTableLoadingRow(transaccionesTabla, 4)
+}
 export function renderTablaTransaccion(transacciones: TransaccionDTO[]) {
-    const transaccionesTabla = document.getElementById("transacciones-tabla-body")!
-
     transaccionesTabla.replaceChildren()
+    
     for (let t of transacciones) {
         transaccionesTabla.appendChild(createTransaccionFila(t))
     }

@@ -35,6 +35,10 @@ export function validatePujaForm({
         return `El monto debe superar a la puja líder por mínimo $ ${subasta.incrementoMinimo}`
     }
 
+    if (subasta.pujaActual == null && monto < subasta.precioBase + subasta.incrementoMinimo) {
+        return `El monto debe superar al precio base por mínimo $ ${subasta.incrementoMinimo}`
+    }
+
     if (Number.isNaN(monto)) {
         return "El monto debe ser un número"
     }
