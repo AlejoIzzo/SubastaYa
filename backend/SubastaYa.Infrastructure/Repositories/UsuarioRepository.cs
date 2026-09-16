@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using SubastaYa.Application.DTOs;
 using SubastaYa.Application.Interfaces;
 using SubastaYa.Data;
+using SubastaYa.Domain.Entities;
 
 namespace SubastaYa.Infrastructure.Repositories
 {
@@ -44,6 +45,11 @@ namespace SubastaYa.Infrastructure.Repositories
                     BilleteraId = u.Billetera != null ? u.Billetera.Id : (int?)null
                 })
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<Usuario?> GetByIdAsync(int id)
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
         }
     }
 }

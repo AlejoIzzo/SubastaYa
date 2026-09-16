@@ -1,6 +1,7 @@
+using SubastaYa.Application.DTOs;
+using SubastaYa.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SubastaYa.Application.DTOs;
 
 namespace SubastaYa.Application.Interfaces
 {
@@ -8,5 +9,7 @@ namespace SubastaYa.Application.Interfaces
     {
         Task<IEnumerable<UsuarioDTO>> GetAllUsuariosDTOAsync();
         Task<UsuarioDTO?> GetUsuarioDTOByIdAsync(int id);
+
+        Task<Usuario?> GetByIdAsync(int id);
     }
 }

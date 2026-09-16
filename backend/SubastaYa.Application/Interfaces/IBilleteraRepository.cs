@@ -14,6 +14,7 @@ namespace SubastaYa.Application.Interfaces
         Task<IEnumerable<TransaccionLedgerDTO>> GetTransaccionesByUsuarioIdAsync(int usuarioId);
         Task AgregarTransaccionAsync(TransaccionLedger transaccion);
         Task AgregarAuditoriaAsync(AuditoriaLog log);
+        void Update(Billetera billetera);
         Task GuardarCambiosAsync();
     }
 }
