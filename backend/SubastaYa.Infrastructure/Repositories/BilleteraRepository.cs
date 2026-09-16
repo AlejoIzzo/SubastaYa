@@ -59,7 +59,7 @@ namespace SubastaYa.Infrastructure.Repositories
                             SubastaTitulo = t.Subasta != null ? t.Subasta.Titulo : null,
                             Tipo = t.Tipo,
                             Monto = t.Monto,
-                            Fecha = t.Fecha
+                            Fecha = DateTime.SpecifyKind(t.Fecha, DateTimeKind.Utc)
                         }).ToList()
                 }).FirstOrDefaultAsync();
         }
@@ -86,7 +86,7 @@ namespace SubastaYa.Infrastructure.Repositories
                             SubastaTitulo = t.Subasta != null ? t.Subasta.Titulo : null,
                             Tipo = t.Tipo,
                             Monto = t.Monto,
-                            Fecha = t.Fecha
+                            Fecha = DateTime.SpecifyKind(t.Fecha, DateTimeKind.Utc)
                         }).ToList()
                 }).FirstOrDefaultAsync();
         }
@@ -104,7 +104,7 @@ namespace SubastaYa.Infrastructure.Repositories
                     SubastaTitulo = t.Subasta != null ? t.Subasta.Titulo : null,
                     Tipo = t.Tipo,
                     Monto = t.Monto,
-                    Fecha = t.Fecha
+                    Fecha = DateTime.SpecifyKind(t.Fecha, DateTimeKind.Utc)
                 }).ToListAsync();
         }
 

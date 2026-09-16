@@ -163,13 +163,13 @@ namespace SubastaYa.Application.Services
                     EntidadId = subasta.Id,
                     Accion = "EXTENSION_TIEMPO",
                     UsuarioId = dto.CompradorId,
-                    Fecha = now,
+                    Fecha = DateTime.SpecifyKind(now, DateTimeKind.Utc),
                     DetalleJson = JsonSerializer.Serialize(new
                     {
                         Motivo = "Regla Anti-Sniping activada",
                         SegundosRestantesAlOfertar = Math.Round(tiempoRestante.TotalSeconds, 1),
                         FechaFinAnterior = fechaFinAnterior,
-                        NuevaFechaFin = subasta.FechaFin,
+                        NuevaFechaFin = DateTime.SpecifyKind(subasta.FechaFin, DateTimeKind.Utc),
                         MontoOfertado = dto.Monto
                     })
                 };
@@ -211,9 +211,9 @@ namespace SubastaYa.Application.Services
                 CompradorId = dto.CompradorId,
                 CompradorNombre = comprador.Nombre,
                 Monto = nuevaPuja.Monto,
-                Fecha = nuevaPuja.Fecha,
+                Fecha = DateTime.SpecifyKind(nuevaPuja.Fecha, DateTimeKind.Utc),
                 AntiSnipingActivado = antiSnipingActivado,
-                FechaFinSubasta = subasta.FechaFin,
+                FechaFinSubasta = DateTime.SpecifyKind(subasta.FechaFin, DateTimeKind.Utc),
                 Mensaje = antiSnipingActivado
                     ? "Puja líder registrada con éxito. ¡Se extendió el tiempo de la subasta por 2 minutos!"
                     : "Puja líder registrada con éxito.",

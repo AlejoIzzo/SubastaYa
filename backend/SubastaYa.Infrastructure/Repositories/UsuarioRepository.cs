@@ -26,7 +26,7 @@ namespace SubastaYa.Infrastructure.Repositories
                     Id = u.Id,
                     Nombre = u.Nombre,
                     Email = u.Email,
-                    FechaRegistro = u.FechaRegistro,
+                    FechaRegistro = DateTime.SpecifyKind(u.FechaRegistro, DateTimeKind.Utc),
                     BilleteraId = u.Billetera != null ? u.Billetera.Id : (int?)null
                 })
                 .ToListAsync();
@@ -41,7 +41,7 @@ namespace SubastaYa.Infrastructure.Repositories
                     Id = u.Id,
                     Nombre = u.Nombre,
                     Email = u.Email,
-                    FechaRegistro = u.FechaRegistro,
+                    FechaRegistro = DateTime.SpecifyKind(u.FechaRegistro, DateTimeKind.Utc),
                     BilleteraId = u.Billetera != null ? u.Billetera.Id : (int?)null
                 })
                 .FirstOrDefaultAsync();

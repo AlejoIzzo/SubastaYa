@@ -41,7 +41,7 @@ namespace SubastaYa.Infrastructure.Repositories
                     CompradorId = p.CompradorId,
                     CompradorNombre = p.Comprador.Nombre,
                     Monto = p.Monto,
-                    Fecha = p.Fecha
+                    Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
                 })
                 .ToListAsync();
         }
@@ -65,7 +65,7 @@ namespace SubastaYa.Infrastructure.Repositories
                     CompradorId = p.CompradorId,
                     CompradorNombre = p.Comprador.Nombre,
                     Monto = p.Monto,
-                    Fecha = p.Fecha
+                    Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
                 })
                 .ToListAsync();
         }
