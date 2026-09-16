@@ -15,85 +15,112 @@ export function renderSubasta(subasta: SubastaDetalleDTO)  {
     descripcion.textContent = subasta.descripcion
     img.setAttribute("src", subasta.urlImagen)
     incrementoMinimo.textContent = String(subasta.incrementoMinimo)
-
-    renderSubastaDependentState(subasta)
 }
 
-/**
- * Oculta, deshabilita o habilita el formulario de puja dependiendo si el usuario es vendedor, líder u otro
- */
-export function renderUserDependentState(subasta: SubastaDetalleDTO, usuario: UsuarioDTO) {
-    if (usuario.id === subasta.vendedorId) {
-        renderFormState("oculto")
-    } else if (subasta.pujaActual && usuario.id === subasta.pujaActual.compradorId) {
-        renderFormState("deshabilitado", "No puedes pujar mientras seas el líder")
-    } else {
-        renderFormState("habilitado")
-    }
-}
-
-/**
- * Renderiza elementos que dependen del estado de la subasta
- */
-export function renderSubastaDependentState(subasta: SubastaDetalleDTO) {
-    const subastaResultadoContainer = document.getElementById("subasta-resultado-container")!
-    const pujaLiderContainer = document.getElementById("puja-lider-container")!
-
-    const timer = document.getElementById("timer")!
-    const timerLabel = document.getElementById("timer-label")!
-    const estadoLabel = document.getElementById("estado-label")!
-    const pujaLiderLabel = document.getElementById("puja-lider-label")!
-    const pujaLiderMonto = document.getElementById("puja-lider-monto")!
+export function renderSubastaState(subasta: SubastaDetalleDTO, usuario: UsuarioDTO) {
+    const timer = document.getElementById("timer")!;
+    const timerLabel = document.getElementById("timer-label")!;
+    const estadoLabel = document.getElementById("estado-label")!;
+    const pujaLiderLabel = document.getElementById("puja-lider-label")!;
+    const pujaLiderMonto = document.getElementById("puja-lider-monto")!;
     const usuarioEstadoTag = document.getElementById("usuario-puja-estado")!;
+    const pujaLiderContainer = document.getElementById("puja-lider-container")!;
+    const subastaResultadoContainer = document.getElementById("subasta-resultado-container")!;
 
+    // Renderizar elementos que dependen de si hay al menos un puja
     if (subasta.pujaActual) {
-        pujaLiderLabel.textContent = "PUJA LÍDER"
-        pujaLiderMonto.textContent = `$ ${subasta.pujaActual.monto}`
-        usuarioEstadoTag.classList.remove("hidden")
+        pujaLiderLabel.textContent = "PUJA LÍDER";
+        pujaLiderMonto.textContent = `$ ${subasta.pujaActual.monto}`;
+        usuarioEstadoTag.classList.remove("hidden");
     } else {
-        pujaLiderLabel.textContent = "PRECIO BASE"
-        pujaLiderMonto.textContent = `$ ${subasta.precioBase}`
-        usuarioEstadoTag.classList.add("hidden")
+        pujaLiderLabel.textContent = "PRECIO BASE";
+        pujaLiderMonto.textContent = `$ ${subasta.precioBase}`;
+        usuarioEstadoTag.classList.add("hidden");
     }
 
-    if (subasta.estado == "ACTIVA") {
-        timer.dataset.timerActivo = "true"
-        timerLabel.textContent = "TIEMPO RESTANTE"
+    // Resetear elementos que dependen del estado
+    estadoLabel.classList.add("hidden");
+    timer.classList.remove("hidden");
+    timerLabel.classList.remove("hidden");
+    pujaLiderContainer.classList.remove("hidden");
+    subastaResultadoContainer.classList.add("hidden");
 
-        estadoLabel.classList.add("hidden")
-    } else if (subasta.estado == "PROGRAMADA") {
-        timer.dataset.timerActivo = "true"
-        timerLabel.textContent = "COMIENZA EN"
+    switch (subasta.estado) {
+        case "ACTIVA": {
+            timer.dataset.timerActivo = "true";
+            timerLabel.textContent = "TIEMPO RESTANTE";
 
-        estadoLabel.classList.add("hidden")
-        renderFormState("deshabilitado")
-    } else { 
-        // finalizada o desierta
-        timer.dataset.timerActivo = "false"
-        
-        const subastaResultadoLabel = document.getElementById("subasta-resultado-label")!
-        const pujaGanadoraMonto = document.getElementById("puja-ganadora-monto")!
+            if (usuario.id === subasta.vendedorId) {
+                renderFormState("oculto");
+            } else if (
+                subasta.pujaActual?.compradorId === usuario.id
+            ) {
+                renderFormState(
+                    "deshabilitado",
+                    "No puedes pujar mientras seas el líder"
+                );
+            } else {
+                renderFormState("habilitado");
+            }
 
-        pujaLiderContainer.classList.add("hidden")
-        subastaResultadoContainer.classList.remove("hidden")
-            
-        estadoLabel.classList.remove("hidden")
-        timerLabel.classList.add("hidden")
-        timer.classList.add("hidden")
+            break;
+        }
 
-        renderFormState("oculto")
+        case "PROGRAMADA": {
+            timer.dataset.timerActivo = "true";
+            timerLabel.textContent = "COMIENZA EN";
 
-        if (subasta.estado == "FINALIZADA") {
-            estadoLabel.textContent = "SUBASTA FINALIZADA"
-            subastaResultadoLabel.textContent = "Se subasto por"
-            pujaGanadoraMonto.textContent = `$ ${String(subasta.pujaActual?.monto)}`
-            
-        } else if (subasta.estado == "DESIERTA") {
-            estadoLabel.textContent = "SUBASTA DESIERTA"
-            subastaResultadoLabel.textContent = "No hubo ningúna puja"
+            renderFormState("deshabilitado");
+
+            break;
+        }
+
+        case "FINALIZADA": {
+            timer.dataset.timerActivo = "false";
+            timer.classList.add("hidden");
+            timerLabel.classList.add("hidden");
+
+            estadoLabel.textContent = "SUBASTA FINALIZADA";
+            estadoLabel.classList.remove("hidden");
+
+            subastaResultadoContainer.classList.remove("hidden");
+            pujaLiderContainer.classList.add("hidden");
+
+            const subastaResultadoLabel = document.getElementById("subasta-resultado-label")!;
+            const pujaGanadoraMonto = document.getElementById("puja-ganadora-monto")!;
+
+            subastaResultadoLabel.textContent = subasta.pujaActual?.compradorId == usuario.id
+                                                    ? "Ganaste la subasta por"
+                                                    : "Se subastó por"
+
+            pujaGanadoraMonto.textContent = `$ ${subasta.pujaActual?.monto ?? ""}`;
+
+            renderFormState("oculto");
+
+            break;
+        }
+
+        case "DESIERTA": {
+            timer.dataset.timerActivo = "false";
+            timer.classList.add("hidden");
+            timerLabel.classList.add("hidden");
+
+            estadoLabel.textContent = "SUBASTA DESIERTA";
+            estadoLabel.classList.remove("hidden");
+
+            subastaResultadoContainer.classList.remove("hidden");
+            pujaLiderContainer.classList.add("hidden");
+
+            const subastaResultadoLabel =
+                document.getElementById("subasta-resultado-label")!;
+
+            subastaResultadoLabel.textContent = "No hubo ninguna puja";
+
+            renderFormState("oculto");
+
+            break;
         }
     }
-
 }
 
 export function renderFormState(estado: "habilitado" | "deshabilitado" | "oculto", tooltipText?: string) {
@@ -236,7 +263,7 @@ export function updateTimer(subasta: SubastaDetalleDTO) {
     if (remaining <= 0) {
         timer.dataset.timerActivo = "false"
         
-        timer.textContent = timer.dataset.estado == "ACTIVA" ? "Finalizada" : "Comenzando..."
+        // timer.textContent = timer.dataset.estado == "ACTIVA" ? "Finalizando..." : "Comenzando..."
         return
     }
 

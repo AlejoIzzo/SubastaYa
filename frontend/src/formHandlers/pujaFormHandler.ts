@@ -7,7 +7,7 @@ import { validatePujaForm } from "../validation/pujaValidation";
 import { toggleErrorDisplay } from "../views/subastaView";
 
 type Args = {
-    getCurrentSubasta: () => Promise<SubastaDetalleDTO>
+    getCurrentSubasta: () => SubastaDetalleDTO
     getLoggedUsuario: () => Promise<UsuarioDTO>
     /**
      * Función a ejecutar una vez confirmada la creación de la puja, se pasa el nuevo estado de la subasta recibido del backend
@@ -25,11 +25,10 @@ export function setupPujaForm({getCurrentSubasta, getLoggedUsuario, onPujaCreate
         const monto = Number(formData.get("monto"))
 
         // obtener objetos mediante getters para evitar stale objects
-        const subasta = await getCurrentSubasta()
+        const subasta = getCurrentSubasta()
         const usuario = await getLoggedUsuario()
         
         const usuarioSaldoDisponible = await getSaldoDisponible(usuario.id)
-        
         const error = validatePujaForm({
             usuario,
             usuarioSaldoDisponible,

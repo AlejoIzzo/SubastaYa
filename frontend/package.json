@@ -11,5 +11,8 @@
   "devDependencies": {
     "typescript": "~6.0.2",
     "vite": "^8.2.2"
+  },
+  "dependencies": {
+    "@microsoft/signalr": "^10.0.11"
   }
 }

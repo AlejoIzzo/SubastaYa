@@ -33,9 +33,11 @@ export function validateSubastaForm(subasta: CrearSubastaDTO): SubastaValidation
     
     const diff = subasta.fechaFin.getTime() - inicio.getTime()
     const duracionMinutos = Math.floor(diff / (1000 * 60));
-    if (duracionMinutos <= 30) {
-        errors.fechaFin = "La subasta debe durar por lo menos 30 minutos"
-    }
+    // deshabilitar validación de duración para testear websockets
+    // TODO: rehabilitar
+    // if (duracionMinutos <= 5) {
+    //     errors.fechaFin = "La subasta debe durar por lo menos 5 minutos"
+    // }
     
     if (inicio > subasta.fechaFin)
         errors.fechaFin = "La fecha de cierre debe ser posterior a las de inicio"

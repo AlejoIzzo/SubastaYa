@@ -1,6 +1,6 @@
 import { getSubasta } from "../api/subastaApi";
 import { renderHeader } from "../components/header";
-import { getSaldoDisponible, getUsuario } from "../api/usuariosApi";
+import { getSaldoDisponible } from "../api/usuariosApi";
 import { validatePujaForm } from "../validation/pujaValidation";
 import { setupPujaForm } from "../formHandlers/pujaFormHandler";
 import type { SubastaDetalleDTO } from "../models/subastaTypes";
@@ -11,13 +11,14 @@ import {
     renderSubasta, 
     sugerirPuja, 
     updatePujaEstadoTag, 
-    renderUserDependentState, 
     toggleErrorDisplay, 
-    renderSubastaDependentState, 
-    updateTimer 
+    updateTimer,
+    renderSubastaState, 
 } from "../views/subastaView";
 import { refreshPujasDates, refreshUserPujas } from "../components/pujaCard";
 import { getLoggedUsuario } from "../helpers/usuarioHelpers";
+import * as signalR from "@microsoft/signalr";
+import type { PujaResultadoDTO } from "../models/pujaTypes";
 
 const params = new URLSearchParams(window.location.search);
 const subastaId = params.get("id");
@@ -31,26 +32,37 @@ async function init() {
     const headerContainer = document.getElementById("header")!
     renderHeader(headerContainer)
 
-    renderUserDependentState(subasta, usuario)
     renderSubasta(subasta)
+    renderSubastaState(subasta, usuario)
     renderPujaList(subasta.ultimasPujas, usuario)
 
     setSaldoUsuario(await getSaldoDisponible(usuario.id))
     updatePujaEstadoTag(subasta, usuario)
     sugerirPuja(subasta.pujaActual!, subasta.incrementoMinimo)
 
+    function applySubastaUpdate(updated: SubastaDetalleDTO) {
+        subasta = updated;
+
+        if (updated.pujaActual) {
+            updatePujaLider(updated.pujaActual!.monto);
+            sugerirPuja(updated.pujaActual!, updated.incrementoMinimo);
+        }
+
+        renderPujaList(updated.ultimasPujas, usuario);
+        updatePujaEstadoTag(updated, usuario);
+        renderSubastaState(subasta, usuario)
+    }
+    function getCurrentSubasta() {
+       return subasta
+    }
+
     setupPujaForm({
         getCurrentSubasta,
         getLoggedUsuario,
         onPujaCreated: async (subastaUpdated: SubastaDetalleDTO) => {
-            subasta = subastaUpdated
+            applySubastaUpdate(subastaUpdated)
 
-            updatePujaLider(subasta.pujaActual!.monto)
             setSaldoUsuario(await getSaldoDisponible(usuario.id))
-            renderPujaList(subasta.ultimasPujas, usuario)
-            updatePujaEstadoTag(subasta, usuario)
-            renderUserDependentState(subasta, usuario)
-            sugerirPuja(subasta.pujaActual!, subasta.incrementoMinimo)
         }
     })
 
@@ -60,8 +72,7 @@ async function init() {
 
         setSaldoUsuario(await getSaldoDisponible(usuario.id))
         updatePujaEstadoTag(subasta, usuario)
-        renderUserDependentState(subasta, usuario)
-        renderSubastaDependentState(subasta)
+        renderSubastaState(subasta, usuario)
         refreshUserPujas(usuario)
     });
     
@@ -86,13 +97,43 @@ async function init() {
 
     // "hace x" de pujas
     window.setInterval(() => refreshPujasDates(), 60000)
+
+
+    // --- websockets config ---
+
+    // conexión hacia el backend
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://localhost:7282/hubs/subastas")
+        .withAutomaticReconnect()
+        .build();
+
+    // escuchar nuevas ofertas de otros usuarios en vivo
+    connection.on("RecibirPuja", (pujaResultado: PujaResultadoDTO) => {
+        applySubastaUpdate(pujaResultado.subastaDetalle)
+
+        // i think this ain't needed
+        // Si se extendió por anti-sniping:
+        if (pujaResultado.antiSnipingActivado) {
+            // subasta.fechaFin = puja.fechaFinSubasta; // i think this ain't needed
+            alert("¡Tiempo extendido por Anti-Sniping (+2 min)!");
+        }
+    });
+
+    // escuchar cuando el Background Worker incia la subasta
+    connection.on("SubastaIniciada", (subsataUpdated: SubastaDetalleDTO) => {
+        applySubastaUpdate(subsataUpdated)
+        alert("¡La subasta comenzó!");
+    });
+
+    // escuchar cuando el Background Worker cierra la subasta
+    connection.on("SubastaFinalizada", (subsataUpdated: SubastaDetalleDTO) => {
+        applySubastaUpdate(subsataUpdated)
+        alert("¡La subasta ha finalizado!");
+    });
+
+    // 4. Iniciar y unirse a la sala de esta subasta
+    await connection.start();
+    await connection.invoke("UnirseASubasta", Number(subastaId));
 }
 
 init()
-
-// helpers
-
-
-async function getCurrentSubasta() {
-    return await getSubasta(Number(subastaId))
-}
