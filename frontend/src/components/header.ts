@@ -14,10 +14,10 @@ const usuarioSelect = clone.querySelector("#usuario-select") as HTMLSelectElemen
 async function cargarUsuarios() {
     const usuarios = await getUsuarios()
 
-    let loggedUserId = Number(localStorage.getItem("usuarioId"))
+    let loggedUserId = Number(sessionStorage.getItem("usuarioId"))
     if (loggedUserId == null) {
         loggedUserId = usuarios?.[0].id
-        localStorage.setItem("usuarioId", String(loggedUserId))
+        sessionStorage.setItem("usuarioId", String(loggedUserId))
     }
 
     for (let usuario of usuarios) {
@@ -38,7 +38,7 @@ cargarUsuarios()
 usuarioSelect.addEventListener("change", () => {
     const usuarioId = usuarioSelect.value
 
-    localStorage.setItem("usuarioId", usuarioId) // localStorage guarda como string
+    sessionStorage.setItem("usuarioId", usuarioId) // sessionStorage guarda como string
 
     // disparar evento para poder refrescar usuario en páginas que lo necesiten
     document.dispatchEvent(

@@ -2,9 +2,9 @@ import { getBilletera } from "../api/billeteraApi"
 import { getUsuario, getUsuarioDashboard } from "../api/usuariosApi"
 
 export async function getLoggedUsuario() { 
-    const usuario = await getUsuario(Number(localStorage.getItem("usuarioId")))
+    const usuario = await getUsuario(Number(sessionStorage.getItem("usuarioId")))
     if (usuario == null) {
-        throw new Error("Error al obtener usuario desde localStorage")
+        throw new Error("Error al obtener usuario desde sessionStorage")
     }
     return usuario
 }
