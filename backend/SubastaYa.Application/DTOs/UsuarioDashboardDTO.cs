@@ -6,6 +6,6 @@ namespace SubastaYa.Application.DTOs
     {
         public UsuarioEstadisticasDTO UsuarioEstadisticas { get; set; } = new UsuarioEstadisticasDTO();
         public IEnumerable<UsuarioSubastaDTO> UsuarioSubastas { get; set; } = new List<UsuarioSubastaDTO>();
-        public IEnumerable<UsuarioParticipacionSubastaDTO> UsuariosParticipacionSubastas { get; set; } = new List<UsuarioParticipacionSubastaDTO>();
+        public IEnumerable<UsuarioParticipacionSubastaDTO> UsuarioParticipacionSubastas { get; set; } = new List<UsuarioParticipacionSubastaDTO>();
     }
 }

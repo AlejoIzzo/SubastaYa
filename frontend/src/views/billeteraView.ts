@@ -46,10 +46,3 @@ function createTransaccionFila(transaccion: TransaccionDTO) {
 
     return clone
 }
-
-// export function updateTablaTransaccion(nuevaTransaccion: TransaccionDTO) {
-//     const transaccionesTabla = document.getElementById("transacciones-tabla")!
-
-//     transaccionesTabla.appendChild(createTransaccionFila(nuevaTransaccion))
-// }
-

@@ -49,7 +49,7 @@ namespace SubastaYa.Application.Services
                     TotalRecaudado = totalRecaudado,
                     TotalPujado = totalPujado
                 },
-                UsuariosParticipacionSubastas = participaciones,
+                UsuarioParticipacionSubastas = participaciones,
                 UsuarioSubastas = subastas
             };
         }

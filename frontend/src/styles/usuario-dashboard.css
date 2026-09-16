@@ -1,0 +1,98 @@
+main {
+    padding: 1rem;
+}
+
+.pagina-titulo {
+    color: var(--primary);
+    margin-bottom: .25rem;
+    & h1 {
+        font-weight: 500;
+    }
+}
+
+.cards-container {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.card,
+.tablas-section {
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--card);
+    flex: 1;
+}
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    & ion-icon {
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+}
+.card-value {
+    font-size: 40px;
+    font-weight: 600;
+}
+
+.tablas-section {
+    margin-top: 10px;
+
+}
+
+.tablas-section-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-button {
+    padding: .25rem .5rem;
+}
+
+.tab-button.selected {
+    color: var(--primary);
+    font-weight: 500;
+    border-bottom: 1px solid var(--primary);
+}
+
+.tabla-container {
+    width: 100%;
+    overflow-x: auto;
+    /* border-bottom: 1px solid var(--border-color); */
+    
+    & table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+}
+
+.tabla-container thead th {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tabla-container th,
+.tabla-container td {
+    padding: .75rem 1rem;
+    text-align: left;
+
+}
+
+.tabla-container th {
+    font-weight: 600;
+}
+
+.tabla-container td {
+    /* border-bottom: 1px solid var(--border-color); */
+}
+
+.tabla-container tbody tr:last-child td {
+    /* border-bottom: 1px solid var(--border-color); */
+}
+
+.tabla-container tbody tr:hover {
+    background: var(--surface-hover);
+}

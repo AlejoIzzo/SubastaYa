@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>SubastaYa - Publicar Subasta</title>
+
+    <link rel="stylesheet" href="/src/styles/style.css">
+    <link rel="stylesheet" href="/src/styles/header.css">
+    <link rel="stylesheet" href="/src/styles/usuario-dashboard.css">
+  </head>
+  <body>
+    <header id="header" class="header">
+    </header>
+    <main>
+        <h1 class="pagina-titulo">Dashboard</h1>
+        <div class="cards-container">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-title">Subastas activas</p>
+                    <ion-icon name="pulse-outline"></ion-icon>
+                </div>
+                <div class="card-body">
+                    <p class="card-value" id="subastas-activas"></p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-title">Subastas ganadas</p>
+                    <ion-icon name="trophy-outline"></ion-icon>
+                </div>
+                <div class="card-body">
+                    <p class="card-value" id="subastas-ganadas"></p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-title">Total recaudado</p>
+                    <ion-icon name="trending-up-outline"></ion-icon>
+                </div>
+                <div class="card-body">
+                    <p class="card-value" id="total-recaudado">$ </p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-title">Total pujado</p>
+                    <ion-icon name="stats-chart-outline"></ion-icon>
+                </div>
+                <div class="card-body">
+                    <p class="card-value" id="total-pujado">$ </p>
+                </div>
+            </div>
+        </div>
+        <div class="tablas-section">
+            <div class="tablas-section-header">
+                <button class="tab-button selected" data-tabla="mis-pujas-tabla" id="mis-subastas-tab-button">
+                    <p class="tab-titulo">Mis subastas</p>
+                </button>
+                <button class="tab-button" data-tabla="mis-subastas-tabla" id="mis-pujas-tab-button">
+                    <p class="tab-titulo">Mis pujas</p>
+                </button>
+            </div>
+            <div class="tablas-section-body">
+                <div class="tabla-container">
+                    <table class="tabla" id="mis-subastas-tabla">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Puja líder</th>
+                                <th>Cantidad de pujas</th>
+                                <th>Estado</th>
+                                <th>Termina/comienza en</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mis-subastas-tabla-body">
+                            
+                        </tbody>
+                    </table>
+                    <table class="tabla hidden" id="mis-pujas-tabla">
+                        <thead>
+                            <tr>
+                                <th>Subasta</th>
+                                <th>Tu ultima puja</th>
+                                <th>Puja líder</th>
+                                <th>Estado</th>
+                                <th>Termina en</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mis-pujas-tabla-body">
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script type="module" src="/src/pages/usuarioDashboardController.ts"></script>
+    <script type="module" src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@8.0.13/dist/ionicons/ionicons.js"></script>
+
+    <template id="mis-subastas-row-template">
+        <tr>
+            <td class="row-subasta-nombre"></td>
+            <td class="row-puja-lider"></td>
+            <td class="row-cantidad-pujas"></td>
+            <td class="row-subasta-estado"></td>
+            <td class="row-timer"></td>
+        </tr>
+    </template>
+
+    <template id="mis-pujas-row-template">
+        <tr>
+            <td class="row-subasta-nombre"></td>
+            <td class="row-puja-usuario"></td>
+            <td class="row-puja-lider"></td>
+            <td class="row-usuario-estado"></td>
+            <td class="row-timer"></td>
+        </tr>
+    </template>
+  </body>
+
+</html>
