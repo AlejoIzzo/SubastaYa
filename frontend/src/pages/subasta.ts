@@ -13,7 +13,8 @@ import {
     updatePujaEstadoTag, 
     toggleErrorDisplay, 
     updateTimer,
-    renderSubastaState, 
+    renderSubastaState,
+    renderSubastaNotFound, 
 } from "../views/subastaView";
 import { refreshPujasDates, refreshUserPujas } from "../components/pujaCard";
 import { getLoggedUsuario } from "../helpers/usuarioHelpers";
@@ -21,21 +22,29 @@ import * as signalR from "@microsoft/signalr";
 import type { PujaResultadoDTO } from "../models/pujaTypes";
 import { showLoading } from "../components/spinner";
 import { showToast } from "../components/toast";
+import { ApiError } from "../api/client";
 
 const params = new URLSearchParams(window.location.search);
 const subastaId = params.get("id");
-if (!subastaId)
+if (!subastaId) {
     throw new Error("Error al obtener ID de subasta desde url")
+}
 
 async function init() {
+    const headerContainer = document.getElementById("header")!
+    renderHeader(headerContainer)
+    
     const pujaListContainer = document.getElementById("puja-list")!
     showLoading(pujaListContainer)
     
-    let subasta = await getSubasta(Number(subastaId))
+    // inicializar y re-asignar de esta forma por errores de inferencia de typescript
+    const subastaInicial = await cargarSubasta(Number(subastaId))
+    if (!subastaInicial)
+        return
+
+    let subasta = subastaInicial
     let usuario = await getLoggedUsuario()
     
-    const headerContainer = document.getElementById("header")!
-    renderHeader(headerContainer)
 
     renderSubasta(subasta)
     renderSubastaState(subasta, usuario)
@@ -140,3 +149,17 @@ async function init() {
 }
 
 init()
+
+async function cargarSubasta(subastaId: number) {
+    
+    try {
+        const subasta = await getSubasta(Number(subastaId))
+        return subasta
+    } catch (err) {
+        if (err instanceof ApiError && err.status === 404) {
+            renderSubastaNotFound();
+        }
+        console.log(err)
+        return null
+    }
+}

@@ -294,3 +294,15 @@ export function updateTimer(subasta: SubastaDetalleDTO) {
     
     timer.textContent = timerText
 }
+
+export function renderSubastaNotFound() {
+    const container = document.querySelector("main")!;
+
+    container.innerHTML = `
+        <section class="not-found">
+            <p class="not-found-title">Subasta no encontrada</p>
+            <p class="not-found-description">La subasta que estás buscando no existe o ya no está disponible.</p>
+            <a href="/index.html" class="primary-text-button">Volver al catálogo</a>
+        </section>
+    `;
+}
