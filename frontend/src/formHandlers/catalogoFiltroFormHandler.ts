@@ -1,49 +1,125 @@
 import { renderSubastaCatalogoLoading } from "../views/catalogoView"
 
 type Args = {
-    // onSubastasUpdate: (subastas: SubastaCatalogoDTO[]) => void
     onFiltrosAplicados: (filtrosFormData: FormData) => void
 }
 
 export function setupFiltroForm({onFiltrosAplicados}: Args) {
     const filtrosForm = document.getElementById("filtros-form") as HTMLFormElement
-    const searchForm = document.getElementById("search-form") as HTMLFormElement
     
     let filtrosFormData = new FormData()
 
-    function updateFiltroFormData() {
-        // data de categoria, estado, precioMin y precioMax
-        const filtroFormData = new FormData(filtrosForm);
-        for (const [key, value] of filtroFormData.entries()) {
-            if (value != null) {
-                filtrosFormData.set(key, value.toString());
+    function cargarFiltrosDesdeUrl() {
+        const params = new URLSearchParams(window.location.search);
+
+        filtrosFormData = new FormData();
+
+        for (const [key, value] of params.entries()) {
+            if (value !== "") {
+                filtrosFormData.set(key, value);
             }
         }
-        console.log(filtroFormData)
-        
-        // data de la barra de busqueda
-        const searchFormData = new FormData(searchForm);
-        filtrosFormData.set("busqueda", searchFormData.get("busqueda") ?? "")
     }
 
-    async function aplicarFiltros() {
-        updateFiltroFormData()
-        renderSubastaCatalogoLoading()
-        
-        // const subastas = await getSubastaCatalogo(filtrosFormData)
-        // onSubastasUpdate(subastas)
-        
-        // volver a página 1 al aplicar filtros nuevos
-        onFiltrosAplicados(filtrosFormData)
-        // await cargarPagina(1);
+    function sincronizarFormConUrl() {
+        const params = new URLSearchParams(window.location.search);
+
+        // categoria
+        const categoriaId = params.get("categoriaId");
+        if (categoriaId) {
+            const categoriaInput = filtrosForm.querySelector<HTMLInputElement>(
+                `input[name="categoriaId"][value="${CSS.escape(categoriaId)}"]`
+            );
+
+            if (categoriaInput) {
+                categoriaInput.checked = true;
+            }
+        }
+
+        // estado
+        const estado = params.get("estado");
+        if (estado) {
+            const estadoInput = filtrosForm.querySelector<HTMLInputElement>(
+                `input[name="estado"][value="${CSS.escape(estado)}"]`
+            );
+
+            if (estadoInput) {
+                estadoInput.checked = true;
+            }
+        }
+
+        // precio mínimo
+        const precioMin = params.get("precioMin");
+        const precioMinInput = filtrosForm.querySelector<HTMLInputElement>(
+            '[name="precioMin"]'
+        );
+
+        if (precioMinInput) {
+            precioMinInput.value = precioMin ?? "";
+        }
+
+        // precio máximo
+        const precioMax = params.get("precioMax");
+        const precioMaxInput = filtrosForm.querySelector<HTMLInputElement>(
+            '[name="precioMax"]'
+        );
+
+        if (precioMaxInput) {
+            precioMaxInput.value = precioMax ?? "";
+        }
+    }
+
+    function actualizarFiltrosDesdeForm() {
+        const formData = new FormData(filtrosForm);
+
+        filtrosFormData = new FormData();
+
+        const busqueda = new URLSearchParams(window.location.search).get("busqueda")
+        if (busqueda) {
+            filtrosFormData.set("busqueda", busqueda)
+        }
+        for (const [key, value] of formData.entries()) {
+            const stringValue = value.toString().trim();
+
+            // "all" significa que no queremos filtrar por ese campo
+            if (stringValue !== "" && stringValue !== "all") {
+                filtrosFormData.set(key, stringValue);
+            }
+        }
+    }
+    function actualizarUrl() {
+        const url = new URL(window.location.href);
+
+        // Solamente reemplazamos los parámetros que maneja el catálogo.
+        url.searchParams.delete("categoriaId");
+        url.searchParams.delete("estado");
+        url.searchParams.delete("precioMin");
+        url.searchParams.delete("precioMax");
+
+        for (const [key, value] of filtrosFormData.entries()) {
+            if (key === "busqueda") {
+                continue;
+            }
+
+            url.searchParams.set(key, value.toString());
+        }
+
+        window.history.pushState({}, "", url);
     }
     
-    filtrosForm.addEventListener("submit", async (event) => {
-        event.preventDefault()
-        await aplicarFiltros()
-    })
+    async function aplicarFiltros() {
+        actualizarFiltrosDesdeForm()
+        actualizarUrl()
+
+        renderSubastaCatalogoLoading()
+
+        onFiltrosAplicados(filtrosFormData)
+    }
     
-    searchForm.addEventListener("submit", async (event) => {
+    cargarFiltrosDesdeUrl();
+    sincronizarFormConUrl();
+    
+    filtrosForm.addEventListener("submit", async (event) => {
         event.preventDefault()
         await aplicarFiltros()
     })
@@ -55,5 +131,7 @@ export function setupFiltroForm({onFiltrosAplicados}: Args) {
             document.querySelector<HTMLInputElement>(".categorias-container input")!.checked = true
         });
     })
+
+    return filtrosFormData
 
 }

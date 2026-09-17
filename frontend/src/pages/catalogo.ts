@@ -5,6 +5,9 @@ import { setupFiltroForm } from "../formHandlers/catalogoFiltroFormHandler";
 import { renderCategoriaSectionLoading, renderFilterSection, renderSubastaCatalogo, renderSubastaCatalogoLoading, updateTimers } from "../views/catalogoView";
 
 async function init() {
+    // const params = new URLSearchParams(window.location.search)
+    // const busqueda = params.get("busqueda") ?? ""
+
     renderHeader(document.getElementById("header")!)
     
     renderSubastaCatalogoLoading()
@@ -12,6 +15,10 @@ async function init() {
     const categorias = await getCategorias()
     
     let filtrosFormData = new FormData();
+    // if (busqueda) {
+    //     filtrosFormData.set("busqueda", busqueda)
+    // }
+
     let paginaActual = 1;
     const tamanioPagina = 12;
 
@@ -34,16 +41,18 @@ async function init() {
 
         return resultado
     }
-    let subastasPaginado = await cargarPagina(1)
     
     renderFilterSection(categorias)
     
-    setupFiltroForm({
+    filtrosFormData = setupFiltroForm({
         onFiltrosAplicados: async (formData) => {
             filtrosFormData = formData
-            subastasPaginado = await cargarPagina(1) // volver a página 1 al aplicar filtros
+
+            // Cuando cambia un filtro, volver a página 1
+            await cargarPagina(1)
         }
     })
+    let subastasPaginado = await cargarPagina(1)
     
     window.setInterval(updateTimers, 1000)
 }

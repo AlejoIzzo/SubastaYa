@@ -1,6 +1,7 @@
 import { renderPaginacion } from "../components/paginacionNav"
 import { showLoading, showTableLoadingRow } from "../components/spinner"
 import { formatDateTime } from "../helpers/dateHelpers"
+import { formatNumber } from "../helpers/stringHelpers"
 import type { BilleteraDTO } from "../models/billeteraTypes"
 import type { PaginatedResultDTO } from "../models/paginationType"
 import type { TransaccionDTO } from "../models/transaccionTypes"
@@ -15,9 +16,9 @@ export function renderBilleteraLoading() {
     showLoading(saldoRetenido)
 }
 export function renderBilletera(billetera: BilleteraDTO)  {
-    saldoTotal.textContent = `$ ${billetera.saldoTotal}`
-    saldoDisponible.textContent = `$ ${billetera.saldoDisponible}`
-    saldoRetenido.textContent = `$ ${billetera.saldoRetenido}`
+    saldoTotal.textContent = `$ ${formatNumber(billetera.saldoTotal)}`
+    saldoDisponible.textContent = `$ ${formatNumber(billetera.saldoDisponible)}`
+    saldoRetenido.textContent = `$ ${formatNumber(billetera.saldoRetenido)}`
 }
 
 const transaccionesTabla = document.getElementById("transacciones-tabla-body")!
@@ -68,7 +69,7 @@ function createTransaccionFila(transaccion: TransaccionDTO) {
     const monto = clone.querySelector(".row-monto")!
 
     fecha.textContent = formatDateTime(new Date(transaccion.fecha))
-    monto.textContent = `$ ${transaccion.monto}`
+    monto.textContent = `$ ${formatNumber(transaccion.monto)}`
 
     if (transaccion.tipo == "LIBERACION") {
         descripcion.textContent = `Liberación por puja superada`

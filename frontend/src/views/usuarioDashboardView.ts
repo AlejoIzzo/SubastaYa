@@ -1,6 +1,6 @@
 import { renderPaginacion } from "../components/paginacionNav"
 import { showLoading, showTableLoadingRow } from "../components/spinner"
-import { capitalize } from "../helpers/stringHelpers"
+import { capitalize, formatNumber } from "../helpers/stringHelpers"
 import type { PaginatedResultDTO } from "../models/paginationType"
 import type { UsuarioDashboardDTO, UsuarioParticipacionSubastaDTO, UsuarioSubastaDTO } from "../models/usuarioTypes"
 
@@ -16,10 +16,10 @@ export function renderUsuarioDashboardLoading()  {
     showLoading(totalPujado)
 }
 export function renderUsuarioDashboard(UsuarioDashboard: UsuarioDashboardDTO)  {
-    subastasGanadas.textContent = `${UsuarioDashboard.usuarioEstadisticas.subastasGanadas}`
-    subastasActivas.textContent = `${UsuarioDashboard.usuarioEstadisticas.subastasActivas}`
-    totalRecaudado.textContent = `$ ${UsuarioDashboard.usuarioEstadisticas.totalRecaudado}`
-    totalPujado.textContent = `$ ${UsuarioDashboard.usuarioEstadisticas.totalPujado}`
+    subastasGanadas.textContent = `${formatNumber(UsuarioDashboard.usuarioEstadisticas.subastasGanadas)}`
+    subastasActivas.textContent = `${formatNumber(UsuarioDashboard.usuarioEstadisticas.subastasActivas)}`
+    totalRecaudado.textContent = `$ ${formatNumber(UsuarioDashboard.usuarioEstadisticas.totalRecaudado)}`
+    totalPujado.textContent = `$ ${formatNumber(UsuarioDashboard.usuarioEstadisticas.totalPujado)}`
 }
 
 const misSubastasTabla = document.getElementById("mis-subastas-tabla")!
@@ -105,9 +105,9 @@ function createMisSubastasFila(usuarioSubastas: UsuarioSubastaDTO) {
 
     subastaNombre.textContent = usuarioSubastas.titulo
     pujaLider.textContent = usuarioSubastas.pujaLider 
-                                ? String(usuarioSubastas.pujaLider.monto)
+                                ? formatNumber(usuarioSubastas.pujaLider.monto)
                                 : " - "
-    cantidadPujas.textContent = usuarioSubastas.cantidadPujas.toString()
+    cantidadPujas.textContent = formatNumber(usuarioSubastas.cantidadPujas)
     subastaEstado.textContent = capitalize(usuarioSubastas.estado)
 
     if (usuarioSubastas.estado == "ACTIVA") {
@@ -133,8 +133,8 @@ function createMisPujasFila(usuarioParticipacionSubastas: UsuarioParticipacionSu
     const timer = clone.querySelector(".row-timer")! as HTMLElement
 
     subastaNombre.textContent = usuarioParticipacionSubastas.titulo
-    pujaLider.textContent = usuarioParticipacionSubastas.pujaLider.monto.toString()
-    usuarioUltimaPuja.textContent = usuarioParticipacionSubastas.ultimaPujaUsuario.monto.toString()
+    pujaLider.textContent = formatNumber(usuarioParticipacionSubastas.pujaLider.monto)
+    usuarioUltimaPuja.textContent = formatNumber(usuarioParticipacionSubastas.ultimaPujaUsuario.monto)
     
     if (usuarioParticipacionSubastas.ultimaPujaUsuario.compradorId === usuarioParticipacionSubastas.pujaLider.compradorId) {
         usuarioEstado.textContent = usuarioParticipacionSubastas.estado == "ACTIVA"

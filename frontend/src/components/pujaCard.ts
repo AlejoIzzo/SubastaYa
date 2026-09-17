@@ -1,3 +1,4 @@
+import { formatNumber } from "../helpers/stringHelpers"
 import type { PujaDTO } from "../models/pujaTypes"
 import type { UsuarioDTO } from "../models/usuarioTypes"
 import htmlTemplate from "./puja-card.html?raw" 
@@ -14,7 +15,7 @@ export function createPujaCardElement(dto: PujaDTO, usuario: UsuarioDTO) {
 
     pujaComprador.textContent = dto.compradorNombre
     pujaFecha.textContent = `${getPujaDate(new Date(dto.fecha))}`
-    pujaMonto.textContent = `$ ${String(dto.monto)}`
+    pujaMonto.textContent = `$ ${formatNumber(dto.monto)}`
     
     pujaFecha.dataset.fecha = dto.fecha
     pujaContainer.dataset.compradorId = String(dto.compradorId)
@@ -26,7 +27,6 @@ export function createPujaCardElement(dto: PujaDTO, usuario: UsuarioDTO) {
 
 export function refreshUserPujas(usuario: UsuarioDTO) {
     const pujaContainers = document.querySelectorAll('.puja-card')!
-    console.log(pujaContainers)
 
     pujaContainers.forEach((x: any) => {
         if (Number(x.dataset.compradorId) === usuario.id)

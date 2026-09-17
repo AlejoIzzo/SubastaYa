@@ -1,3 +1,4 @@
+import { capitalize, formatNumber } from "../helpers/stringHelpers"
 import type { SubastaCatalogoDTO } from "../models/subastaTypes"
 
 import htmlTemplate from "./subasta-card.html?raw" 
@@ -9,6 +10,7 @@ export function createSubastaCard(dto: SubastaCatalogoDTO) {
     const container = clone.querySelector(".card-container")! as HTMLElement
     const categoria = clone.querySelector(".categoria")!
     const titulo = clone.querySelector(".titulo")!
+    const pujaActualLabel = clone.querySelector(".puja-actual-label")!
     const pujaActualMonto = clone.querySelector(".puja-actual-monto")!
     const pujaContador = clone.querySelector(".puja-contador")!
     const img = clone.querySelector("#img")! as HTMLImageElement
@@ -20,7 +22,12 @@ export function createSubastaCard(dto: SubastaCatalogoDTO) {
 
     categoria.textContent = dto.categoriaNombre
     titulo.textContent = dto.titulo
-    pujaActualMonto.textContent = "$ " + dto.pujaActual
+    if (dto.estado == "ACTIVA" || dto.estado == "PROGRAMADA") {
+        pujaActualLabel.textContent = dto.cantidadPujas == 0 ? "Precio base" : "Puja líder actual"
+    } else {
+        pujaActualLabel.textContent = dto.cantidadPujas == 0 ? "Precio base" : "Puja ganadora"
+    }
+    pujaActualMonto.textContent = "$ " + formatNumber(dto.pujaActual)
     img.src = dto.urlImagen
     
     if (dto.cantidadPujas > 0)
@@ -42,7 +49,7 @@ export function createSubastaCard(dto: SubastaCatalogoDTO) {
         tiempoLabel.textContent = "Comienza en"
     }
     else if (dto.estado == "FINALIZADA" || dto.estado == "DESIERTA") {
-        tiempoLabel.textContent = "Finalizada"
+        tiempoLabel.textContent = capitalize(dto.estado)
         tiempo.dataset.timerActivo = "false"
     }
 

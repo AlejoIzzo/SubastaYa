@@ -1,4 +1,5 @@
 import { createPujaCardElement } from "../components/pujaCard"
+import { formatNumber } from "../helpers/stringHelpers"
 import type { PujaDTO } from "../models/pujaTypes"
 import type { SubastaDetalleDTO } from "../models/subastaTypes"
 import type { UsuarioDTO } from "../models/usuarioTypes"
@@ -14,7 +15,7 @@ export function renderSubasta(subasta: SubastaDetalleDTO)  {
     vendedorNombre.textContent = subasta.vendedorNombre
     descripcion.textContent = subasta.descripcion
     img.setAttribute("src", subasta.urlImagen)
-    incrementoMinimo.textContent = String(subasta.incrementoMinimo)
+    incrementoMinimo.textContent = formatNumber(subasta.incrementoMinimo)
 }
 
 export function renderSubastaState(subasta: SubastaDetalleDTO, usuario: UsuarioDTO) {
@@ -30,11 +31,11 @@ export function renderSubastaState(subasta: SubastaDetalleDTO, usuario: UsuarioD
     // Renderizar elementos que dependen de si hay al menos un puja
     if (subasta.pujaActual) {
         pujaLiderLabel.textContent = "PUJA LÍDER"
-        pujaLiderMonto.textContent = `$ ${subasta.pujaActual.monto}`
+        pujaLiderMonto.textContent = `$ ${formatNumber(subasta.pujaActual.monto)}`
         usuarioEstadoTag.classList.remove("hidden")
     } else {
         pujaLiderLabel.textContent = "PRECIO BASE"
-        pujaLiderMonto.textContent = `$ ${subasta.precioBase}`
+        pujaLiderMonto.textContent = `$ ${formatNumber(subasta.precioBase)}`
         usuarioEstadoTag.classList.add("hidden")
     }
 
@@ -159,12 +160,12 @@ export function renderFormState(estado: "habilitado" | "deshabilitado" | "oculto
 export function updatePujaLider(pujaActual: number) {
     const pujaLiderMonto = document.getElementById("puja-lider-monto")!
 
-    pujaLiderMonto.textContent = `$ ${pujaActual}`
+    pujaLiderMonto.textContent = `$ ${formatNumber(pujaActual)}`
 }
 
 export function setSaldoUsuario(saldoDisponible: number) {
     const usuarioSaldo = document.getElementById("usuario-saldo")!
-    usuarioSaldo.textContent = String(saldoDisponible)
+    usuarioSaldo.textContent = formatNumber(saldoDisponible)
 }
 
 export function renderPujaList(pujas: PujaDTO[], usuario: UsuarioDTO) {
