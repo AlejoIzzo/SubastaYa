@@ -14,8 +14,9 @@ const usuarioSelect = clone.querySelector("#usuario-select") as HTMLSelectElemen
 async function cargarUsuarios() {
     const usuarios = await getUsuarios()
 
-    let loggedUserId = Number(sessionStorage.getItem("usuarioId"))
-    if (loggedUserId == null) {
+    let loggedUserId = Number(sessionStorage.getItem("usuarioId") ?? -1)
+    // si no hay usuario elegido en la session, elegir el primero
+    if (loggedUserId === -1) {
         loggedUserId = usuarios?.[0].id
         sessionStorage.setItem("usuarioId", String(loggedUserId))
     }
