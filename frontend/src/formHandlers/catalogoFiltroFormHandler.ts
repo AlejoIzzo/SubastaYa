@@ -1,12 +1,11 @@
-import { getSubastaCatalogo } from "../api/subastaApi"
-import type { SubastaCatalogoDTO } from "../models/subastaTypes"
 import { renderSubastaCatalogoLoading } from "../views/catalogoView"
 
 type Args = {
-    onSubastasUpdate: (subastas: SubastaCatalogoDTO[]) => void
+    // onSubastasUpdate: (subastas: SubastaCatalogoDTO[]) => void
+    onFiltrosAplicados: (filtrosFormData: FormData) => void
 }
 
-export function setupFiltroForm({onSubastasUpdate}: Args) {
+export function setupFiltroForm({onFiltrosAplicados}: Args) {
     const filtrosForm = document.getElementById("filtros-form") as HTMLFormElement
     const searchForm = document.getElementById("search-form") as HTMLFormElement
     
@@ -31,8 +30,12 @@ export function setupFiltroForm({onSubastasUpdate}: Args) {
         updateFiltroFormData()
         renderSubastaCatalogoLoading()
         
-        const subastas = await getSubastaCatalogo(filtrosFormData)
-        onSubastasUpdate(subastas)
+        // const subastas = await getSubastaCatalogo(filtrosFormData)
+        // onSubastasUpdate(subastas)
+        
+        // volver a página 1 al aplicar filtros nuevos
+        onFiltrosAplicados(filtrosFormData)
+        // await cargarPagina(1);
     }
     
     filtrosForm.addEventListener("submit", async (event) => {

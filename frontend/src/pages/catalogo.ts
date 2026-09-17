@@ -9,16 +9,39 @@ async function init() {
     
     renderSubastaCatalogoLoading()
     renderCategoriaSectionLoading()
-    let subastas = await getSubastaCatalogo()
     const categorias = await getCategorias()
     
-    renderSubastaCatalogo(subastas)
+    let filtrosFormData = new FormData();
+    let paginaActual = 1;
+    const tamanioPagina = 12;
+
+    async function cargarPagina(pagina: number) {
+        renderSubastaCatalogoLoading();
+
+        const resultado = await getSubastaCatalogo(
+            filtrosFormData,
+            pagina,
+            tamanioPagina ?? 12
+        );
+
+        paginaActual = resultado.paginaActual;
+
+        renderSubastaCatalogo({
+            resultado: resultado,
+            onAnterior: () => cargarPagina(resultado.paginaActual - 1),
+            onSiguiente: () => cargarPagina(resultado.paginaActual + 1)
+        });
+
+        return resultado
+    }
+    let subastasPaginado = await cargarPagina(1)
+    
     renderFilterSection(categorias)
     
     setupFiltroForm({
-        onSubastasUpdate: (subastasFiltered) => {
-            subastas = subastasFiltered
-            renderSubastaCatalogo(subastas)
+        onFiltrosAplicados: async (formData) => {
+            filtrosFormData = formData
+            subastasPaginado = await cargarPagina(1) // volver a página 1 al aplicar filtros
         }
     })
     
@@ -26,3 +49,4 @@ async function init() {
 }
 
 init()
+

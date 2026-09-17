@@ -191,3 +191,18 @@ main:has(.not-found) {
 .not-found-description {
     margin-bottom: .75rem;
 }
+
+.paginacion {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & button {
+        display: flex;
+        align-items: center;
+    }
+    & button:enabled {
+        color: var(--primary)
+    }
+}

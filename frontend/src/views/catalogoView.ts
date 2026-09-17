@@ -1,16 +1,24 @@
+import { renderPaginacion } from "../components/paginacionNav"
 import { createRadioButton } from "../components/radio-button"
 import { showLoading } from "../components/spinner"
 import { createSubastaCard } from "../components/subastaCard"
 import type { categoriaDTO } from "../models/categoriaTypes"
+import type { PaginatedResultDTO } from "../models/paginationType"
 import type { SubastaCatalogoDTO } from "../models/subastaTypes"
 
 const cardsContainer = document.querySelector(".catalogo-cards-container")!
 export function renderSubastaCatalogoLoading() {
     showLoading(cardsContainer)
 }
-export function renderSubastaCatalogo(subastas: SubastaCatalogoDTO[]) {
-    cardsContainer.replaceChildren()
 
+type RenderSubastaCatalogoArgs = {
+    resultado: PaginatedResultDTO<SubastaCatalogoDTO>, 
+    onSiguiente: () => void, 
+    onAnterior: () => void
+}
+export function renderSubastaCatalogo({ resultado, onSiguiente, onAnterior}: RenderSubastaCatalogoArgs) {
+    cardsContainer.replaceChildren()
+    const subastas = resultado.items
     if (subastas.length <= 0) {
         const p = document.createElement("p")
         p.textContent = "No hay subastas para mostrar, pruebe ajustar los filtros o la busqueda."
@@ -21,6 +29,13 @@ export function renderSubastaCatalogo(subastas: SubastaCatalogoDTO[]) {
     for (let s of subastas) {
         cardsContainer.appendChild(createSubastaCard(s))
     }
+
+    renderPaginacion({
+        paginacionNavId: "paginacion",
+        resultado, 
+        onSiguiente, 
+        onAnterior
+    })
 }
 
 const categoriasContainer = document.querySelector(".categorias-container")!
