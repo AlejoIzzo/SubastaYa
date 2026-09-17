@@ -9,5 +9,7 @@ namespace SubastaYa.Application.Services
         Task<IEnumerable<UsuarioDTO>> GetAllUsuariosAsync();
         Task<UsuarioDTO?> GetUsuarioByIdAsync(int id);
         Task<UsuarioDashboardDTO> GetUsuarioDashboard(int id);
+        Task<PagedResultDTO<UsuarioSubastaDTO>> GetSubastasDeUsuarioPaginadasAsync(int usuarioId, int pagina = 1, int tamanioPagina = 5);
+        Task<PagedResultDTO<UsuarioParticipacionSubastaDTO>> GetSubastasParticipacionesDeUsuarioPaginadasAsync(int usuarioId, int pagina = 1, int tamanioPagina = 5);
     }
 }

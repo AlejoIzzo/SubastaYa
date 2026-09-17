@@ -46,6 +46,16 @@ namespace SubastaYa.API.Controllers
             return Ok(transacciones);
         }
 
+        [HttpGet("{billeteraId}/transacciones")]
+        public async Task<ActionResult<PagedResultDTO<TransaccionLedgerDTO>>> GetTransaccionesPaginadas(
+            int billeteraId,
+            [FromQuery] int pagina = 1,
+            [FromQuery] int tamanioPagina = 5)
+        {
+            var transacciones = await _billeteraService.GetTransaccionesPaginadasAsync(billeteraId, pagina, tamanioPagina);
+            return Ok(transacciones);
+        }
+
         [HttpPost("{billeteraId}/depositos")]
         public async Task<ActionResult<BilleteraDTO>> Depositar(int billeteraId, [FromBody] CargarSaldoDTO dto)
         {

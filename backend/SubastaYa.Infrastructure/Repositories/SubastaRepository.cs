@@ -224,6 +224,54 @@ namespace SubastaYa.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<PagedResultDTO<UsuarioSubastaDTO>> GetSubastasDeUsuarioPaginadas(int usuarioId, int pagina, int tamanioPagina)
+        {
+            var query = _context.Subastas
+                .Where(s => s.VendedorId == usuarioId)
+                .OrderByDescending(s => s.FechaInicio);
+
+            var totalItems = await query.CountAsync();
+            int skip = (pagina - 1) * tamanioPagina;
+
+            var items = await query
+                .Skip(skip)
+                .Take(tamanioPagina)
+                .Select(s => new UsuarioSubastaDTO
+                {
+                    Id = s.Id,
+                    Titulo = s.Titulo,
+                    UrlImagen = s.UrlImagen,
+                    PrecioBase = s.PrecioBase,
+                    CantidadPujas = s.Pujas.Count(),
+                    FechaInicio = DateTime.SpecifyKind(s.FechaInicio, DateTimeKind.Utc),
+                    FechaFin = DateTime.SpecifyKind(s.FechaFin, DateTimeKind.Utc),
+                    Estado = s.Estado,
+                    VendedorId = s.VendedorId,
+                    PujaLider = s.Pujas
+                        .OrderByDescending(p => p.Monto)
+                        .Select(p => new PujaDTO
+                        {
+                            Id = p.Id,
+                            SubastaId = p.SubastaId,
+                            SubastaTitulo = s.Titulo,
+                            CompradorId = p.CompradorId,
+                            CompradorNombre = p.Comprador.Nombre,
+                            Monto = p.Monto,
+                            Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
+                        })
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
+
+            return new PagedResultDTO<UsuarioSubastaDTO>
+            {
+                Items = items,
+                TotalItems = totalItems,
+                PaginaActual = pagina,
+                TamanioPagina = tamanioPagina
+            };
+        }
+
         public async Task<int> GetSubastasGanadasUsuario(int usuarioId)
         {
             var ganadas = await _context.Subastas
@@ -277,6 +325,66 @@ namespace SubastaYa.Infrastructure.Repositories
                         .First()
                 })
                 .ToListAsync();
+        }
+
+        public async Task<PagedResultDTO<UsuarioParticipacionSubastaDTO>> GetSubastasParticipacionesDeUsuarioPaginadas(int usuarioId, int pagina, int tamanioPagina)
+        {
+            var query = _context.Subastas
+                .Where(s => s.Pujas.Any(p => p.CompradorId == usuarioId))
+                .OrderByDescending(s => s.Pujas.Where(p => p.CompradorId == usuarioId).Max(p => p.Fecha));
+
+            var totalItems = await query.CountAsync();
+            int skip = (pagina - 1) * tamanioPagina;
+
+            var items = await query
+                .Skip(skip)
+                .Take(tamanioPagina)
+                .Select(s => new UsuarioParticipacionSubastaDTO
+                {
+                    Id = s.Id,
+                    Titulo = s.Titulo,
+                    UrlImagen = s.UrlImagen,
+                    FechaInicio = DateTime.SpecifyKind(s.FechaInicio, DateTimeKind.Utc),
+                    FechaFin = DateTime.SpecifyKind(s.FechaFin, DateTimeKind.Utc),
+                    Estado = s.Estado,
+                    VendedorId = s.VendedorId,
+                    PujaLider = s.Pujas
+                        .OrderByDescending(p => p.Monto)
+                        .Select(p => new PujaDTO
+                        {
+                            Id = p.Id,
+                            SubastaId = p.SubastaId,
+                            SubastaTitulo = s.Titulo,
+                            CompradorId = p.CompradorId,
+                            CompradorNombre = p.Comprador.Nombre,
+                            Monto = p.Monto,
+                            Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
+                        })
+                        .FirstOrDefault(),
+                    UltimaPujaUsuario = s.Pujas
+                        .Where(p => p.CompradorId == usuarioId)
+                        .OrderByDescending(p => p.Fecha)
+                        .Select(p => new PujaDTO
+                        {
+                            Id = p.Id,
+                            SubastaId = p.SubastaId,
+                            SubastaTitulo = s.Titulo,
+                            CompradorId = p.CompradorId,
+                            CompradorNombre = p.Comprador.Nombre,
+                            Monto = p.Monto,
+                            Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
+                        })
+                        .First()
+                })
+                .ToListAsync();
+
+            return new PagedResultDTO<UsuarioParticipacionSubastaDTO>
+            {
+                Items = items,
+                TotalItems = totalItems,
+                PaginaActual = pagina,
+                TamanioPagina = tamanioPagina
+            };
         }
 
         public async Task<decimal> GetTotalRecaudadoUsuario(int usuarioId)

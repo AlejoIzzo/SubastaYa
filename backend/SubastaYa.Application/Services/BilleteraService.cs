@@ -32,6 +32,11 @@ namespace SubastaYa.Application.Services
         {
             return await _billeteraRepository.GetTransaccionesByUsuarioIdAsync(usuarioId);
         }
+
+        public async Task<PagedResultDTO<TransaccionLedgerDTO>> GetTransaccionesPaginadasAsync(int billeteraId, int pagina = 1, int tamanioPagina = 5)
+        {
+            return await _billeteraRepository.GetTransaccionesPaginadasByBilleteraIdAsync(billeteraId, pagina, tamanioPagina);
+        }
         public async Task<BilleteraDTO> CargarSaldoAsync(int billeteraId, decimal monto)
         {
             if (monto <= 0)

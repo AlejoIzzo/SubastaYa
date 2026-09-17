@@ -108,6 +108,38 @@ namespace SubastaYa.Infrastructure.Repositories
                 }).ToListAsync();
         }
 
+        public async Task<PagedResultDTO<TransaccionLedgerDTO>> GetTransaccionesPaginadasByBilleteraIdAsync(int billeteraId, int pagina, int tamanioPagina)
+        {
+            var query = _context.TransaccionLedger
+                .Where(t => t.BilleteraId == billeteraId)
+                .OrderByDescending(t => t.Fecha);
+
+            var totalItems = await query.CountAsync();
+
+            int skip = (pagina - 1) * tamanioPagina;
+            var items = await query
+                .Skip(skip)
+                .Take(tamanioPagina)
+                .Select(t => new TransaccionLedgerDTO
+                {
+                    Id = t.Id,
+                    BilleteraId = t.BilleteraId,
+                    SubastaId = t.SubastaId,
+                    SubastaTitulo = t.Subasta != null ? t.Subasta.Titulo : null,
+                    Tipo = t.Tipo,
+                    Monto = t.Monto,
+                    Fecha = DateTime.SpecifyKind(t.Fecha, DateTimeKind.Utc)
+                }).ToListAsync();
+
+            return new PagedResultDTO<TransaccionLedgerDTO>
+            {
+                Items = items,
+                TotalItems = totalItems,
+                PaginaActual = pagina,
+                TamanioPagina = tamanioPagina
+            };
+        }
+
         public async Task AgregarTransaccionAsync(TransaccionLedger transaccion)
         {
             await _context.TransaccionLedger.AddAsync(transaccion);

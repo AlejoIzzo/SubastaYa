@@ -53,5 +53,15 @@ namespace SubastaYa.Application.Services
                 UsuarioSubastas = subastas
             };
         }
+
+        public async Task<PagedResultDTO<UsuarioSubastaDTO>> GetSubastasDeUsuarioPaginadasAsync(int usuarioId, int pagina = 1, int tamanioPagina = 5)
+        {
+            return await _subastaRepository.GetSubastasDeUsuarioPaginadas(usuarioId, pagina, tamanioPagina);
+        }
+
+        public async Task<PagedResultDTO<UsuarioParticipacionSubastaDTO>> GetSubastasParticipacionesDeUsuarioPaginadasAsync(int usuarioId, int pagina = 1, int tamanioPagina = 5)
+        {
+            return await _subastaRepository.GetSubastasParticipacionesDeUsuarioPaginadas(usuarioId, pagina, tamanioPagina);
+        }
     }
 }

@@ -50,5 +50,25 @@ namespace SubastaYa.API.Controllers
             var dashboard = await _usuarioService.GetUsuarioDashboard(id);
             return Ok(dashboard);
         }
+
+        [HttpGet("{id}/subastas")]
+        public async Task<ActionResult<PagedResultDTO<UsuarioSubastaDTO>>> GetSubastasByUsuario(
+            int id, 
+            [FromQuery] int pagina = 1, 
+            [FromQuery] int tamanioPagina = 5)
+        {
+            var result = await _usuarioService.GetSubastasDeUsuarioPaginadasAsync(id, pagina, tamanioPagina);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}/participaciones")]
+        public async Task<ActionResult<PagedResultDTO<UsuarioParticipacionSubastaDTO>>> GetParticipacionesByUsuario(
+            int id, 
+            [FromQuery] int pagina = 1, 
+            [FromQuery] int tamanioPagina = 5)
+        {
+            var result = await _usuarioService.GetSubastasParticipacionesDeUsuarioPaginadasAsync(id, pagina, tamanioPagina);
+            return Ok(result);
+        }
     }
 }

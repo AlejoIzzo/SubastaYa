@@ -10,5 +10,6 @@ namespace SubastaYa.Application.Services
         Task<BilleteraDTO?> GetByIdAsync(int id);
         Task<BilleteraDTO> CargarSaldoAsync(int usuarioId, decimal monto);
         Task<IEnumerable<TransaccionLedgerDTO>> GetTransaccionesAsync(int usuarioId);
+        Task<PagedResultDTO<TransaccionLedgerDTO>> GetTransaccionesPaginadasAsync(int billeteraId, int pagina = 1, int tamanioPagina = 5);
     }
 }

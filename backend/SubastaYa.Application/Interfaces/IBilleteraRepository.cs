@@ -12,6 +12,7 @@ namespace SubastaYa.Application.Interfaces
         Task<BilleteraDTO?> GetDtoByUsuarioIdAsync(int usuarioId);
         Task<BilleteraDTO?> GetDtoByIdAsync(int id);
         Task<IEnumerable<TransaccionLedgerDTO>> GetTransaccionesByUsuarioIdAsync(int usuarioId);
+        Task<PagedResultDTO<TransaccionLedgerDTO>> GetTransaccionesPaginadasByBilleteraIdAsync(int billeteraId, int pagina, int tamanioPagina);
         Task AgregarTransaccionAsync(TransaccionLedger transaccion);
         Task AgregarAuditoriaAsync(AuditoriaLog log);
         void Update(Billetera billetera);

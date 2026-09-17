@@ -17,7 +17,9 @@ namespace SubastaYa.Application.Interfaces
         void Update(Subasta subasta);
         void Delete(Subasta subasta);
         Task<IEnumerable<UsuarioSubastaDTO>> GetSubastasDeUsuario(int usuarioId);
+        Task<PagedResultDTO<UsuarioSubastaDTO>> GetSubastasDeUsuarioPaginadas(int usuarioId, int pagina, int tamanioPagina);
         Task<IEnumerable<UsuarioParticipacionSubastaDTO>> GetSubastasParticipacionesDeUsuario(int usuarioId);
+        Task<PagedResultDTO<UsuarioParticipacionSubastaDTO>> GetSubastasParticipacionesDeUsuarioPaginadas(int usuarioId, int pagina, int tamanioPagina);
         Task<decimal> GetTotalRecaudadoUsuario(int usuarioId);
         Task<int> GetSubastasGanadasUsuario(int usuarioId);
         Task<int> GetSubastasActivasUsuario(int usuarioId);
