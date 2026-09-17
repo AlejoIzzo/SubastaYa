@@ -45,9 +45,14 @@ namespace SubastaYa.API.Controllers
         }
 
         [HttpGet("{id}/dashboard")]
-        public async Task<ActionResult<UsuarioDashboardDTO>> GetUsuarioDashboard(int id)
+        public async Task<ActionResult<UsuarioDashboardDTO>> GetUsuarioDashboard(
+            int id,
+            [FromQuery] int paginaSubastas = 1,
+            [FromQuery] int tamanioSubastas = 5,
+            [FromQuery] int paginaParticipaciones = 1,
+            [FromQuery] int tamanioParticipaciones = 5)
         {
-            var dashboard = await _usuarioService.GetUsuarioDashboard(id);
+            var dashboard = await _usuarioService.GetUsuarioDashboard(id, paginaSubastas, tamanioSubastas, paginaParticipaciones, tamanioParticipaciones);
             return Ok(dashboard);
         }
 
