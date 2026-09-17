@@ -1,6 +1,7 @@
 import { postPuja } from "../api/pujaApi";
 import { getSaldoDisponible } from "../api/usuariosApi";
 import { showButtonLoading, showButtonReady } from "../components/spinner";
+import { showToast } from "../components/toast";
 import type { CrearPujaDTO } from "../models/pujaTypes";
 import type { SubastaDetalleDTO } from "../models/subastaTypes";
 import type { UsuarioDTO } from "../models/usuarioTypes";
@@ -47,12 +48,14 @@ export function setupPujaForm({getCurrentSubasta, getLoggedUsuario, onPujaCreate
             monto: monto
         }
         
-        showButtonLoading(submitButton);
+        showButtonLoading(submitButton)
+        
         try {
             const resultado = await postPuja(Number(subasta.id), crearPujaDTO)
+            showToast("Puja realizada correctamente", "success")
             await onPujaCreated(resultado.subastaDetalle)
         } catch (err: any) {
-            alert(`Ocurrió un error al registrar puja: ${err}`)
+            showToast(err.message, "error")
             console.error(err)
         } finally { 
             showButtonReady(submitButton, "Pujar");

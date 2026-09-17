@@ -1,5 +1,6 @@
 import { postSubasta } from "../api/subastaApi";
 import { showButtonLoading, showButtonReady } from "../components/spinner";
+import { showToast } from "../components/toast";
 import { formatLocalDateTime } from "../helpers/dateHelpers";
 import type { CrearSubastaDTO, SubastaCreadaDTO } from "../models/subastaTypes";
 import type { UsuarioDTO } from "../models/usuarioTypes";
@@ -19,14 +20,12 @@ export function setupSubastaForm({getLoggedUsuario, onSubastaCreated} : Args) {
     fechaFin.setAttribute("min", formatLocalDateTime(new Date()))
     
     comenzarInmediatoCheckbox.addEventListener("change", () => {
-        const fechaInicioField = fechaInicio.closest(".form-field") as HTMLElement
-
         if (comenzarInmediatoCheckbox.checked) {
             fechaInicio.removeAttribute("required")
-            fechaInicioField.classList.add("hidden")
+            fechaInicio.disabled = true
         } else {
             fechaInicio.setAttribute("required", "")
-            fechaInicioField.classList.remove("hidden")
+            fechaInicio.disabled = false
         }
     })
 
@@ -71,12 +70,9 @@ export function setupSubastaForm({getLoggedUsuario, onSubastaCreated} : Args) {
             const resultado = await postSubasta(crearSubastaDTO)
             onSubastaCreated(resultado)
         } catch (err: any) {
-            alert(`Ocurrió un error al crear subasta: ${err}`)
+            showToast(err.message, "error")
             console.error(err)
-        }
-        finally {
-            // no re-habilitar, dejar que redirija a página de subasta
-            // showButtonReady(submitButton, "Publicar");
+            showButtonReady(submitButton, "Publicar");
         }
     })
     

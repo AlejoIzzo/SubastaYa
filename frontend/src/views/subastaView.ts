@@ -18,60 +18,62 @@ export function renderSubasta(subasta: SubastaDetalleDTO)  {
 }
 
 export function renderSubastaState(subasta: SubastaDetalleDTO, usuario: UsuarioDTO) {
-    const timer = document.getElementById("timer")!;
-    const timerLabel = document.getElementById("timer-label")!;
-    const estadoLabel = document.getElementById("estado-label")!;
-    const pujaLiderLabel = document.getElementById("puja-lider-label")!;
-    const pujaLiderMonto = document.getElementById("puja-lider-monto")!;
-    const usuarioEstadoTag = document.getElementById("usuario-puja-estado")!;
-    const pujaLiderContainer = document.getElementById("puja-lider-container")!;
-    const subastaResultadoContainer = document.getElementById("subasta-resultado-container")!;
+    const timer = document.getElementById("timer")!
+    const timerLabel = document.getElementById("timer-label")!
+    const estadoLabel = document.getElementById("estado-label")!
+    const pujaLiderLabel = document.getElementById("puja-lider-label")!
+    const pujaLiderMonto = document.getElementById("puja-lider-monto")!
+    const usuarioEstadoTag = document.getElementById("usuario-puja-estado")!
+    const pujaLiderContainer = document.getElementById("puja-lider-container")!
+    const subastaResultadoContainer = document.getElementById("subasta-resultado-container")!
 
     // Renderizar elementos que dependen de si hay al menos un puja
     if (subasta.pujaActual) {
-        pujaLiderLabel.textContent = "PUJA LÍDER";
-        pujaLiderMonto.textContent = `$ ${subasta.pujaActual.monto}`;
-        usuarioEstadoTag.classList.remove("hidden");
+        pujaLiderLabel.textContent = "PUJA LÍDER"
+        pujaLiderMonto.textContent = `$ ${subasta.pujaActual.monto}`
+        usuarioEstadoTag.classList.remove("hidden")
     } else {
-        pujaLiderLabel.textContent = "PRECIO BASE";
-        pujaLiderMonto.textContent = `$ ${subasta.precioBase}`;
-        usuarioEstadoTag.classList.add("hidden");
+        pujaLiderLabel.textContent = "PRECIO BASE"
+        pujaLiderMonto.textContent = `$ ${subasta.precioBase}`
+        usuarioEstadoTag.classList.add("hidden")
     }
 
     // Resetear elementos que dependen del estado
-    estadoLabel.classList.add("hidden");
-    timer.classList.remove("hidden");
-    timerLabel.classList.remove("hidden");
-    pujaLiderContainer.classList.remove("hidden");
-    subastaResultadoContainer.classList.add("hidden");
+    estadoLabel.classList.add("hidden")
+    timer.classList.remove("hidden")
+    timerLabel.classList.remove("hidden")
+    pujaLiderContainer.classList.remove("hidden")
+    subastaResultadoContainer.classList.add("hidden")
 
     switch (subasta.estado) {
         case "ACTIVA": {
-            timer.dataset.timerActivo = "true";
-            timerLabel.textContent = "TIEMPO RESTANTE";
+            timer.dataset.timerActivo = "true"
+            timerLabel.textContent = "TIEMPO RESTANTE"
 
             if (usuario.id === subasta.vendedorId) {
-                renderFormState("oculto");
-            } else if (
-                subasta.pujaActual?.compradorId === usuario.id
-            ) {
-                renderFormState(
-                    "deshabilitado",
-                    "No puedes pujar mientras seas el líder"
-                );
+                renderFormState("oculto")
+            } else if (subasta.pujaActual?.compradorId === usuario.id) {
+                renderFormState("deshabilitado", "No puedes pujar mientras seas el líder")
             } else {
-                renderFormState("habilitado");
+                renderFormState("habilitado")
             }
 
             break;
         }
 
         case "PROGRAMADA": {
-            timer.dataset.timerActivo = "true";
-            timerLabel.textContent = "COMIENZA EN";
+            timer.dataset.timerActivo = "true"
+            timerLabel.textContent = "COMIENZA EN"
 
-            renderFormState("deshabilitado");
-
+            if (usuario.id === subasta.vendedorId) {
+                renderFormState("oculto")
+            } else {
+                renderFormState(
+                    "deshabilitado",
+                    "No puedes pujar hasta que la subasta comience"
+                );
+            }
+  
             break;
         }
 
@@ -260,17 +262,24 @@ export function updateTimer(subasta: SubastaDetalleDTO) {
     const remaining = objetivo - Date.now();
     const totalSegundos = Math.floor(remaining / 1000);
 
+    console.log(Math.floor((totalSegundos % 3600) / 60))
     if (remaining <= 0) {
         timer.dataset.timerActivo = "false"
+        timer.classList.remove("danger-text")
         
         // timer.textContent = timer.dataset.estado == "ACTIVA" ? "Finalizando..." : "Comenzando..."
         return
+    } 
+    console.log(totalSegundos)
+    if (totalSegundos <= 120) {
+        timer.classList.add("danger-text")
     }
 
     const dias = Math.floor(totalSegundos / 86400);
     const horas = String(Math.floor((totalSegundos % 86400) / 3600)).padStart(2, "0");
     const minutos = String(Math.floor((totalSegundos % 3600) / 60)).padStart(2, "0");
     const segundos = String(totalSegundos % 60).padStart(2, "0");
+
 
     const timerText = dias > 0 
                 ? `${dias}d ${horas}:${minutos}:${segundos}` 

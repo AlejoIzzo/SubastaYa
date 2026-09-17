@@ -18,14 +18,13 @@ export function validateSubastaForm(subasta: CrearSubastaDTO): SubastaValidation
     // si fecha inicio es null (comenzar de inmediato), validar como si fuera en el instante actual
     const inicio = subasta.fechaInicio ? subasta.fechaInicio : new Date() 
 
-    // if (subasta.fechaInicio) {
-    //     if (subasta.fechaInicio < new Date())
-    //         errors.fechaInicio = "La subasta no puede comenzar en el pasado"
+    if (subasta.fechaInicio) {
+        if (subasta.fechaInicio < new Date())
+            errors.fechaInicio = "La subasta no puede comenzar en el pasado"
 
-    //     if (subasta.fechaInicio > subasta.fechaFin)
-    //         errors.fechaFin = "La fecha de cierre debe ser posterior a la fecha de inicio"
-    // }
-    
+        if (subasta.fechaInicio > subasta.fechaFin)
+            errors.fechaFin = "La fecha de cierre debe ser posterior a la fecha de inicio"
+    }
 
     if (inicio < new Date())
         errors.fechaInicio = "La subasta no puede comenzar en el pasado"
@@ -34,10 +33,9 @@ export function validateSubastaForm(subasta: CrearSubastaDTO): SubastaValidation
     const diff = subasta.fechaFin.getTime() - inicio.getTime()
     const duracionMinutos = Math.floor(diff / (1000 * 60));
     // deshabilitar validación de duración para testear websockets
-    // TODO: rehabilitar
-    // if (duracionMinutos <= 5) {
-    //     errors.fechaFin = "La subasta debe durar por lo menos 5 minutos"
-    // }
+    if (duracionMinutos <= 5) {
+        errors.fechaFin = "La subasta debe durar por lo menos 5 minutos"
+    }
     
     if (inicio > subasta.fechaFin)
         errors.fechaFin = "La fecha de cierre debe ser posterior a las de inicio"

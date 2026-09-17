@@ -24,8 +24,13 @@ export async function post<T>(endpoint: string, object: {}) : Promise<T> {
     });
 
     if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error);
+        const error = await response.json();
+        throw new Error(
+            error.detail ??
+            error.message ??
+            error.title ??
+            "Ocurrió un error"
+        );
     }
 
     return await response.json();

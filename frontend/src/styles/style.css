@@ -80,6 +80,10 @@ input[type=number] {
     display: none !important;
 }
 
+.danger-text {
+    color: rgb(220, 51, 51) !important;
+}
+
 .icon-link {
     text-decoration: none;
     color: var(--primary-text);

@@ -20,6 +20,7 @@ import { getLoggedUsuario } from "../helpers/usuarioHelpers";
 import * as signalR from "@microsoft/signalr";
 import type { PujaResultadoDTO } from "../models/pujaTypes";
 import { showLoading } from "../components/spinner";
+import { showToast } from "../components/toast";
 
 const params = new URLSearchParams(window.location.search);
 const subastaId = params.get("id");
@@ -83,7 +84,7 @@ async function init() {
     
     // eventos a los que escuchar para mostrar errores (además de form submit)
     const montoInput = document.getElementById("puja-input") as HTMLInputElement
-    ["input", "blur"].forEach(evento => montoInput.addEventListener(evento, async () => {
+    montoInput.addEventListener("input", async () => {
         const monto = Number(montoInput.value)
         const usuarioSaldoDisponible = await getSaldoDisponible(usuario.id)
 
@@ -95,7 +96,7 @@ async function init() {
         })
 
         toggleErrorDisplay(errorMesage)
-    }))
+    })
 
     // timer de subasta
     window.setInterval(() => updateTimer(subasta), 1000)
@@ -117,21 +118,20 @@ async function init() {
 
         // Si se extendió por anti-sniping:
         if (pujaResultado.antiSnipingActivado) {
-            // subasta.fechaFin = puja.fechaFinSubasta; // i think this ain't needed
-            alert("¡Tiempo extendido por Anti-Sniping (+2 min)!");
+            showToast("¡Tiempo extendido por Anti-Sniping (+2 min)!", "info")
         }
     });
 
     // escuchar cuando el Background Worker incia la subasta
     connection.on("SubastaIniciada", (subsataUpdated: SubastaDetalleDTO) => {
         applySubastaUpdate(subsataUpdated)
-        alert("¡La subasta comenzó!");
+        showToast("¡La subasta comenzó!", "info")
     });
 
     // escuchar cuando el Background Worker cierra la subasta
     connection.on("SubastaFinalizada", (subsataUpdated: SubastaDetalleDTO) => {
         applySubastaUpdate(subsataUpdated)
-        alert("¡La subasta ha finalizado!");
+        showToast("¡La subasta ha finalizado!", "info")
     });
 
     // Iniciar y unirse a la sala de esta subasta
