@@ -11,6 +11,13 @@ export function renderSubastaCatalogoLoading() {
 export function renderSubastaCatalogo(subastas: SubastaCatalogoDTO[]) {
     cardsContainer.replaceChildren()
 
+    if (subastas.length <= 0) {
+        const p = document.createElement("p")
+        p.textContent = "No hay subastas para mostrar, pruebe ajustar los filtros o la busqueda."
+        p.style.margin = "auto auto"
+        cardsContainer.appendChild(p)
+    }
+
     for (let s of subastas) {
         cardsContainer.appendChild(createSubastaCard(s))
     }

@@ -170,3 +170,7 @@ main {
 .tabla-container tbody tr:hover {
     background: var(--surface-hover);
 }
+
+.empty-message {
+    margin-top: .5rem;
+}

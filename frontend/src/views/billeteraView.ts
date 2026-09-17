@@ -25,6 +25,17 @@ export function renderTablaTransaccionLoading() {
 export function renderTablaTransaccion(transacciones: TransaccionDTO[]) {
     transaccionesTabla.replaceChildren()
     
+    const emptyMessage = document.querySelector(".empty-message")!
+    const tablaHead = document.querySelector(".tabla thead")!
+    
+    if (transacciones.length <= 0) {
+        emptyMessage.classList.remove("hidden")
+        tablaHead.classList.add("hidden")
+    } else {
+        emptyMessage.classList.add("hidden")
+        tablaHead.classList.remove("hidden")
+    }
+
     for (let t of transacciones) {
         transaccionesTabla.appendChild(createTransaccionFila(t))
     }

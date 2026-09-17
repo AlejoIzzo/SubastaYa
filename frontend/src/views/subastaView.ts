@@ -171,6 +171,13 @@ export function renderPujaList(pujas: PujaDTO[], usuario: UsuarioDTO) {
     const pujasListContainer = document.getElementById("puja-list")!
     pujasListContainer.replaceChildren()
     
+    if (pujas.length <= 0) {
+        const p = document.createElement("p")
+        p.textContent = "Aún no hay pujas para mostrar."
+        p.style.alignSelf = "center"
+        pujasListContainer.appendChild(p)
+    }
+
     for (let puja of pujas) {
         pujasListContainer.appendChild(createPujaCardElement(puja, usuario))
     }

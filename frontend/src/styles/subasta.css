@@ -19,6 +19,7 @@ main {
     padding: 1rem;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
+    background-color: var(--card);
 }
 
 .info-container {
@@ -56,6 +57,7 @@ main {
     padding: 1rem;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);   
+    background-color: var(--card);
     
     /* & > *:not(:last-child) {
         border-bottom: 1px solid var(--border-color);

@@ -4,7 +4,6 @@
     overflow: hidden;
     cursor: pointer;
     position: relative;
-
     width: 100%;
     max-width: 400px;
     /* justify-self: center; */
@@ -16,6 +15,8 @@
 
     text-decoration: none;
     color: var(--text);
+    background-color: var(--card);
+
 }
 
 .card-img-container {

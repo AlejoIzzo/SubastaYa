@@ -20,14 +20,29 @@ export function renderUsuarioDashboard(UsuarioDashboard: UsuarioDashboardDTO)  {
     totalPujado.textContent = `$ ${UsuarioDashboard.usuarioEstadisticas.totalPujado}`
 }
 
+const misSubastasTabla = document.getElementById("mis-subastas-tabla")!
+const misPujasTabla = document.getElementById("mis-pujas-tabla")!
+
 const misSubastasTablaBody = document.getElementById("mis-subastas-tabla-body")!
 const misPujasTablaBody = document.getElementById("mis-pujas-tabla-body")!
+
+const subastasEmptyMessage = document.querySelector("#subastas-empty-message")!
+const pujasEmptyMessage = document.querySelector("#pujas-empty-message")!
+
 export function renderTablasLoading() {
     showTableLoadingRow(misSubastasTablaBody, 5)
     showTableLoadingRow(misPujasTablaBody, 5)
 }
 export function renderMisSubastasTabla(usuarioSubatas: UsuarioSubastaDTO[]) {
-
+    const tablaHead = document.querySelector("#mis-subastas-tabla thead")!
+    
+    if (misSubastasTabla.dataset.visible == "true" && usuarioSubatas.length <= 0) {
+        subastasEmptyMessage.classList.remove("hidden")
+        tablaHead.classList.add("hidden")
+    } else {
+        subastasEmptyMessage.classList.add("hidden")
+        tablaHead.classList.remove("hidden")
+    }
     misSubastasTablaBody.replaceChildren()
     for (let u of usuarioSubatas) {
         misSubastasTablaBody.appendChild(createMisSubastasFila(u))
@@ -35,7 +50,15 @@ export function renderMisSubastasTabla(usuarioSubatas: UsuarioSubastaDTO[]) {
 }
 
 export function renderMisPujasTabla(usuarioParticipacionSubastas: UsuarioParticipacionSubastaDTO[]) {
-
+    const tablaHead = document.querySelector("#mis-pujas-tabla thead")!
+    
+    if (misPujasTabla.dataset.visible == "true" &&usuarioParticipacionSubastas.length <= 0) {
+        pujasEmptyMessage.classList.remove("hidden")
+        tablaHead.classList.add("hidden")
+    } else {
+        pujasEmptyMessage.classList.add("hidden")
+        tablaHead.classList.remove("hidden")
+    }
     misPujasTablaBody.replaceChildren()
     for (let u of usuarioParticipacionSubastas) {
         misPujasTablaBody.appendChild(createMisPujasFila(u))
