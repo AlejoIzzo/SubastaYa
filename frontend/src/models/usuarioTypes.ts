@@ -1,3 +1,4 @@
+import type { PaginatedResultDTO } from "./paginationType"
 import type { PujaDTO } from "./pujaTypes"
 
 export type UsuarioDTO = {
@@ -10,8 +11,8 @@ export type UsuarioDTO = {
 
 export type UsuarioDashboardDTO = {
     usuarioEstadisticas: UsuarioEstadisticasDTO,
-    usuarioSubastas: UsuarioSubastaDTO[],
-    usuarioParticipacionSubastas: UsuarioParticipacionSubastaDTO[]
+    usuarioSubastas: PaginatedResultDTO<UsuarioSubastaDTO>,
+    usuarioParticipacionSubastas: PaginatedResultDTO<UsuarioParticipacionSubastaDTO>
 }
 
 export type UsuarioEstadisticasDTO = {

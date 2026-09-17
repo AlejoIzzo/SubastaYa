@@ -1,6 +1,8 @@
+import { renderPaginacion } from "../components/paginacionNav"
 import { showLoading, showTableLoadingRow } from "../components/spinner"
 import { formatDateTime } from "../helpers/dateHelpers"
 import type { BilleteraDTO } from "../models/billeteraTypes"
+import type { PaginatedResultDTO } from "../models/paginationType"
 import type { TransaccionDTO } from "../models/transaccionTypes"
 
 const saldoTotal = document.getElementById("saldo-total")!
@@ -22,12 +24,20 @@ const transaccionesTabla = document.getElementById("transacciones-tabla-body")!
 export function renderTablaTransaccionLoading() {
     showTableLoadingRow(transaccionesTabla, 4)
 }
-export function renderTablaTransaccion(transacciones: TransaccionDTO[]) {
+
+type RenderTablaTransaccionArgs = {
+    transaccionesPaged: PaginatedResultDTO<TransaccionDTO>,
+    onSiguiente: () => void 
+    onAnterior: () => void
+}
+export function renderTablaTransaccion({transaccionesPaged, onSiguiente, onAnterior}: RenderTablaTransaccionArgs) {
     transaccionesTabla.replaceChildren()
     
     const emptyMessage = document.querySelector(".empty-message")!
     const tablaHead = document.querySelector(".tabla thead")!
     
+    const transacciones = transaccionesPaged.items
+
     if (transacciones.length <= 0) {
         emptyMessage.classList.remove("hidden")
         tablaHead.classList.add("hidden")
@@ -39,6 +49,13 @@ export function renderTablaTransaccion(transacciones: TransaccionDTO[]) {
     for (let t of transacciones) {
         transaccionesTabla.appendChild(createTransaccionFila(t))
     }
+
+    renderPaginacion({
+        paginacionNavId: "paginacion",
+        resultado: transaccionesPaged,
+        onSiguiente: onSiguiente,
+        onAnterior: onAnterior,
+    })
 }
 
 function createTransaccionFila(transaccion: TransaccionDTO) {

@@ -1,9 +1,8 @@
 import type { PaginatedResultDTO } from "../models/paginationType"
-import type { SubastaCatalogoDTO } from "../models/subastaTypes"
 
 type RenderPaginacionArgs = {
     paginacionNavId: string
-    resultado: PaginatedResultDTO<SubastaCatalogoDTO>
+    resultado: PaginatedResultDTO<any>
     onSiguiente: () => void
     onAnterior: () => void
 }
@@ -27,8 +26,7 @@ export function renderPaginacion({paginacionNavId = "paginacion", resultado, onS
     anterior.disabled = !resultado.tienePaginaAnterior;
 
     const pagina = document.createElement("span");
-    pagina.textContent =
-    `${resultado.paginaActual} / ${resultado.totalPaginas}`;
+    pagina.textContent = `${resultado.paginaActual} / ${resultado.totalPaginas}`;
     
     const siguiente = document.createElement("button");
     const siguienteIcon = document.createElement("ion-icon")

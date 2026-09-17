@@ -1,5 +1,5 @@
+import { getTransacciones } from "../api/billeteraApi"
 import { renderHeader } from "../components/header"
-import { showLoading, showTableLoadingRow } from "../components/spinner"
 import { getLoggedUsuarioBilletera } from "../helpers/usuarioHelpers"
 import type { BilleteraDTO } from "../models/billeteraTypes"
 import { renderBilletera, renderBilleteraLoading, renderTablaTransaccion, renderTablaTransaccionLoading } from "../views/billeteraView"
@@ -11,9 +11,20 @@ async function init() {
     renderBilleteraLoading()
     renderTablaTransaccionLoading()
     let billetera = await getLoggedUsuarioBilletera()
-    
-    renderBilletera(billetera)
-    renderTablaTransaccion(billetera.transacciones)
+    const tamanioPagina = 9
+
+    async function cargarPaginaTransacciones(pagina: number) {
+        let transaccionesPaged = await getTransacciones(billetera.id, pagina, tamanioPagina)
+        console.log(transaccionesPaged)
+        renderTablaTransaccion({
+            transaccionesPaged,
+            onAnterior: () => cargarPaginaTransacciones(transaccionesPaged.paginaActual - 1),
+            onSiguiente: () => cargarPaginaTransacciones(transaccionesPaged.paginaActual + 1),
+        })
+    }
+
+    renderBilletera(billetera)  
+    cargarPaginaTransacciones(1)
 
     setupSubastaForm({
         getLoggedUsuarioBilletera,
@@ -21,7 +32,7 @@ async function init() {
 
             billetera = resultado
             renderBilletera(billetera)
-            renderTablaTransaccion(billetera.transacciones)
+            cargarPaginaTransacciones(1)
         }
     })
 
@@ -31,7 +42,7 @@ async function init() {
         renderTablaTransaccionLoading()
         billetera = await getLoggedUsuarioBilletera()
         renderBilletera(billetera)
-        renderTablaTransaccion(billetera.transacciones)
+        cargarPaginaTransacciones(1)
     });
 }
 

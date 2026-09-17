@@ -1,5 +1,7 @@
+import { renderPaginacion } from "../components/paginacionNav"
 import { showLoading, showTableLoadingRow } from "../components/spinner"
 import { capitalize } from "../helpers/stringHelpers"
+import type { PaginatedResultDTO } from "../models/paginationType"
 import type { UsuarioDashboardDTO, UsuarioParticipacionSubastaDTO, UsuarioSubastaDTO } from "../models/usuarioTypes"
 
 const subastasActivas = document.getElementById("subastas-activas")!
@@ -33,10 +35,16 @@ export function renderTablasLoading() {
     showTableLoadingRow(misSubastasTablaBody, 5)
     showTableLoadingRow(misPujasTablaBody, 5)
 }
-export function renderMisSubastasTabla(usuarioSubatas: UsuarioSubastaDTO[]) {
+type RenderMisSubastasTablaArgs = {
+    resultado: PaginatedResultDTO<UsuarioSubastaDTO>, 
+    onSiguiente: () => void, 
+    onAnterior: () => void
+}
+export function renderMisSubastasTabla({resultado, onSiguiente, onAnterior}: RenderMisSubastasTablaArgs) {
     const tablaHead = document.querySelector("#mis-subastas-tabla thead")!
     
-    if (misSubastasTabla.dataset.visible == "true" && usuarioSubatas.length <= 0) {
+    const usuarioSubastas = resultado.items
+    if (misSubastasTabla.dataset.visible == "true" && usuarioSubastas.length <= 0) {
         subastasEmptyMessage.classList.remove("hidden")
         tablaHead.classList.add("hidden")
     } else {
@@ -44,15 +52,27 @@ export function renderMisSubastasTabla(usuarioSubatas: UsuarioSubastaDTO[]) {
         tablaHead.classList.remove("hidden")
     }
     misSubastasTablaBody.replaceChildren()
-    for (let u of usuarioSubatas) {
+    for (let u of usuarioSubastas) {
         misSubastasTablaBody.appendChild(createMisSubastasFila(u))
     }
-}
 
-export function renderMisPujasTabla(usuarioParticipacionSubastas: UsuarioParticipacionSubastaDTO[]) {
+    renderPaginacion({
+        paginacionNavId: "mis-subastas-paginacion",
+        resultado: resultado,
+        onSiguiente,
+        onAnterior
+    })
+}
+type RenderMisPujasTablaArgs = {
+    resultado: PaginatedResultDTO<UsuarioParticipacionSubastaDTO>, 
+    onSiguiente: () => void, 
+    onAnterior: () => void
+}
+export function renderMisPujasTabla({resultado, onSiguiente, onAnterior}: RenderMisPujasTablaArgs) {
     const tablaHead = document.querySelector("#mis-pujas-tabla thead")!
-    
-    if (misPujasTabla.dataset.visible == "true" &&usuarioParticipacionSubastas.length <= 0) {
+
+    const usuarioParticipacionSubastas = resultado.items
+    if (misPujasTabla.dataset.visible == "true" && usuarioParticipacionSubastas.length <= 0) {
         pujasEmptyMessage.classList.remove("hidden")
         tablaHead.classList.add("hidden")
     } else {
@@ -63,6 +83,13 @@ export function renderMisPujasTabla(usuarioParticipacionSubastas: UsuarioPartici
     for (let u of usuarioParticipacionSubastas) {
         misPujasTablaBody.appendChild(createMisPujasFila(u))
     }
+
+    renderPaginacion({
+        paginacionNavId: "mis-pujas-paginacion",
+        resultado: resultado,
+        onSiguiente,
+        onAnterior
+    })
 }
 
 function createMisSubastasFila(usuarioSubastas: UsuarioSubastaDTO) {
