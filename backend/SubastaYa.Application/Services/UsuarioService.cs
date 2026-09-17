@@ -29,16 +29,15 @@ namespace SubastaYa.Application.Services
             return await _usuarioRepository.GetUsuarioDTOByIdAsync(id);
         }
 
-        public async Task<UsuarioDashboardDTO> GetUsuarioDashboard(int id)
+        public async Task<UsuarioDashboardDTO> GetUsuarioDashboard(int id, int paginaSubastas = 1, int tamanioSubastas = 5, int paginaParticipaciones = 1, int tamanioParticipaciones = 5)
         {
             decimal totalRecaudado = await _subastaRepository.GetTotalRecaudadoUsuario(id);
             decimal totalPujado = await _pujaRepository.GetTotalPujadoUsuario(id);
             int subastasActivas = await _subastaRepository.GetSubastasActivasUsuario(id);
             int subastasGanadas = await _subastaRepository.GetSubastasGanadasUsuario(id);
 
-            var subastas = await _subastaRepository.GetSubastasDeUsuario(id);
-
-            var participaciones = await _subastaRepository.GetSubastasParticipacionesDeUsuario(id);
+            var subastas = await _subastaRepository.GetSubastasDeUsuarioPaginadas(id, paginaSubastas, tamanioSubastas);
+            var participaciones = await _subastaRepository.GetSubastasParticipacionesDeUsuarioPaginadas(id, paginaParticipaciones, tamanioParticipaciones);
 
             return new UsuarioDashboardDTO
             {
