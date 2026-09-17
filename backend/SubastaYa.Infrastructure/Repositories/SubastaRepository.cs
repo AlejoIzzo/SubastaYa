@@ -89,7 +89,7 @@ namespace SubastaYa.Infrastructure.Repositories
         }
 
         // devolver DTO directamente desde el repositorio para que SQL haga la agregación
-        public async Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog(SubastaFiltroDTO? filtro = null)
+        public async Task<PagedResultDTO<SubastaCatalogDTO>> GetSubastaCatalog(SubastaFiltroDTO? filtro = null)
         {
             var query = _context.Subastas.AsQueryable();
 
@@ -148,14 +148,17 @@ namespace SubastaYa.Infrastructure.Repositories
                 query = query.OrderBy(s => s.FechaFin);
             }
 
-            // Paginación opcional
-            if (filtro != null && filtro.Pagina.HasValue && filtro.Pagina.Value > 0 && filtro.TamanioPagina.HasValue && filtro.TamanioPagina.Value > 0)
-            {
-                int skip = (filtro.Pagina.Value - 1) * filtro.TamanioPagina.Value;
-                query = query.Skip(skip).Take(filtro.TamanioPagina.Value);
-            }
+            // 1. Obtener el total de elementos coincidentes antes de paginar
+            var totalItems = await query.CountAsync();
 
-            return await query
+            // 2. Parámetros de paginación (default: página 1, tamaño 6)
+            int pagina = (filtro?.Pagina.HasValue == true && filtro.Pagina.Value > 0) ? filtro.Pagina.Value : 1;
+            int tamanio = (filtro?.TamanioPagina.HasValue == true && filtro.TamanioPagina.Value > 0) ? filtro.TamanioPagina.Value : 6;
+
+            int skip = (pagina - 1) * tamanio;
+            query = query.Skip(skip).Take(tamanio);
+
+            var items = await query
                 .Select(s => new SubastaCatalogDTO
                 {
                     Id = s.Id,
@@ -172,6 +175,14 @@ namespace SubastaYa.Infrastructure.Repositories
                     PujaActual = s.Pujas.Select(p => (decimal?)p.Monto).Max() ?? s.PrecioBase,
                     VendedorNombre = s.Vendedor.Nombre
                 }).ToListAsync();
+
+            return new PagedResultDTO<SubastaCatalogDTO>
+            {
+                Items = items,
+                TotalItems = totalItems,
+                PaginaActual = pagina,
+                TamanioPagina = tamanio
+            };
         }
 
         public async Task<int> GetSubastasActivasUsuario(int usuarioId)

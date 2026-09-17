@@ -12,7 +12,7 @@ namespace SubastaYa.Application.Interfaces
     {
         Task<SubastaDetalleDTO?> GetByIdAsync(int id, int ultimasPujasLimit = 15);
         Task<IEnumerable<Subasta>> GetAllAsync();
-        Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog(SubastaFiltroDTO? filtro = null);
+        Task<PagedResultDTO<SubastaCatalogDTO>> GetSubastaCatalog(SubastaFiltroDTO? filtro = null);
         Task CrearAsync(Subasta subasta);
         void Update(Subasta subasta);
         void Delete(Subasta subasta);

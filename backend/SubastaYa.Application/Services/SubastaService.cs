@@ -66,7 +66,7 @@ namespace SubastaYa.Application.Services
             };
         }
 
-        public async Task<IEnumerable<SubastaCatalogDTO>> GetSubastaCatalog(SubastaFiltroDTO? filtro = null)
+        public async Task<PagedResultDTO<SubastaCatalogDTO>> GetSubastaCatalog(SubastaFiltroDTO? filtro = null)
         {
             return await _subastaRepository.GetSubastaCatalog(filtro);
         }

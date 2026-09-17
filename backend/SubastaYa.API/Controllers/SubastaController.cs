@@ -22,7 +22,7 @@ namespace SubastaYa.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SubastaCatalogDTO>>> GetSubastaCatalog([FromQuery] SubastaFiltroDTO? filtro)
+        public async Task<ActionResult<PagedResultDTO<SubastaCatalogDTO>>> GetSubastaCatalog([FromQuery] SubastaFiltroDTO? filtro)
         {
             var subastas = await _service.GetSubastaCatalog(filtro);
 
