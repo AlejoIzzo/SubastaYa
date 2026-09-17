@@ -20,6 +20,7 @@ export function setupFiltroForm({onSubastasUpdate}: Args) {
                 filtrosFormData.set(key, value.toString());
             }
         }
+        console.log(filtroFormData)
         
         // data de la barra de busqueda
         const searchFormData = new FormData(searchForm);

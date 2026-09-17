@@ -63,11 +63,22 @@ main {
         outline: none;
         border: none;        
         
+        font-size: 1rem;
         max-width: 100px;
-        padding: .25rem .5rem;
+        padding: .5rem;
         border-radius: var(--border-radius);
         background: none;
         border: 1px solid var(--border-color);
         font-family: 'Inter', sans-serif;
     }
+}
+
+.form-select {
+    width: 100%;
+    padding: .5rem;
+    font-size: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    background-color: transparent;
+    cursor: pointer;
 }

@@ -51,6 +51,16 @@
                 <span> - </span>
                 <input type="number" id="precio-max-input" name="precioMax" placeholder="Máximo">
             </div>
+            <h3 class="filtro-titulo">Ordenamiento</h3>
+            <div class="ordeado-container">
+                <select name="orden" id="orden" class="form-select">
+                    <option value="tiempo_asc">Menor tiempo</option>
+                    <option value="tiempo_desc">Mayor tiempo</option>
+                    <option value="puja_desc">Mayor puja líder</option>
+                    <option value="puja_asc">Menor puja líder</option>
+                    <option value="recientes">Recientes</option>
+                </select>
+            </div>
             <button class="text-button" type="submit"><p>Aplicar Filtros</p></button>
         </form>
         <section class='catalogo-container'>
