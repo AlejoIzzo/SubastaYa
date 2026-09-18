@@ -102,15 +102,16 @@ El sistema precarga automáticamente las cuentas requeridas por la cátedra para
 | **Sin Fondos** | `sinfondos@test.com` | $500 | $0 | $500 | Para probar rechazo por saldo insuficiente |
 
 ### Subastas de Prueba Precargadas:
-1. **Activa estándar (Id: 1):** Cierra en ~25 minutos con líder en $45.000 (para probar pujas en vivo).
-2. **Activa crítica (Id: 2):** Cierra en menos de 2 minutos (para probar cambio de color del timer visual y extensión Anti-Sniping).
-3. **Próxima (Id: 3):** Inicio programado a +24 horas (pujas bloqueadas).
-4. **Vencida con Ganador (Id: 4):** Para verificar liquidación final del Worker.
-5. **Vencida Desierta (Id: 5):** Vencida sin ofertas para verificar pase a estado DESIERTA.
+1. **Activa estándar (Id: 1):** Activa y abierta para recibir ofertas (Líder inicial: Comprador 1 en $45.000).
+2. **Activa complementaria (Id: 2):** Activa (Carta Pokémon Charizard).  
+   *(Nota: Para probar la zona crítica de < 60 segundos y la extensión automática Anti-Sniping en cualquier momento de la demo, simplemente se utiliza el formulario **"Publicar Subasta"** del frontend creando una subasta con 2 minutos de duración).*
+3. **Próxima (Id: 3):** Programada a futuro (pujas bloqueadas).
+4. **Vencida con Ganador (Id: 4):** Vencida con oferta ganadora (para verificar liquidación del Worker).
+5. **Vencida Desierta (Id: 5):** Vencida sin ofertas (para verificar pase a DESIERTA).
 
 ---
 
-##  Prueba de Concurrencia Optimista (Stress Test - HTTP 409 Conflict)
+## 🛡️ Prueba de Concurrencia Optimista (Stress Test - HTTP 409 Conflict)
 
 ### Fundamento Teórico
 Para evitar condiciones de carrera (Race Conditions) como la pérdida de ofertas simultáneas o inconsistencias en los saldos en garantía, las entidades `Subasta` y `Billetera` cuentan con una propiedad de control de versión:
@@ -125,18 +126,16 @@ Cuando dos usuarios intentan pujar sobre la misma subasta en el mismo milisegund
 
 ### Script de Prueba (Ejecución en Paralelo)
 
-Podés ejecutar este script en **PowerShell** con la API en ejecución para disparar dos ofertas en el mismo instante y comprobar el rechazo por concurrencia:
+Podés ejecutar este script en **PowerShell** con la API en ejecución para disparar dos ofertas idénticas en el mismo instante y comprobar el rechazo por concurrencia:
 
 ```powershell
-# Disparo simultáneo de 2 pujas sobre la Subasta 1
-$body1 = '{"compradorId": 2, "monto": 55000}'
-$body2 = '{"compradorId": 3, "monto": 55000}'
-
+# Disparo simultáneo de 2 peticiones idénticas de puja sobre la Subasta 1
+# (Comprador 2 con $200.000 de saldo disponible superando la oferta de $45.000)
 $task1 = [System.Threading.Tasks.Task]::Run({
-    curl.exe -k -s -w "\nStatus: %{http_code}\n" -X POST "https://localhost:7282/api/subastas/1/pujas" -H "Content-Type: application/json" -d '{"compradorId": 2, "monto": 55000}'
+    curl.exe -k -s -w "`nStatus: %{http_code}`n" -X POST "https://localhost:7282/api/subastas/1/pujas" -H "Content-Type: application/json" -d '{\"compradorId\": 3, \"monto\": 55000}'
 })
 $task2 = [System.Threading.Tasks.Task]::Run({
-    curl.exe -k -s -w "\nStatus: %{http_code}\n" -X POST "https://localhost:7282/api/subastas/1/pujas" -H "Content-Type: application/json" -d '{"compradorId": 3, "monto": 55000}'
+    curl.exe -k -s -w "`nStatus: %{http_code}`n" -X POST "https://localhost:7282/api/subastas/1/pujas" -H "Content-Type: application/json" -d '{\"compradorId\": 3, \"monto\": 55000}'
 })
 
 [System.Threading.Tasks.Task]::WaitAll($task1, $task2)
