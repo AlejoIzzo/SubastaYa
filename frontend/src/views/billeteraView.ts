@@ -80,7 +80,12 @@ function createTransaccionFila(transaccion: TransaccionDTO) {
     } else if (transaccion.tipo == "DEPOSITO") {
         descripcion.textContent = `Deposito de saldo`
         subasta.textContent = " - "
+    } else if (transaccion.tipo == "COBRO") {
+        descripcion.textContent = `Cobro por producto subastado`
+        subasta.textContent = transaccion.subastaTitulo
+    } else if (transaccion.tipo == "PAGO") {
+        descripcion.textContent = `Pago por subasta ganada`
+        subasta.textContent = transaccion.subastaTitulo
     }
-
     return clone
 }
