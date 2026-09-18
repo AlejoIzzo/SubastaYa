@@ -10,10 +10,10 @@ namespace SubastaYa.Data
         {
             // 1. Categorías
             modelBuilder.Entity<Categoria>().HasData(
-                new Categoria { Id = 1, Nombre = "Tecnología", UrlIcono = "https://images.unsplash.com/photo-1519389950473-47ba0277781c" },
-                new Categoria { Id = 2, Nombre = "Coleccionables", UrlIcono = "https://images.unsplash.com/photo-1563245372-f21724e3856d" },
-                new Categoria { Id = 3, Nombre = "Indumentaria", UrlIcono = "https://images.unsplash.com/photo-1523381210434-271e8be1f52b" },
-                new Categoria { Id = 4, Nombre = "Vehículos", UrlIcono = "https://images.unsplash.com/photo-1503376780353-7e6692767b70" }
+                new Categoria { Id = 1, Nombre = "Tecnología", UrlIcono = "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=200&auto=format&fit=crop&q=80" },
+                new Categoria { Id = 2, Nombre = "Coleccionables", UrlIcono = "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=200&auto=format&fit=crop&q=80" },
+                new Categoria { Id = 3, Nombre = "Indumentaria", UrlIcono = "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=200&auto=format&fit=crop&q=80" },
+                new Categoria { Id = 4, Nombre = "Vehículos", UrlIcono = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&auto=format&fit=crop&q=80" }
             );
 
             // 2. Usuarios
@@ -71,11 +71,11 @@ namespace SubastaYa.Data
                     CategoriaId = 1,
                     Titulo = "PlayStation 5 Digital Edition",
                     Descripcion = "Consola de última generación en perfecto estado con joystick DualSense",
-                    UrlImagen = "https://images.unsplash.com/photo-1606813907291-d86efa9b94db",
+                    UrlImagen = "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&auto=format&fit=crop&q=80",
                     PrecioBase = 30000.00m,
                     IncrementoMinimo = 5000.00m,
-                    FechaInicio = new DateTime(2026, 9, 1, 19, 0, 0, DateTimeKind.Utc),
-                    FechaFin = new DateTime(2026, 9, 1, 23, 45, 0, DateTimeKind.Utc),
+                    FechaInicio = new DateTime(2026, 9, 15, 10, 0, 0, DateTimeKind.Utc),
+                    FechaFin = new DateTime(2026, 12, 31, 23, 59, 59, DateTimeKind.Utc),
                     Estado = "ACTIVA"
                 },
                 // 2. Activa crítica: Cierra en menos de 2 min (para probar alerta visual y anti-sniping)
@@ -86,11 +86,11 @@ namespace SubastaYa.Data
                     CategoriaId = 2,
                     Titulo = "Carta Pokémon Charizard 1st Edition",
                     Descripcion = "Carta coleccionable en estado Near Mint, protegida en acrílico",
-                    UrlImagen = "https://images.unsplash.com/photo-1613770920235-94578b87192f",
+                    UrlImagen = "https://images.unsplash.com/photo-1613770920235-94578b87192f?w=600&auto=format&fit=crop&q=80",
                     PrecioBase = 10000.00m,
                     IncrementoMinimo = 1000.00m,
-                    FechaInicio = new DateTime(2026, 9, 1, 19, 0, 0, DateTimeKind.Utc),
-                    FechaFin = new DateTime(2026, 9, 1, 23, 15, 0, DateTimeKind.Utc),
+                    FechaInicio = new DateTime(2026, 9, 15, 10, 0, 0, DateTimeKind.Utc),
+                    FechaFin = new DateTime(2026, 10, 31, 23, 59, 59, DateTimeKind.Utc),
                     Estado = "ACTIVA"
                 },
                 // 3. Próxima: Inicio programado a +24 hs (pujas bloqueadas)
@@ -101,11 +101,11 @@ namespace SubastaYa.Data
                     CategoriaId = 4,
                     Titulo = "Toyota Corolla 2022 2.0 SEG CVT",
                     Descripcion = "Vehículo sedán con 25.000 km, único dueño, todos los services oficiales",
-                    UrlImagen = "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb",
+                    UrlImagen = "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&auto=format&fit=crop&q=80",
                     PrecioBase = 15000000.00m,
                     IncrementoMinimo = 100000.00m,
-                    FechaInicio = new DateTime(2026, 9, 2, 20, 0, 0, DateTimeKind.Utc),
-                    FechaFin = new DateTime(2026, 9, 3, 20, 0, 0, DateTimeKind.Utc),
+                    FechaInicio = new DateTime(2026, 12, 1, 10, 0, 0, DateTimeKind.Utc),
+                    FechaFin = new DateTime(2026, 12, 15, 20, 0, 0, DateTimeKind.Utc),
                     Estado = "PROGRAMADA"
                 },
                 // 4. Vencida con ganador: Fecha fin pasada + puja ganadora
@@ -116,10 +116,10 @@ namespace SubastaYa.Data
                     CategoriaId = 1,
                     Titulo = "MacBook Pro M2 14 pulgadas 512GB",
                     Descripcion = "Laptop profesional 16GB RAM, batería con 40 ciclos de carga",
-                    UrlImagen = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8",
+                    UrlImagen = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop&q=80",
                     PrecioBase = 80000.00m,
                     IncrementoMinimo = 5000.00m,
-                    FechaInicio = new DateTime(2026, 8, 30, 10, 0, 0, DateTimeKind.Utc),
+                    FechaInicio = new DateTime(2026, 8, 20, 10, 0, 0, DateTimeKind.Utc),
                     FechaFin = new DateTime(2026, 9, 1, 18, 0, 0, DateTimeKind.Utc),
                     Estado = "ACTIVA"
                 },
@@ -131,10 +131,10 @@ namespace SubastaYa.Data
                     CategoriaId = 3,
                     Titulo = "Campera de Cuero Vintage Hombre",
                     Descripcion = "Campera de cuero genuino talle L, importada",
-                    UrlImagen = "https://images.unsplash.com/photo-1551028719-00167b16eac5",
+                    UrlImagen = "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&auto=format&fit=crop&q=80",
                     PrecioBase = 25000.00m,
                     IncrementoMinimo = 2000.00m,
-                    FechaInicio = new DateTime(2026, 8, 30, 10, 0, 0, DateTimeKind.Utc),
+                    FechaInicio = new DateTime(2026, 8, 20, 10, 0, 0, DateTimeKind.Utc),
                     FechaFin = new DateTime(2026, 9, 1, 17, 0, 0, DateTimeKind.Utc),
                     Estado = "ACTIVA"
                 }
