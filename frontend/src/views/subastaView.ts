@@ -270,7 +270,6 @@ export function updateTimer(subasta: SubastaDetalleDTO) {
     const remaining = objetivo - Date.now();
     const totalSegundos = Math.floor(remaining / 1000);
 
-    console.log(Math.floor((totalSegundos % 3600) / 60))
     if (remaining <= 0) {
         timer.dataset.timerActivo = "false"
         timer.classList.remove("danger-text")
@@ -278,8 +277,8 @@ export function updateTimer(subasta: SubastaDetalleDTO) {
         // timer.textContent = timer.dataset.estado == "ACTIVA" ? "Finalizando..." : "Comenzando..."
         return
     } 
-    console.log(totalSegundos)
-    if (totalSegundos <= 120) {
+
+    if (totalSegundos <= 60) {
         timer.classList.add("danger-text")
     }
 

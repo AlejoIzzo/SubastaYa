@@ -15,7 +15,6 @@ async function init() {
 
     async function cargarPaginaTransacciones(pagina: number) {
         let transaccionesPaged = await getTransacciones(billetera.id, pagina, tamanioPagina)
-        console.log(transaccionesPaged)
         renderTablaTransaccion({
             transaccionesPaged,
             onAnterior: () => cargarPaginaTransacciones(transaccionesPaged.paginaActual - 1),

@@ -69,23 +69,27 @@ function createTransaccionFila(transaccion: TransaccionDTO) {
     const monto = clone.querySelector(".row-monto")!
 
     fecha.textContent = formatDateTime(new Date(transaccion.fecha))
-    monto.textContent = `$ ${formatNumber(transaccion.monto)}`
-
+    
     if (transaccion.tipo == "LIBERACION") {
         descripcion.textContent = `Liberación por puja superada`
         subasta.textContent = transaccion.subastaTitulo
+        monto.textContent = `+ $ ${formatNumber(transaccion.monto)}`
     } else if (transaccion.tipo == "RETENCION") {
         descripcion.textContent = `Retención por puja`
         subasta.textContent = transaccion.subastaTitulo
+        monto.textContent = `- $ ${formatNumber(transaccion.monto)}`
     } else if (transaccion.tipo == "DEPOSITO") {
         descripcion.textContent = `Deposito de saldo`
         subasta.textContent = " - "
+        monto.textContent = `+ $ ${formatNumber(transaccion.monto)}`
     } else if (transaccion.tipo == "COBRO") {
         descripcion.textContent = `Cobro por producto subastado`
         subasta.textContent = transaccion.subastaTitulo
+        monto.textContent = `+ $ ${formatNumber(transaccion.monto)}`
     } else if (transaccion.tipo == "PAGO") {
         descripcion.textContent = `Pago por subasta ganada`
         subasta.textContent = transaccion.subastaTitulo
+        monto.textContent = `- $ ${formatNumber(transaccion.monto)}`
     }
     return clone
 }
