@@ -56,3 +56,27 @@
     background-color: transparent;
     cursor: pointer;
 }
+
+@media screen and (max-width: 768px) {
+    .header {
+        flex-wrap: wrap;
+        gap: .5rem;
+        padding: .5rem .75rem;
+    }
+
+    .header-left-container {
+        order: 1;
+    }
+
+    .header-right-container {
+        order: 2;
+    }
+
+    .searchbar {
+        order: 3;
+
+        flex: none;
+        max-width: none;
+        width: 100%;
+    }
+}

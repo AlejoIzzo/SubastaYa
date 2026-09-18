@@ -153,3 +153,45 @@ button:disabled {
     background-color: transparent;
     cursor: pointer;
 }
+
+@media screen and (max-width: 768px) {
+    main {
+        padding: .75rem;
+    }
+
+    #subasta-form {
+        grid-template-columns: 1fr;
+    }
+
+    .form-field-group {
+        flex-direction: column;
+    }
+
+    .buttons-container {
+        flex-direction: column-reverse;
+        gap: .5rem;
+    }
+
+    #submit-button,
+    #cancel-button {
+        width: 100%;
+    }
+
+    .producto-card {
+        height: auto;
+    }
+
+    .producto-card .form-section,
+    .producto-card .form-body {
+        height: auto;
+    }
+
+    .descripcion-form-field {
+        flex: none;
+    }
+
+    .descripcion-form-field textarea {
+        min-height: 150px;
+        flex: none;
+    }
+}
