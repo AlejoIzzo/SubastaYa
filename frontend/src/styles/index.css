@@ -1,11 +1,13 @@
 main {
-    display: flex;
-    padding: 1rem;
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
     gap: 1rem;
+    padding: 1rem;
+    align-items: start;
 }
 
 .catalogo-container {
-    flex: 1;
+    /* flex: 1; */
     min-width: 0;
 }
 
@@ -13,7 +15,9 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: .75rem;
     margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 
 .publicar-subasta-button {
@@ -28,7 +32,10 @@ main {
 
 .catalogo-cards-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(100%, 300px), 1fr)
+    );
     gap: 1rem;
 }
 
@@ -58,17 +65,19 @@ main {
 .rango-precio-container {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: .25rem;
     & input {
-        outline: none;
-        border: none;        
-        
-        font-size: 1rem;
+        min-width: 0;
+        width: 100%;
         max-width: 100px;
+
+        outline: none;
+        border: 1px solid var(--border-color);
+        font-size: 1rem;
         padding: .5rem;
         border-radius: var(--border-radius);
         background: none;
-        border: 1px solid var(--border-color);
         font-family: 'Inter', sans-serif;
     }
 }
@@ -81,4 +90,26 @@ main {
     border-radius: 3px;
     background-color: transparent;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    main {
+        grid-template-columns: 1fr;
+        padding: .75rem;
+    }
+
+    .filtros-container {
+        width: 100%;
+    }
+
+    .rango-precio-container input {
+        max-width: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .publicar-subasta-button {
+        width: 100%;
+        justify-content: center;
+    }
 }
