@@ -1,48 +1,58 @@
 main {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
     padding: 1rem;
     gap: 1rem;
     flex: 1;
     min-height: 0;
 }
 
-.producto-section {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+.producto-section,
+.puja-section {
+    min-width: 0;
     min-height: 0;
+}
+
+.producto-section {
+    display: grid;
+    grid-template-rows: auto minmax(250px, 1fr) auto;
+    gap: 1rem;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--card);  
 }
 
 .title-container,
 .info-container {
-    padding: 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    background-color: var(--card);
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
 }
 
-.info-container {
-    flex: 1;
-}
 
 .img-container {
-    overflow: hidden; 
-    
-    flex: 1;
+    min-width: 0;
+    min-height: 250px;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 0;
+
+    overflow: hidden;
 
     & img {
         max-width: 100%;
         max-height: 100%;
-        
+
         border-radius: var(--border-radius);
         display: block;
-
-        overflow: hidden;
+        object-fit: contain;
     }
 }
 
@@ -257,16 +267,19 @@ main {
 .form-body {
     display: flex;
     gap: .5rem;
+    min-width: 0;
 }
 
 #puja-input {
+    min-width: 0;
+    width: 0;
+    flex: 2;
+    
     outline: none;
-
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
     padding:.5rem;
     font-size: 20px;
-    flex: 2;
 
     transition: .25s;
     &:focus {
@@ -275,6 +288,7 @@ main {
     }
 }
 .puja-button {
+    min-width: 0;
     flex: 1;
     font-size: 20px;
 }
@@ -288,5 +302,51 @@ main {
 @media screen and (max-width: 768px) {
     main {
         grid-template-columns: 1fr;
-    }   
+    }
+
+    body {
+        overflow-y: auto;
+    }
+
+    main {
+        min-height: auto;
+    }
+
+    .puja-section {
+        min-height: auto;
+        height: auto;
+    }
+    .form-body {
+        flex-direction: column;
+    }
+
+    .puja-button,
+    #puja-input {
+        width: 100%;
+        min-width: 0;
+        flex: none;
+        box-sizing: border-box;
+    }
+
+    #puja-list {
+        flex: none;
+        height: auto;
+        max-height: 250px;
+        min-height: 100px;
+        overflow-y: auto;
+    }
+
+    .producto-section {
+        grid-template-rows: auto auto auto;
+    }
+
+    .img-container {
+        min-height: auto;
+        aspect-ratio: 4 / 3;
+    }
+
+    .form-body {
+        flex-direction: column;
+    }
+
 }
