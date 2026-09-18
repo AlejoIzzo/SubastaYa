@@ -28,6 +28,7 @@ export function createSubastaCard(dto: SubastaCatalogoDTO) {
         pujaActualLabel.textContent = dto.cantidadPujas == 0 ? "Precio base" : "Puja ganadora"
     }
     pujaActualMonto.textContent = "$ " + formatNumber(dto.pujaActual)
+    
     img.src = dto.urlImagen
     
     if (dto.cantidadPujas > 0)

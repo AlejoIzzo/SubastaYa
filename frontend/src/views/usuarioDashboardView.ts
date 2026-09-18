@@ -105,7 +105,7 @@ function createMisSubastasFila(usuarioSubastas: UsuarioSubastaDTO) {
 
     subastaNombre.textContent = usuarioSubastas.titulo
     pujaLider.textContent = usuarioSubastas.pujaLider 
-                                ? formatNumber(usuarioSubastas.pujaLider.monto)
+                                ? `$ ${formatNumber(usuarioSubastas.pujaLider.monto)}`
                                 : " - "
     cantidadPujas.textContent = formatNumber(usuarioSubastas.cantidadPujas)
     subastaEstado.textContent = capitalize(usuarioSubastas.estado)
@@ -133,8 +133,8 @@ function createMisPujasFila(usuarioParticipacionSubastas: UsuarioParticipacionSu
     const timer = clone.querySelector(".row-timer")! as HTMLElement
 
     subastaNombre.textContent = usuarioParticipacionSubastas.titulo
-    pujaLider.textContent = formatNumber(usuarioParticipacionSubastas.pujaLider.monto)
-    usuarioUltimaPuja.textContent = formatNumber(usuarioParticipacionSubastas.ultimaPujaUsuario.monto)
+    pujaLider.textContent = `$ ${formatNumber(usuarioParticipacionSubastas.pujaLider.monto)}`
+    usuarioUltimaPuja.textContent = `$ ${formatNumber(usuarioParticipacionSubastas.ultimaPujaUsuario.monto)}`
     
     if (usuarioParticipacionSubastas.ultimaPujaUsuario.compradorId === usuarioParticipacionSubastas.pujaLider.compradorId) {
         usuarioEstado.textContent = usuarioParticipacionSubastas.estado == "ACTIVA"

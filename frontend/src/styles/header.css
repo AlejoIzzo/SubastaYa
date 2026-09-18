@@ -22,6 +22,12 @@
     font-size: 1.25rem;
 }
 
+.logo-image img {
+    height: 50px;
+    width: auto;
+    display: block;
+}
+
 .searchbar {
     display: flex;
     align-items: center;
