@@ -22,5 +22,6 @@ namespace SubastaYa.Application.Interfaces
         Task GuardarCambiosAsync();
 
         Task<decimal> GetTotalPujadoUsuario(int usuarioId);
+        Task RegistrarAuditoriaAsync(AuditoriaLog log);
     }
 }
