@@ -93,5 +93,19 @@ namespace SubastaYa.Infrastructure.Repositories
                 .Where(p => p.CompradorId == usuarioId)
                 .SumAsync(p => (decimal?)p.Monto) ?? 0m;
         }
+
+        public async Task RegistrarAuditoriaAsync(AuditoriaLog log)
+        {
+            try
+            {
+                _context.ChangeTracker.Clear();
+                await _context.AuditoriaLogs.AddAsync(log);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                // Silencioso para garantizar que no tape la respuesta del error principal
+            }
+        }
     }
 }

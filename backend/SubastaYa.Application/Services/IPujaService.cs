@@ -15,5 +15,8 @@ namespace SubastaYa.Application.Services
 
         /// Obtiene todas las pujas de la plataforma (con filtro opcional por usuario).
         Task<IEnumerable<PujaDTO>> GetAllPujasAsync(int? usuarioId = null);
+
+        /// Registra en la tabla de auditoría inmutable los intentos de puja rechazados por concurrencia o reglas de negocio críticas.
+        Task RegistrarAuditoriaRechazoAsync(int subastaId, int? usuarioId, decimal monto, string accion, string motivo);
     }
 }

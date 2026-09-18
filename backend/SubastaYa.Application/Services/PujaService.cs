@@ -220,5 +220,24 @@ namespace SubastaYa.Application.Services
                 SubastaDetalle = subastaDetalle
             };
         }
+
+        public async Task RegistrarAuditoriaRechazoAsync(int subastaId, int? usuarioId, decimal monto, string accion, string motivo)
+        {
+            var log = new AuditoriaLog
+            {
+                Entidad = "SUBASTA",
+                EntidadId = subastaId,
+                Accion = accion,
+                UsuarioId = usuarioId,
+                Fecha = DateTime.UtcNow,
+                DetalleJson = JsonSerializer.Serialize(new
+                {
+                    Motivo = motivo,
+                    MontoOfertado = monto
+                })
+            };
+
+            await _pujaRepository.RegistrarAuditoriaAsync(log);
+        }
     }
 }

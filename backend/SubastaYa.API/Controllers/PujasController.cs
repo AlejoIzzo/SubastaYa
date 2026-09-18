@@ -60,6 +60,9 @@ namespace SubastaYa.API.Controllers
             }
             catch (ConcurrenciaException ex)
             {
+                // Registrar intento de puja rechazado por concurrencia (Sección 3.4 del TP)
+                await _pujaService.RegistrarAuditoriaRechazoAsync(subastaId, dto.CompradorId, dto.Monto, "PUJA_RECHAZADA_CONCURRENCIA", ex.Message);
+
                 // Manejo explícito de concurrencia optimista (Requerimiento evaluado del TP)
                 return StatusCode(StatusCodes.Status409Conflict, new
                 {
@@ -70,6 +73,9 @@ namespace SubastaYa.API.Controllers
             }
             catch (DominioException ex)
             {
+                // Registrar intento de puja rechazado por validación de negocio crítica (Sección 3.4 del TP)
+                await _pujaService.RegistrarAuditoriaRechazoAsync(subastaId, dto.CompradorId, dto.Monto, "PUJA_RECHAZADA_NEGOCIO", ex.Message);
+
                 // Errores de validación de negocio (monto insuficiente, fondos insuficientes, etc.)
                 return BadRequest(new
                 {
