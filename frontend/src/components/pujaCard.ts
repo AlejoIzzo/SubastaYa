@@ -36,14 +36,6 @@ export function refreshUserPujas(usuario: UsuarioDTO) {
     })
 }
 
-export function refreshPujasDates() {
-    const pujaFecha = document.querySelectorAll(".puja-fecha")!
-
-    pujaFecha.forEach((el: any) => {
-        el.textContent = getPujaDate(new Date(el.dataset.fecha))
-    })
-}
-
 function getPujaDate(fecha: Date): string {
     return fecha.toLocaleString();
 }

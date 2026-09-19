@@ -16,7 +16,7 @@ import {
     renderSubastaState,
     renderSubastaNotFound, 
 } from "../views/subastaView";
-import { refreshPujasDates, refreshUserPujas } from "../components/pujaCard";
+import { refreshUserPujas } from "../components/pujaCard";
 import { getLoggedUsuario } from "../helpers/usuarioHelpers";
 import * as signalR from "@microsoft/signalr";
 import type { PujaResultadoDTO } from "../models/pujaTypes";
@@ -109,9 +109,6 @@ async function init() {
 
     // timer de subasta
     window.setInterval(() => updateTimer(subasta), 1000)
-
-    // "hace x" de pujas
-    window.setInterval(() => refreshPujasDates(), 60000)
 
     // --- websockets config ---
 
