@@ -27,7 +27,6 @@ namespace SubastaYa.Infrastructure.Repositories
                 .FirstOrDefaultAsync(s => s.Id == subastaId);
         }
 
-
         public async Task<IEnumerable<PujaDTO>> GetPujasBySubastaIdAsync(int subastaId)
         {
             return await _context.Pujas
@@ -41,7 +40,7 @@ namespace SubastaYa.Infrastructure.Repositories
                     CompradorId = p.CompradorId,
                     CompradorNombre = p.Comprador.Nombre,
                     Monto = p.Monto,
-                    Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
+                    Fecha = p.Fecha
                 })
                 .ToListAsync();
         }
@@ -65,11 +64,10 @@ namespace SubastaYa.Infrastructure.Repositories
                     CompradorId = p.CompradorId,
                     CompradorNombre = p.Comprador.Nombre,
                     Monto = p.Monto,
-                    Fecha = DateTime.SpecifyKind(p.Fecha, DateTimeKind.Utc)
+                    Fecha = p.Fecha
                 })
                 .ToListAsync();
         }
-
 
         public async Task AgregarAsync(Puja puja)
         {
@@ -87,6 +85,7 @@ namespace SubastaYa.Infrastructure.Repositories
                 throw new ConcurrenciaException("La subasta fue modificada por otra oferta en este mismo instante. Por favor, actualice la vista e intente nuevamente.");
             }
         }
+
         public async Task<decimal> GetTotalPujadoUsuario(int usuarioId)
         {
             return await _context.Pujas

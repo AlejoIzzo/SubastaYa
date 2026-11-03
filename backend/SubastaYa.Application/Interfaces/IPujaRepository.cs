@@ -10,7 +10,6 @@ namespace SubastaYa.Application.Interfaces
         /// Obtiene la subasta con sus datos necesarios para evaluar la puja incluyendo sus pujas anteriores.
         Task<Subasta?> GetSubastaParaPujarAsync(int subastaId);
 
-
         /// Obtiene el historial de todas las ofertas realizadas en una subasta, ordenadas de más reciente a más antigua.
         Task<IEnumerable<PujaDTO>> GetPujasBySubastaIdAsync(int subastaId);
 
@@ -22,6 +21,7 @@ namespace SubastaYa.Application.Interfaces
         Task GuardarCambiosAsync();
 
         Task<decimal> GetTotalPujadoUsuario(int usuarioId);
+
         Task RegistrarAuditoriaAsync(AuditoriaLog log);
     }
 }

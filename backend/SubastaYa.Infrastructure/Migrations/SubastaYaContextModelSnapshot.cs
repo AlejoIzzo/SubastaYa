@@ -91,7 +91,14 @@ namespace SubastaYa.Infrastructure.Migrations
                     b.HasIndex("UsuarioId")
                         .IsUnique();
 
-                    b.ToTable("Billeteras");
+                    b.ToTable("Billeteras", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Billeteras_SaldoDisponible_NoNegativo", "[SaldoDisponible] >= 0");
+
+                            t.HasCheckConstraint("CK_Billeteras_SaldoRetenido_NoNegativo", "[SaldoRetenido] >= 0");
+
+                            t.HasCheckConstraint("CK_Billeteras_SaldoTotal_NoNegativo", "[SaldoTotal] >= 0");
+                        });
 
                     b.HasData(
                         new
@@ -106,8 +113,8 @@ namespace SubastaYa.Infrastructure.Migrations
                         {
                             Id = 2,
                             SaldoDisponible = 105000.00m,
-                            SaldoRetenido = 45000.00m,
-                            SaldoTotal = 150000.00m,
+                            SaldoRetenido = 135000.00m,
+                            SaldoTotal = 240000.00m,
                             UsuarioId = 2
                         },
                         new
@@ -299,8 +306,8 @@ namespace SubastaYa.Infrastructure.Migrations
                             CategoriaId = 1,
                             Descripcion = "Consola de última generación en perfecto estado con joystick DualSense",
                             Estado = "ACTIVA",
-                            FechaFin = new DateTime(2026, 12, 31, 23, 59, 59, 0, DateTimeKind.Utc),
-                            FechaInicio = new DateTime(2026, 9, 15, 10, 0, 0, 0, DateTimeKind.Utc),
+                            FechaFin = new DateTime(2026, 11, 1, 12, 25, 0, 0, DateTimeKind.Utc),
+                            FechaInicio = new DateTime(2026, 11, 1, 11, 0, 0, 0, DateTimeKind.Utc),
                             IncrementoMinimo = 5000.00m,
                             PrecioBase = 30000.00m,
                             Titulo = "PlayStation 5 Digital Edition",
@@ -313,8 +320,8 @@ namespace SubastaYa.Infrastructure.Migrations
                             CategoriaId = 2,
                             Descripcion = "Carta coleccionable en estado Near Mint, protegida en acrílico",
                             Estado = "ACTIVA",
-                            FechaFin = new DateTime(2026, 10, 31, 23, 59, 59, 0, DateTimeKind.Utc),
-                            FechaInicio = new DateTime(2026, 9, 15, 10, 0, 0, 0, DateTimeKind.Utc),
+                            FechaFin = new DateTime(2026, 11, 1, 12, 1, 30, 0, DateTimeKind.Utc),
+                            FechaInicio = new DateTime(2026, 11, 1, 11, 0, 0, 0, DateTimeKind.Utc),
                             IncrementoMinimo = 1000.00m,
                             PrecioBase = 10000.00m,
                             Titulo = "Carta Pokémon Charizard 1st Edition",
@@ -327,8 +334,8 @@ namespace SubastaYa.Infrastructure.Migrations
                             CategoriaId = 4,
                             Descripcion = "Vehículo sedán con 25.000 km, único dueño, todos los services oficiales",
                             Estado = "PROGRAMADA",
-                            FechaFin = new DateTime(2026, 12, 15, 20, 0, 0, 0, DateTimeKind.Utc),
-                            FechaInicio = new DateTime(2026, 12, 1, 10, 0, 0, 0, DateTimeKind.Utc),
+                            FechaFin = new DateTime(2026, 11, 8, 12, 0, 0, 0, DateTimeKind.Utc),
+                            FechaInicio = new DateTime(2026, 11, 2, 12, 0, 0, 0, DateTimeKind.Utc),
                             IncrementoMinimo = 100000.00m,
                             PrecioBase = 15000000.00m,
                             Titulo = "Toyota Corolla 2022 2.0 SEG CVT",
@@ -341,8 +348,8 @@ namespace SubastaYa.Infrastructure.Migrations
                             CategoriaId = 1,
                             Descripcion = "Laptop profesional 16GB RAM, batería con 40 ciclos de carga",
                             Estado = "ACTIVA",
-                            FechaFin = new DateTime(2026, 9, 1, 18, 0, 0, 0, DateTimeKind.Utc),
-                            FechaInicio = new DateTime(2026, 8, 20, 10, 0, 0, 0, DateTimeKind.Utc),
+                            FechaFin = new DateTime(2026, 11, 1, 10, 0, 0, 0, DateTimeKind.Utc),
+                            FechaInicio = new DateTime(2026, 10, 30, 12, 0, 0, 0, DateTimeKind.Utc),
                             IncrementoMinimo = 5000.00m,
                             PrecioBase = 80000.00m,
                             Titulo = "MacBook Pro M2 14 pulgadas 512GB",
@@ -355,8 +362,8 @@ namespace SubastaYa.Infrastructure.Migrations
                             CategoriaId = 3,
                             Descripcion = "Campera de cuero genuino talle L, importada",
                             Estado = "ACTIVA",
-                            FechaFin = new DateTime(2026, 9, 1, 17, 0, 0, 0, DateTimeKind.Utc),
-                            FechaInicio = new DateTime(2026, 8, 20, 10, 0, 0, 0, DateTimeKind.Utc),
+                            FechaFin = new DateTime(2026, 11, 1, 9, 0, 0, 0, DateTimeKind.Utc),
+                            FechaInicio = new DateTime(2026, 10, 30, 12, 0, 0, 0, DateTimeKind.Utc),
                             IncrementoMinimo = 2000.00m,
                             PrecioBase = 25000.00m,
                             Titulo = "Campera de Cuero Vintage Hombre",
@@ -408,9 +415,18 @@ namespace SubastaYa.Infrastructure.Migrations
                         {
                             Id = 1,
                             BilleteraId = 2,
-                            Fecha = new DateTime(2026, 9, 1, 10, 0, 0, 0, DateTimeKind.Utc),
-                            Monto = 150000.00m,
+                            Fecha = new DateTime(2026, 8, 30, 10, 0, 0, 0, DateTimeKind.Utc),
+                            Monto = 240000.00m,
                             Tipo = "DEPOSITO"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BilleteraId = 2,
+                            Fecha = new DateTime(2026, 8, 31, 15, 0, 0, 0, DateTimeKind.Utc),
+                            Monto = 90000.00m,
+                            SubastaId = 4,
+                            Tipo = "RETENCION"
                         },
                         new
                         {
@@ -487,28 +503,28 @@ namespace SubastaYa.Infrastructure.Migrations
                         {
                             Id = 1,
                             Email = "vendedor@test.com",
-                            FechaRegistro = new DateTime(2026, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FechaRegistro = new DateTime(2026, 8, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             Nombre = "Vendedor Test"
                         },
                         new
                         {
                             Id = 2,
                             Email = "comprador1@test.com",
-                            FechaRegistro = new DateTime(2026, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FechaRegistro = new DateTime(2026, 8, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             Nombre = "Comprador 1"
                         },
                         new
                         {
                             Id = 3,
                             Email = "comprador2@test.com",
-                            FechaRegistro = new DateTime(2026, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FechaRegistro = new DateTime(2026, 8, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             Nombre = "Comprador 2"
                         },
                         new
                         {
                             Id = 4,
                             Email = "sinfondos@test.com",
-                            FechaRegistro = new DateTime(2026, 9, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            FechaRegistro = new DateTime(2026, 8, 20, 0, 0, 0, 0, DateTimeKind.Utc),
                             Nombre = "Sin Fondos"
                         });
                 });

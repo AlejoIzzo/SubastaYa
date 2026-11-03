@@ -6,7 +6,7 @@
 
 ---
 
-##  Descripción del Proyecto
+## 📌 Descripción del Proyecto
 
 **SubastaYa** es una solución web integral (Backend RESTful, Frontend reactivo y Base de Datos relacional) diseñada para compras y ventas competitivas en línea en tiempo real. La plataforma resuelve los dos desafíos más críticos de los sistemas de subastas tradicionales:
 
@@ -18,7 +18,7 @@
 
 ---
 
-##  Arquitectura y Tecnologías
+## 🛠️ Arquitectura y Tecnologías
 
 ### Backend (.NET 8 - Clean Architecture)
 - **SubastaYa.Domain:** Entidades (`Subasta`, `Billetera`, `Puja`, `Usuario`, `AuditoriaLog`, `TransaccionLedger`), Value Objects y tokens de concurrencia (`Version` / `[Timestamp]`).
@@ -37,7 +37,7 @@
 
 ---
 
-##  Requisitos Previos
+## 🚀 Requisitos Previos
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Node.js (v18 o superior)](https://nodejs.org/) y npm
@@ -45,7 +45,7 @@
 
 ---
 
-##  Instalación y Puesta en Marcha
+## ⚙️ Instalación y Puesta en Marcha
 
 ### 1. Clonar el Repositorio
 ```bash
@@ -65,49 +65,52 @@ cd SubastaYa
      "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=SubastaYaDB;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
    }
    ```
-3. Aplicar las migraciones Code-First y cargar los datos semilla (Seed Data):
+3. Restaurar dependencias del proyecto:
+   ```bash
+   dotnet restore
+   ```
+4. Aplicar las migraciones Code-First y cargar los datos semilla (Seed Data):
    ```bash
    dotnet ef database update --project ../SubastaYa.Infrastructure --startup-project .
    ```
    *(Si no tenés instalada la herramienta CLI de EF Core globalmente, podés instalarla con: `dotnet tool install --global dotnet-ef`)*
-4. Iniciar la API Backend:
+5. Iniciar la API Backend:
    ```bash
    dotnet run --launch-profile https
    ```
    - **API escuchando en:** `https://localhost:7282`
-   - **Documentación Swagger UI:** `https://localhost:7282/swagger`
-   - **SignalR Hub:** `https://localhost:7282/hubs/subastas`
+   - **Swagger UI:** `https://localhost:7282/swagger`
 
-### 3. Levantar el Frontend
+### 3. Configurar y Levantar el Frontend
 
-En una nueva terminal:
-```bash
-cd frontend
-npm install
-npm run dev
-```
-- **Aplicación Web accesible en:** `http://localhost:5173`
+1. Abrir una nueva terminal e ingresar a la carpeta frontend:
+   ```bash
+   cd frontend
+   ```
+2. Instalar las dependencias de Node.js:
+   ```bash
+   npm install
+   ```
+3. Iniciar el servidor de desarrollo de Vite:
+   ```bash
+   npm run dev
+   ```
+4. Abrir en el navegador: `http://localhost:5173`
 
 ---
 
-##  Datos Semilla para Pruebas (Seed Data)
+## 👥 Usuarios Demo (Seed Data)
 
-El sistema precarga automáticamente las cuentas requeridas por la cátedra para evaluar todos los flujos:
+El sistema inicializa automáticamente los siguientes usuarios para pruebas inmediatas:
 
-| Usuario | Email | Saldo Total | Saldo Retenido | Saldo Disponible | Rol / Propósito |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Vendedor Test** | `vendedor@test.com` | $0 | $0 | $0 | Publicador de subastas |
-| **Comprador 1** | `comprador1@test.com` | $150.000 | $45.000 | $105.000 | Postor líder en subasta activa |
-| **Comprador 2** | `comprador2@test.com` | $200.000 | $0 | $200.000 | Postor habilitado para superar ofertas |
-| **Sin Fondos** | `sinfondos@test.com` | $500 | $0 | $500 | Para probar rechazo por saldo insuficiente |
+| Usuario | Rol | Saldo Inicial | Descripción |
+| :--- | :--- | :--- | :--- |
+| **Vendedor Test** | Vendedor | $0.00 | Dueño de las subastas publicadas. |
+| **Comprador 1** | Comprador | $150.000,00 | Postor líder en PlayStation 5 ($45.000 en retención). |
+| **Comprador 2** | Comprador | $200.000,00 | Fondos disponibles completos para pujar. |
+| **Sin Fondos** | Comprador | $500,00 | Ideal para comprobar el rechazo por saldo insuficiente. |
 
-### Subastas de Prueba Precargadas:
-1. **Activa estándar (Id: 1):** Activa y abierta para recibir ofertas (Líder inicial: Comprador 1 en $45.000).
-2. **Activa complementaria (Id: 2):** Activa (Carta Pokémon Charizard).  
-   *(Nota: Para probar la zona crítica de < 60 segundos y la extensión automática Anti-Sniping en cualquier momento de la demo, simplemente se utiliza el formulario **"Publicar Subasta"** del frontend creando una subasta con 2 minutos de duración).*
-3. **Próxima (Id: 3):** Programada a futuro (pujas bloqueadas).
-4. **Vencida con Ganador (Id: 4):** Vencida con oferta ganadora (para verificar liquidación del Worker).
-5. **Vencida Desierta (Id: 5):** Vencida sin ofertas (para verificar pase a DESIERTA).
+*Nota: Podés alternar entre usuarios en cualquier momento desde el selector del Header en el Frontend.*
 
 ---
 
@@ -115,10 +118,12 @@ El sistema precarga automáticamente las cuentas requeridas por la cátedra para
 
 ### Fundamento Teórico
 Para evitar condiciones de carrera (Race Conditions) como la pérdida de ofertas simultáneas o inconsistencias en los saldos en garantía, las entidades `Subasta` y `Billetera` cuentan con una propiedad de control de versión:
+
 ```csharp
 [Timestamp]
 public byte[] Version { get; set; }
 ```
+
 Cuando dos usuarios intentan pujar sobre la misma subasta en el mismo milisegundo:
 1. Ambas peticiones leen el mismo token de versión inicial.
 2. La primera petición en ser procesada actualiza la subasta, incrementa la versión y hace `COMMIT` atómico (retornando `201 Created`).
@@ -154,7 +159,21 @@ $task2 = [System.Threading.Tasks.Task]::Run({
 
 ---
 
-##  Endpoints Principales de la API REST
+## 📡 Códigos de Estado HTTP en `POST /api/subastas/{id}/pujas`
+
+El endpoint de ofertas implementa códigos de estado HTTP diferenciados de acuerdo con la especificación y las reglas de negocio del sistema:
+
+| Código HTTP | Estado | Caso de Uso / Regla de Negocio |
+| :--- | :--- | :--- |
+| **`201 Created`** | Created | Oferta válida persistida atómicamente y nuevo líder registrado. |
+| **`400 Bad Request`** | Bad Request | Oferta inválida: monto menor al mínimo requerido (`RUN-06`), subasta no activa o fuera de vigencia. |
+| **`404 Not Found`** | Not Found | Subasta o usuario comprador inexistente. |
+| **`409 Conflict`** | Conflict | Colisión por concurrencia optimista (`DbUpdateConcurrencyException`). |
+| **`422 Unprocessable Entity`** | Unprocessable Entity | Petición bien formada que viola la regla de solvencia: saldo disponible insuficiente en la billetera virtual (`RUN-05`). |
+
+---
+
+## 📋 Endpoints Principales de la API REST
 
 | Método | Endpoint | Descripción |
 | :--- | :--- | :--- |

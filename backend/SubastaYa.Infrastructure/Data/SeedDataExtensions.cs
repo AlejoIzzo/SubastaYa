@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using SubastaYa.Domain.Entities;
 
@@ -8,16 +8,16 @@ namespace SubastaYa.Data
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
-            // 1. Categorías
+            // 1. CategorÃ­as
             modelBuilder.Entity<Categoria>().HasData(
-                new Categoria { Id = 1, Nombre = "Tecnología", UrlIcono = "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=200&auto=format&fit=crop&q=80" },
+                new Categoria { Id = 1, Nombre = "TecnologÃ­a", UrlIcono = "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=200&auto=format&fit=crop&q=80" },
                 new Categoria { Id = 2, Nombre = "Coleccionables", UrlIcono = "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=200&auto=format&fit=crop&q=80" },
                 new Categoria { Id = 3, Nombre = "Indumentaria", UrlIcono = "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=200&auto=format&fit=crop&q=80" },
-                new Categoria { Id = 4, Nombre = "Vehículos", UrlIcono = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&auto=format&fit=crop&q=80" }
+                new Categoria { Id = 4, Nombre = "VehÃ­culos", UrlIcono = "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=200&auto=format&fit=crop&q=80" }
             );
 
             // 2. Usuarios
-            var baseDate = new DateTime(2026, 9, 1, 0, 0, 0, DateTimeKind.Utc);
+            var baseDate = new DateTime(2026, 8, 20, 0, 0, 0, DateTimeKind.Utc);
             modelBuilder.Entity<Usuario>().HasData(
                 new Usuario { Id = 1, Nombre = "Vendedor Test", Email = "vendedor@test.com", FechaRegistro = baseDate },
                 new Usuario { Id = 2, Nombre = "Comprador 1", Email = "comprador1@test.com", FechaRegistro = baseDate },
@@ -39,8 +39,8 @@ namespace SubastaYa.Data
                 {
                     Id = 2,
                     UsuarioId = 2,
-                    SaldoTotal = 150000.00m,
-                    SaldoRetenido = 45000.00m,
+                    SaldoTotal = 240000.00m,
+                    SaldoRetenido = 135000.00m,
                     SaldoDisponible = 105000.00m
                 },
                 new Billetera
@@ -61,51 +61,52 @@ namespace SubastaYa.Data
                 }
             );
 
-            // 4. Subastas (5 Casos de Prueba)
+            // 4. Subastas (5 Casos de Prueba con ventanas temporales relativas DB-11)
+            var baseNow = new DateTime(2026, 11, 1, 12, 0, 0, DateTimeKind.Utc);
             modelBuilder.Entity<Subasta>().HasData(
-                // 1. Activa estándar: Cierra en 20-30 min con líder en $45.000
+                // 1. Activa estÃ¡ndar: Cierra en 20-30 min con lÃ­der en $45.000 (ej. +25 min)
                 new Subasta
                 {
                     Id = 1,
                     VendedorId = 1,
                     CategoriaId = 1,
                     Titulo = "PlayStation 5 Digital Edition",
-                    Descripcion = "Consola de última generación en perfecto estado con joystick DualSense",
+                    Descripcion = "Consola de Ãºltima generaciÃ³n en perfecto estado con joystick DualSense",
                     UrlImagen = "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=600&auto=format&fit=crop&q=80",
                     PrecioBase = 30000.00m,
                     IncrementoMinimo = 5000.00m,
-                    FechaInicio = new DateTime(2026, 9, 15, 10, 0, 0, DateTimeKind.Utc),
-                    FechaFin = new DateTime(2026, 12, 31, 23, 59, 59, DateTimeKind.Utc),
+                    FechaInicio = baseNow.AddHours(-1),
+                    FechaFin = baseNow.AddMinutes(25),
                     Estado = "ACTIVA"
                 },
-                // 2. Activa crítica: Cierra en menos de 2 min (para probar alerta visual y anti-sniping)
+                // 2. Activa crÃ­tica: Cierra en menos de 2 min (90 segundos para alerta visual roja < 60s y anti-sniping)
                 new Subasta
                 {
                     Id = 2,
                     VendedorId = 1,
                     CategoriaId = 2,
-                    Titulo = "Carta Pokémon Charizard 1st Edition",
-                    Descripcion = "Carta coleccionable en estado Near Mint, protegida en acrílico",
+                    Titulo = "Carta PokÃ©mon Charizard 1st Edition",
+                    Descripcion = "Carta coleccionable en estado Near Mint, protegida en acrÃ­lico",
                     UrlImagen = "https://images.unsplash.com/photo-1613770920235-94578b87192f?w=600&auto=format&fit=crop&q=80",
                     PrecioBase = 10000.00m,
                     IncrementoMinimo = 1000.00m,
-                    FechaInicio = new DateTime(2026, 9, 15, 10, 0, 0, DateTimeKind.Utc),
-                    FechaFin = new DateTime(2026, 10, 31, 23, 59, 59, DateTimeKind.Utc),
+                    FechaInicio = baseNow.AddHours(-1),
+                    FechaFin = baseNow.AddSeconds(90),
                     Estado = "ACTIVA"
                 },
-                // 3. Próxima: Inicio programado a +24 hs (pujas bloqueadas)
+                // 3. PrÃ³xima: Inicio programado a +24 hs (pujas bloqueadas)
                 new Subasta
                 {
                     Id = 3,
                     VendedorId = 1,
                     CategoriaId = 4,
                     Titulo = "Toyota Corolla 2022 2.0 SEG CVT",
-                    Descripcion = "Vehículo sedán con 25.000 km, único dueño, todos los services oficiales",
+                    Descripcion = "VehÃ­culo sedÃ¡n con 25.000 km, Ãºnico dueÃ±o, todos los services oficiales",
                     UrlImagen = "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&auto=format&fit=crop&q=80",
                     PrecioBase = 15000000.00m,
                     IncrementoMinimo = 100000.00m,
-                    FechaInicio = new DateTime(2026, 12, 1, 10, 0, 0, DateTimeKind.Utc),
-                    FechaFin = new DateTime(2026, 12, 15, 20, 0, 0, DateTimeKind.Utc),
+                    FechaInicio = baseNow.AddHours(24),
+                    FechaFin = baseNow.AddDays(7),
                     Estado = "PROGRAMADA"
                 },
                 // 4. Vencida con ganador: Fecha fin pasada + puja ganadora
@@ -115,12 +116,12 @@ namespace SubastaYa.Data
                     VendedorId = 1,
                     CategoriaId = 1,
                     Titulo = "MacBook Pro M2 14 pulgadas 512GB",
-                    Descripcion = "Laptop profesional 16GB RAM, batería con 40 ciclos de carga",
+                    Descripcion = "Laptop profesional 16GB RAM, baterÃ­a con 40 ciclos de carga",
                     UrlImagen = "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop&q=80",
                     PrecioBase = 80000.00m,
                     IncrementoMinimo = 5000.00m,
-                    FechaInicio = new DateTime(2026, 8, 20, 10, 0, 0, DateTimeKind.Utc),
-                    FechaFin = new DateTime(2026, 9, 1, 18, 0, 0, DateTimeKind.Utc),
+                    FechaInicio = baseNow.AddDays(-2),
+                    FechaFin = baseNow.AddHours(-2),
                     Estado = "ACTIVA"
                 },
                 // 5. Vencida desierta: Fecha fin pasada sin pujas
@@ -134,8 +135,8 @@ namespace SubastaYa.Data
                     UrlImagen = "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=600&auto=format&fit=crop&q=80",
                     PrecioBase = 25000.00m,
                     IncrementoMinimo = 2000.00m,
-                    FechaInicio = new DateTime(2026, 8, 20, 10, 0, 0, DateTimeKind.Utc),
-                    FechaFin = new DateTime(2026, 9, 1, 17, 0, 0, DateTimeKind.Utc),
+                    FechaInicio = baseNow.AddDays(-2),
+                    FechaFin = baseNow.AddHours(-3),
                     Estado = "ACTIVA"
                 }
             );
@@ -154,7 +155,7 @@ namespace SubastaYa.Data
                 {
                     Id = 2,
                     SubastaId = 1,
-                    CompradorId = 2, // comprador1 (líder)
+                    CompradorId = 2, // comprador1 (lÃ­der)
                     Monto = 45000.00m,
                     Fecha = new DateTime(2026, 9, 1, 19, 45, 0, DateTimeKind.Utc)
                 },
@@ -170,17 +171,27 @@ namespace SubastaYa.Data
 
             // 6. Transacciones Ledger (Movimientos contables que respaldan los saldos)
             modelBuilder.Entity<TransaccionLedger>().HasData(
-                // Depósito inicial comprador 1 ($150.000)
+                // DepÃ³sito inicial comprador 1 ($240.000)
                 new TransaccionLedger
                 {
                     Id = 1,
                     BilleteraId = 2,
                     SubastaId = null,
                     Tipo = "DEPOSITO",
-                    Monto = 150000.00m,
-                    Fecha = new DateTime(2026, 9, 1, 10, 0, 0, DateTimeKind.Utc)
+                    Monto = 240000.00m,
+                    Fecha = new DateTime(2026, 8, 30, 10, 0, 0, DateTimeKind.Utc)
                 },
-                // Retención comprador 1 por puja líder en subasta 1 ($45.000)
+                // RetenciÃ³n comprador 1 por puja ganadora en subasta 4 ($90.000)
+                new TransaccionLedger
+                {
+                    Id = 7,
+                    BilleteraId = 2,
+                    SubastaId = 4,
+                    Tipo = "RETENCION",
+                    Monto = 90000.00m,
+                    Fecha = new DateTime(2026, 8, 31, 15, 0, 0, DateTimeKind.Utc)
+                },
+                // RetenciÃ³n comprador 1 por puja lÃ­der en subasta 1 ($45.000)
                 new TransaccionLedger
                 {
                     Id = 2,
@@ -190,7 +201,7 @@ namespace SubastaYa.Data
                     Monto = 45000.00m,
                     Fecha = new DateTime(2026, 9, 1, 19, 45, 0, DateTimeKind.Utc)
                 },
-                // Depósito inicial comprador 2 ($200.000)
+                // DepÃ³sito inicial comprador 2 ($200.000)
                 new TransaccionLedger
                 {
                     Id = 3,
@@ -200,7 +211,7 @@ namespace SubastaYa.Data
                     Monto = 200000.00m,
                     Fecha = new DateTime(2026, 9, 1, 10, 0, 0, DateTimeKind.Utc)
                 },
-                // Retención temporal comprador 2 en subasta 1 ($35.000)
+                // RetenciÃ³n temporal comprador 2 en subasta 1 ($35.000)
                 new TransaccionLedger
                 {
                     Id = 4,
@@ -210,7 +221,7 @@ namespace SubastaYa.Data
                     Monto = 35000.00m,
                     Fecha = new DateTime(2026, 9, 1, 19, 30, 0, DateTimeKind.Utc)
                 },
-                // Liberación de saldo a comprador 2 al ser superado por comprador 1 ($35.000)
+                // LiberaciÃ³n de saldo a comprador 2 al ser superado por comprador 1 ($35.000)
                 new TransaccionLedger
                 {
                     Id = 5,
@@ -220,7 +231,7 @@ namespace SubastaYa.Data
                     Monto = 35000.00m,
                     Fecha = new DateTime(2026, 9, 1, 19, 45, 0, DateTimeKind.Utc)
                 },
-                // Depósito inicial sinfondos ($500)
+                // DepÃ³sito inicial sinfondos ($500)
                 new TransaccionLedger
                 {
                     Id = 6,

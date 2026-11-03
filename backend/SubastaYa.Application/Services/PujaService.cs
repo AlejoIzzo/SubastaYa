@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -44,7 +44,7 @@ namespace SubastaYa.Application.Services
             //Validaciones de existencia y estado de la Subasta
             var subasta = await _pujaRepository.GetSubastaParaPujarAsync(subastaId);
             if (subasta == null)
-                throw new DominioException($"Subasta con ID {subastaId} no encontrada.");
+                throw new RecursoNoEncontradoException($"Subasta con ID {subastaId} no encontrada.");
 
             if (subasta.Estado != "ACTIVA")
                 throw new DominioException($"No se puede ofertar en una subasta que no esté ACTIVA (Estado actual: {subasta.Estado}).");
@@ -60,7 +60,7 @@ namespace SubastaYa.Application.Services
             //Validaciones del Usuario Comprador
             var comprador = await _usuarioRepository.GetByIdAsync(dto.CompradorId);
             if (comprador == null)
-                throw new DominioException($"Usuario comprador con ID {dto.CompradorId} no encontrado.");
+                throw new RecursoNoEncontradoException($"Usuario comprador con ID {dto.CompradorId} no encontrado.");
 
             if (subasta.VendedorId == dto.CompradorId)
                 throw new DominioException("El vendedor no puede ofertar en su propia subasta.");
@@ -89,11 +89,11 @@ namespace SubastaYa.Application.Services
             //Validación de Fondos Disponibles en la Billetera
             var billeteraComprador = await _billeteraRepository.GetByUsuarioIdAsync(dto.CompradorId);
             if (billeteraComprador == null)
-                throw new DominioException("El comprador no posee una billetera registrada en el sistema.");
+                throw new RecursoNoEncontradoException("El comprador no posee una billetera registrada en el sistema.");
 
             if (billeteraComprador.SaldoDisponible < dto.Monto)
             {
-                throw new DominioException(
+                throw new SaldoInsuficienteException(
                     $"Saldo disponible insuficiente. Dispones de ${billeteraComprador.SaldoDisponible:N2} " +
                     $"y la puja requiere congelar ${dto.Monto:N2}."
                 );
@@ -122,8 +122,23 @@ namespace SubastaYa.Application.Services
                 billeteraAnterior = await _billeteraRepository.GetByUsuarioIdAsync(pujaLiderActual.CompradorId);
                 if (billeteraAnterior != null)
                 {
+                    if (billeteraAnterior.SaldoRetenido < pujaLiderActual.Monto)
+                    {
+                        throw new DominioException(
+                            $"Inconsistencia de saldo en billetera {billeteraAnterior.Id}: " +
+                            $"el saldo retenido (${billeteraAnterior.SaldoRetenido:N2}) es inferior al monto a liberar (${pujaLiderActual.Monto:N2})."
+                        );
+                    }
+
                     billeteraAnterior.SaldoRetenido -= pujaLiderActual.Monto;
                     billeteraAnterior.SaldoDisponible += pujaLiderActual.Monto;
+
+                    if (billeteraAnterior.SaldoRetenido < 0 || billeteraAnterior.SaldoDisponible < 0)
+                    {
+                        throw new DominioException(
+                            $"Inconsistencia financiera: saldo negativo detectado en la billetera {billeteraAnterior.Id} tras liberación de puja."
+                        );
+                    }
 
                     transaccionLiberacion = new TransaccionLedger
                     {
@@ -202,7 +217,7 @@ namespace SubastaYa.Application.Services
 
             //Construir y retornar el resultado
 
-            SubastaDetalleDTO subastaDetalle = await _subastaRepository.GetByIdAsync(subasta.Id);
+            SubastaDetalleDTO? subastaDetalle = await _subastaRepository.GetByIdAsync(subasta.Id);
             
             return new PujaResultadoDTO
             {
@@ -217,7 +232,7 @@ namespace SubastaYa.Application.Services
                 Mensaje = antiSnipingActivado
                     ? "Puja líder registrada con éxito. ¡Se extendió el tiempo de la subasta por 2 minutos!"
                     : "Puja líder registrada con éxito.",
-                SubastaDetalle = subastaDetalle
+                SubastaDetalle = subastaDetalle!
             };
         }
 
@@ -230,10 +245,11 @@ namespace SubastaYa.Application.Services
                 Accion = accion,
                 UsuarioId = usuarioId,
                 Fecha = DateTime.UtcNow,
-                DetalleJson = JsonSerializer.Serialize(new
+                DetalleJson = System.Text.Json.JsonSerializer.Serialize(new
                 {
                     Motivo = motivo,
-                    MontoOfertado = monto
+                    MontoOfertado = monto,
+                    FechaRechazo = DateTime.UtcNow
                 })
             };
 

@@ -49,49 +49,91 @@ namespace SubastaYa.Infrastructure.Repositories
                 var billeteraGanador = await _context.Billeteras.FirstOrDefaultAsync(b => b.UsuarioId == ganadorId);
                 var billeteraVendedor = await _context.Billeteras.FirstOrDefaultAsync(b => b.UsuarioId == vendedorId);
 
+                if (billeteraGanador == null)
+                    throw new InvalidOperationException($"No se encontró la billetera para el comprador ganador con UsuarioId {ganadorId}.");
+
+                if (billeteraVendedor == null)
+                    throw new InvalidOperationException($"No se encontró la billetera para el vendedor con UsuarioId {vendedorId}.");
+
                 // 1. Cambiar estado de la subasta a FINALIZADA
                 subasta.Estado = "FINALIZADA";
                 _context.Subastas.Update(subasta);
 
                 // 2. Liquidación atómica:
-                // - Al comprador ganador se le debita definitivamente el saldo retenido (y por ende su saldo total disminuye)
-                if (billeteraGanador != null)
-                {
-                    billeteraGanador.SaldoRetenido = Math.Max(0, billeteraGanador.SaldoRetenido - monto);
-                    billeteraGanador.SaldoTotal = Math.Max(0, billeteraGanador.SaldoTotal - monto);
-                    billeteraGanador.SaldoDisponible = Math.Max(0, billeteraGanador.SaldoTotal - billeteraGanador.SaldoRetenido);
-                    _context.Billeteras.Update(billeteraGanador);
+                // Obtener el saldo neto que realmente fue retenido para ESTA subasta en el libro mayor (Ledger)
+                var retencionesSubasta = await _context.TransaccionLedger
+                    .Where(t => t.BilleteraId == billeteraGanador.Id && t.SubastaId == subasta.Id && t.Tipo == "RETENCION")
+                    .SumAsync(t => t.Monto);
 
-                    // Registro en libro mayor (Ledger) para el comprador: PAGO
-                    var pagoLedger = new TransaccionLedger
-                    {
-                        BilleteraId = billeteraGanador.Id,
-                        SubastaId = subasta.Id,
-                        Tipo = "PAGO",
-                        Monto = monto,
-                        Fecha = now
-                    };
-                    await _context.TransaccionLedger.AddAsync(pagoLedger);
+                var liberacionesSubasta = await _context.TransaccionLedger
+                    .Where(t => t.BilleteraId == billeteraGanador.Id && t.SubastaId == subasta.Id && t.Tipo == "LIBERACION")
+                    .SumAsync(t => t.Monto);
+
+                var montoRetenidoSubasta = retencionesSubasta - liberacionesSubasta;
+
+                // Validación de solvencia: El saldo retenido en la billetera no puede ser menor a lo retenido por esta subasta
+                if (billeteraGanador.SaldoRetenido < montoRetenidoSubasta)
+                {
+                    throw new InvalidOperationException(
+                        $"Error de liquidación: la billetera {billeteraGanador.Id} posee un saldo retenido " +
+                        $"(${billeteraGanador.SaldoRetenido:N2}) inferior al monto retenido por la subasta {subasta.Id} (${montoRetenidoSubasta:N2})."
+                    );
                 }
+
+                // El comprador debe tener suficiente saldo total para el débito de adjudicación
+                if (billeteraGanador.SaldoTotal < monto)
+                {
+                    throw new InvalidOperationException(
+                        $"Error de liquidación: la billetera {billeteraGanador.Id} posee un saldo total " +
+                        $"(${billeteraGanador.SaldoTotal:N2}) inferior al monto a liquidar (${monto:N2})."
+                    );
+                }
+
+                // Descontar de SaldoRetenido únicamente lo que realmente estaba retenido por ESTA subasta
+                billeteraGanador.SaldoRetenido -= montoRetenidoSubasta;
+
+                // Descontar del SaldoTotal el monto liquidado definitivo
+                billeteraGanador.SaldoTotal -= monto;
+
+                // El saldo disponible se recalcula garantizando la coherencia financiera
+                billeteraGanador.SaldoDisponible = billeteraGanador.SaldoTotal - billeteraGanador.SaldoRetenido;
+
+                // Validación estricta de no-negatividad post-liquidación
+                if (billeteraGanador.SaldoRetenido < 0 || billeteraGanador.SaldoDisponible < 0 || billeteraGanador.SaldoTotal < 0)
+                {
+                    throw new InvalidOperationException(
+                        $"Inconsistencia financiera: saldo negativo detectado en la billetera {billeteraGanador.Id} tras liquidar la subasta {subasta.Id}."
+                    );
+                }
+
+                _context.Billeteras.Update(billeteraGanador);
+
+                // Registro en libro mayor (Ledger) para el comprador: PAGO
+                var pagoLedger = new TransaccionLedger
+                {
+                    BilleteraId = billeteraGanador.Id,
+                    SubastaId = subasta.Id,
+                    Tipo = "PAGO",
+                    Monto = monto,
+                    Fecha = now
+                };
+                await _context.TransaccionLedger.AddAsync(pagoLedger);
 
                 // - Al vendedor se le acredita el dinero en su saldo total y disponible
-                if (billeteraVendedor != null)
-                {
-                    billeteraVendedor.SaldoTotal += monto;
-                    billeteraVendedor.SaldoDisponible = billeteraVendedor.SaldoTotal - billeteraVendedor.SaldoRetenido;
-                    _context.Billeteras.Update(billeteraVendedor);
+                billeteraVendedor.SaldoTotal += monto;
+                billeteraVendedor.SaldoDisponible = billeteraVendedor.SaldoTotal - billeteraVendedor.SaldoRetenido;
+                _context.Billeteras.Update(billeteraVendedor);
 
-                    // Registro en libro mayor (Ledger) para el vendedor: COBRO
-                    var cobroLedger = new TransaccionLedger
-                    {
-                        BilleteraId = billeteraVendedor.Id,
-                        SubastaId = subasta.Id,
-                        Tipo = "COBRO",
-                        Monto = monto,
-                        Fecha = now
-                    };
-                    await _context.TransaccionLedger.AddAsync(cobroLedger);
-                }
+                // Registro en libro mayor (Ledger) para el vendedor: COBRO
+                var cobroLedger = new TransaccionLedger
+                {
+                    BilleteraId = billeteraVendedor.Id,
+                    SubastaId = subasta.Id,
+                    Tipo = "COBRO",
+                    Monto = monto,
+                    Fecha = now
+                };
+                await _context.TransaccionLedger.AddAsync(cobroLedger);
 
                 // 3. Auditoría inmutable de cierre con adjudicación y venta
                 var logAuditoria = new AuditoriaLog
