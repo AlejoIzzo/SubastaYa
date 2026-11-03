@@ -116,6 +116,14 @@ namespace SubastaYa.Data
                         "[Estado] IN ('PROGRAMADA', 'ACTIVA', 'FINALIZADA', 'DESIERTA')"
                     ));
 
+            modelBuilder.Entity<Billetera>()
+                .ToTable("Billeteras", table =>
+                {
+                    table.HasCheckConstraint("CK_Billeteras_SaldoTotal_NoNegativo", "[SaldoTotal] >= 0");
+                    table.HasCheckConstraint("CK_Billeteras_SaldoRetenido_NoNegativo", "[SaldoRetenido] >= 0");
+                    table.HasCheckConstraint("CK_Billeteras_SaldoDisponible_NoNegativo", "[SaldoDisponible] >= 0");
+                });
+
             // --- Carga de Datos Semilla Obligatorios (Seed Data) ---
             modelBuilder.Seed();
         }

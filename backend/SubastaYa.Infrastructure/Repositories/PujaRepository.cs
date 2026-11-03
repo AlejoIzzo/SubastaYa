@@ -27,7 +27,6 @@ namespace SubastaYa.Infrastructure.Repositories
                 .FirstOrDefaultAsync(s => s.Id == subastaId);
         }
 
-
         public async Task<IEnumerable<PujaDTO>> GetPujasBySubastaIdAsync(int subastaId)
         {
             return await _context.Pujas
@@ -70,7 +69,6 @@ namespace SubastaYa.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-
         public async Task AgregarAsync(Puja puja)
         {
             await _context.Pujas.AddAsync(puja);
@@ -87,11 +85,25 @@ namespace SubastaYa.Infrastructure.Repositories
                 throw new ConcurrenciaException("La subasta fue modificada por otra oferta en este mismo instante. Por favor, actualice la vista e intente nuevamente.");
             }
         }
+
         public async Task<decimal> GetTotalPujadoUsuario(int usuarioId)
         {
             return await _context.Pujas
                 .Where(p => p.CompradorId == usuarioId)
                 .SumAsync(p => (decimal?)p.Monto) ?? 0m;
+        }
+
+        public async Task RegistrarAuditoriaAsync(AuditoriaLog log)
+        {
+            try
+            {
+                await _context.AuditoriaLogs.AddAsync(log);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                // La auditoría de rechazo no debe bloquear el flujo de la aplicación
+            }
         }
     }
 }

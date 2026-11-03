@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
 using SubastaYa.API.Hubs;
 using SubastaYa.Application.DTOs;
 using SubastaYa.Application.Exceptions;
@@ -17,6 +16,7 @@ namespace SubastaYa.API.Controllers
     {
         private readonly IPujaService _pujaService;
         private readonly IHubContext<SubastaHub> _hubContext;
+
         public PujasController(IPujaService pujaService, IHubContext<SubastaHub> hubContext)
         {
             _pujaService = pujaService;
@@ -45,9 +45,15 @@ namespace SubastaYa.API.Controllers
 
         /// <summary>
         /// Registra una nueva puja en la subasta.
-        /// Maneja bloqueo atómico de saldos (Escrow), extensión anti-sniping y concurrencia optimista (HTTP 409).
+        /// Maneja bloqueo atómico de saldos (Escrow), extensión anti-sniping, concurrencia optimista (HTTP 409)
+        /// y validación estricta de saldo insuficiente (HTTP 422).
         /// </summary>
         [HttpPost]
+        [ProducesResponseType(typeof(PujaResultadoDTO), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
         public async Task<ActionResult<PujaResultadoDTO>> CrearPuja(int subastaId, [FromBody] CrearPujaDTO dto)
         {
             try
@@ -60,7 +66,10 @@ namespace SubastaYa.API.Controllers
             }
             catch (ConcurrenciaException ex)
             {
-                // Manejo explícito de concurrencia optimista (Requerimiento evaluado del TP)
+                // Registrar intento de puja rechazado por concurrencia (Sección 3.4 del TP)
+                await _pujaService.RegistrarAuditoriaRechazoAsync(subastaId, dto.CompradorId, dto.Monto, "PUJA_RECHAZADA_CONCURRENCIA", ex.Message);
+
+                // Manejo explícito de concurrencia optimista (HTTP 409)
                 return StatusCode(StatusCodes.Status409Conflict, new
                 {
                     status = 409,
@@ -68,9 +77,34 @@ namespace SubastaYa.API.Controllers
                     message = ex.Message
                 });
             }
+            catch (RecursoNoEncontradoException ex)
+            {
+                return NotFound(new
+                {
+                    status = 404,
+                    error = "Not Found",
+                    message = ex.Message
+                });
+            }
+            catch (SaldoInsuficienteException ex)
+            {
+                // Registrar intento de puja rechazado por saldo insuficiente (RUN-05 / Sección 3.4 del TP)
+                await _pujaService.RegistrarAuditoriaRechazoAsync(subastaId, dto.CompradorId, dto.Monto, "PUJA_RECHAZADA_NEGOCIO", ex.Message);
+
+                // Entidad no procesable: Petición bien formada que viola la solvencia económica (HTTP 422)
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, new
+                {
+                    status = 422,
+                    error = "Unprocessable Entity",
+                    message = ex.Message
+                });
+            }
             catch (DominioException ex)
             {
-                // Errores de validación de negocio (monto insuficiente, fondos insuficientes, etc.)
+                // Registrar intento de puja rechazado por validación de negocio (monto menor al mínimo RUN-06, subasta inactiva, etc.)
+                await _pujaService.RegistrarAuditoriaRechazoAsync(subastaId, dto.CompradorId, dto.Monto, "PUJA_RECHAZADA_NEGOCIO", ex.Message);
+
+                // Errores de validación de negocio (HTTP 400)
                 return BadRequest(new
                 {
                     status = 400,

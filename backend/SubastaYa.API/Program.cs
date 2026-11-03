@@ -3,6 +3,7 @@ using SubastaYa.API.Hubs;
 using SubastaYa.Application.Interfaces;
 using SubastaYa.Application.Services;
 using SubastaYa.Data;
+using SubastaYa.Infrastructure.Data;
 using SubastaYa.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,14 +25,6 @@ builder.Services.AddCors(options =>
             .AllowCredentials() //Para el handshake, lo necesita el signalR
             .AllowAnyMethod();
     });
-    // politica para http requests comunes
-    options.AddPolicy("Frontend", policy =>
-    {
-        policy
-            .WithOrigins("http://localhost:5173")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -50,11 +43,21 @@ builder.Services.AddScoped<IPujaRepository, PujaRepository>();
 builder.Services.AddScoped<IPujaService, PujaService>();
 builder.Services.AddScoped<ISubastaClosingRepository, SubastaClosingRepository>();
 builder.Services.AddScoped<ISubastaClosingService, SubastaClosingService>();
+builder.Services.AddScoped<IAuditoriaRepository, AuditoriaRepository>();
+builder.Services.AddScoped<IAuditoriaService, AuditoriaService>();
 
 // Worker en segundo plano para cierre automático, liquidación y activación de subastas
 builder.Services.AddHostedService<SubastaYa.API.Workers.SubastaClosingWorker>();
 
 var app = builder.Build();
+
+// Inicialización de la base de datos y sincronización de ventanas temporales relativas (DB-11)
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<SubastaYaContext>();
+    await context.Database.MigrateAsync();
+    await DbInitializer.InicializarVentanasRelativasAsync(context);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
