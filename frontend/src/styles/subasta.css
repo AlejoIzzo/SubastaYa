@@ -54,8 +54,11 @@ main {
         display: block;
         object-fit: contain;
     }
+    & img.img-error {
+        max-width: 50%;
+        max-height: 50%;
+    }
 }
-
 
 .puja-section {
     min-height: 0;

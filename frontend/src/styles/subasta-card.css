@@ -21,26 +21,36 @@
     aspect-ratio: 4 / 3;
     overflow: hidden; 
 
-    & img {
+    & img:not(.img-error) {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
-
+        
         overflow: hidden;
         transition: 
             transform 300ms ease;
     }
 }
+.card-img-container:has(.img-error) {
+    display: flex;
+    & img {
+        width: 50%;
+        height: 50%;
+        object-fit: cover;
+        display: block;
+        margin: auto;
+
+        overflow: hidden;
+    }
+}
 
 .card-container:hover {
-    /* the zoom in + card moves up feels like too much, keep one */
-    /* transform: translateY(-3px); */
-
     box-shadow: 0 0px 15px var(--primary-shadow);
     border: 1px solid var(--primary);
 
-    & img {
+    /* no hacer zoom en la imagen fallback */
+    & img:not(.img-error) {
         transform: scale(1.05);
     }
 }
@@ -90,4 +100,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+}
+
+.img-error {
+
 }

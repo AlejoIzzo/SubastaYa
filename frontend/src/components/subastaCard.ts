@@ -29,14 +29,22 @@ export function createSubastaCard(dto: SubastaCatalogoDTO) {
     }
     pujaActualMonto.textContent = "$ " + formatNumber(dto.pujaActual)
     
+    const imgFallbackUrl = "./src/assets/img-fallback.jpg"
     img.src = dto.urlImagen
+    img.addEventListener('error', (event: Event) => {
+        const target = event.target as HTMLImageElement;
+        // Prevent infinite loop if fallback also fails
+        target.onerror = null; 
+        target.src = imgFallbackUrl;
+        target.classList.add("img-error");
+        target.title = "Imagen no encontrada"
+    });
     
     if (dto.cantidadPujas > 0)
         pujaContador.textContent = `${dto.cantidadPujas} ${dto.cantidadPujas > 1 ? "Pujas" : "Puja"}`
     else
         pujaContador.textContent = "Sin pujas"
 
-    
     // guardar data en el elemento del timer para poder acceder en la función updateTimers()
     tiempo.dataset.estado = dto.estado
     tiempo.dataset.inicio = String(dto.fechaInicio)
