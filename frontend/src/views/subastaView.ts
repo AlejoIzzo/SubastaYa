@@ -14,8 +14,19 @@ export function renderSubasta(subasta: SubastaDetalleDTO)  {
     titulo.textContent = subasta.titulo
     vendedorNombre.textContent = subasta.vendedorNombre
     descripcion.textContent = subasta.descripcion
-    img.setAttribute("src", subasta.urlImagen)
     incrementoMinimo.textContent = formatNumber(subasta.incrementoMinimo)
+    
+    img.setAttribute("src", subasta.urlImagen)
+
+    const imgFallbackUrl = "./src/assets/img-fallback.jpg"
+    img.addEventListener('error', (event: Event) => {
+        const target = event.target as HTMLImageElement;
+        // Prevent infinite loop if fallback also fails
+        target.onerror = null; 
+        target.src = imgFallbackUrl;
+        target.classList.add("img-error");
+        target.title = "Imagen no encontrada"
+    });
 }
 
 export function renderSubastaState(subasta: SubastaDetalleDTO, usuario: UsuarioDTO) {

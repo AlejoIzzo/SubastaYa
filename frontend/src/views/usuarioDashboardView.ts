@@ -100,17 +100,37 @@ function createMisSubastasFila(usuarioSubastas: UsuarioSubastaDTO) {
     const pujaLider = clone.querySelector(".row-puja-lider")!
     const cantidadPujas = clone.querySelector(".row-cantidad-pujas")!
     const subastaEstado = clone.querySelector(".row-subasta-estado")!
-    const timer = clone.querySelector(".row-timer") as HTMLElement
+    const cardStatusTag = clone.querySelector(".card-status-tag")! as HTMLElement
+    const cardStatusTagText = clone.querySelector(".card-status-tag-text")! as HTMLElement
+    const cardStatusTagIcon = clone.querySelector(".card-status-tag-icon")! as HTMLElement
 
+    const timer = clone.querySelector(".row-timer") as HTMLElement
 
     subastaNombre.textContent = usuarioSubastas.titulo
     pujaLider.textContent = usuarioSubastas.pujaLider 
                                 ? `$ ${formatNumber(usuarioSubastas.pujaLider.monto)}`
                                 : " - "
     cantidadPujas.textContent = formatNumber(usuarioSubastas.cantidadPujas)
-    subastaEstado.textContent = capitalize(usuarioSubastas.estado)
 
     if (usuarioSubastas.estado == "ACTIVA") {
+        cardStatusTag.classList.add("tag-activa")
+        cardStatusTagText.textContent = "ACTIVA"
+        cardStatusTagIcon.setAttribute("name", "ellipse")
+    } else if (usuarioSubastas.estado == "PROGRAMADA") {
+        cardStatusTag.classList.add("tag-programada")
+        cardStatusTagText.textContent = "PROGRAMADA"
+        cardStatusTagIcon.setAttribute("name", "calendar-outline")
+    } else if (usuarioSubastas.estado == "FINALIZADA") {
+        cardStatusTag.classList.add("tag-finalizada")
+        cardStatusTagText.textContent = "FINALIZADA"
+        cardStatusTagIcon.setAttribute("name", "trophy-outline")
+    } else if (usuarioSubastas.estado == "DESIERTA") {
+        cardStatusTag.classList.add("tag-desierta")
+        cardStatusTagText.textContent = "DESIERTA"
+        cardStatusTagIcon.setAttribute("name", "remove-circle-outline")
+    }
+
+    if (usuarioSubastas.estado == "ACTIVA" || usuarioSubastas.estado == "PROGRAMADA") {
         timer.textContent = "00:00:00"
         timer.dataset.activo = "true"
         timer.dataset.inicio = usuarioSubastas.fechaFin
@@ -132,18 +152,30 @@ function createMisPujasFila(usuarioParticipacionSubastas: UsuarioParticipacionSu
     const usuarioEstado = clone.querySelector(".row-usuario-estado")!
     const timer = clone.querySelector(".row-timer")! as HTMLElement
 
+    const usuarioEstadoTag = clone.getElementById("usuario-puja-estado")!;
+    const usuarioEstadoIcon = usuarioEstadoTag.querySelector<HTMLElement>("#puja-estado-icon")!;
+    const usuarioEstadoText = usuarioEstadoTag.querySelector<HTMLParagraphElement>("#puja-estado-texto")!;
+
     subastaNombre.textContent = usuarioParticipacionSubastas.titulo
     pujaLider.textContent = `$ ${formatNumber(usuarioParticipacionSubastas.pujaLider.monto)}`
     usuarioUltimaPuja.textContent = `$ ${formatNumber(usuarioParticipacionSubastas.ultimaPujaUsuario.monto)}`
     
     if (usuarioParticipacionSubastas.ultimaPujaUsuario.compradorId === usuarioParticipacionSubastas.pujaLider.compradorId) {
-        usuarioEstado.textContent = usuarioParticipacionSubastas.estado == "ACTIVA"
+        usuarioEstadoTag.classList.add("lider")
+        usuarioEstadoIcon.setAttribute("name", "trophy-outline")
+        usuarioEstadoText.textContent = usuarioParticipacionSubastas.estado == "ACTIVA"
                                         ? "Líderando"
                                         : "Ganador"
     } else {
-        usuarioEstado.textContent = usuarioParticipacionSubastas.estado == "ACTIVA"
-                                        ? "Superado"
-                                        : "Perdedor"
+        if (usuarioParticipacionSubastas.estado == "ACTIVA") {
+            usuarioEstadoIcon.setAttribute("name", "information-circle-outline")
+            usuarioEstadoTag.classList.add("superado")
+            usuarioEstadoText.textContent = "Superado"
+        } else {
+            usuarioEstadoIcon.setAttribute("name", "information-circle-outline")
+            usuarioEstadoTag.classList.add("superado")
+            usuarioEstadoText.textContent = "Perdedor"
+        }
     }
 
     if (usuarioParticipacionSubastas.estado == "ACTIVA") {

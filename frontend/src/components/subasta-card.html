@@ -6,7 +6,10 @@
         <div class="card-info">
             <div class="card-info-header">
                 <p class="categoria">Categoria</p>
-                <p class="puja-contador"></p>
+                <div class="card-status-tag">
+                    <ion-icon name="" class="card-status-tag-icon"></ion-icon>
+                    <p class="card-status-tag-text"></p>
+                </div>
             </div>
             <div class="card-info-body">
                 <p class="titulo">Título</p>
@@ -14,7 +17,10 @@
             <hr>
             <div class="card-info-footer">
                 <div>
-                    <p class="puja-actual-label">Puja actual</p>
+                    <div style="display: flex; gap: .25rem;">
+                        <p class="puja-actual-label">Puja actual</p>
+                        <p class="puja-contador"></p>
+                    </div>
                     <span class="puja-actual-monto">$ 0</span>
                 </div>
                 <div class="card-tiempo-container">
