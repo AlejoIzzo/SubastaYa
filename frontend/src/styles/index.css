@@ -2,12 +2,10 @@ main {
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr);
     gap: 1rem;
-    padding: 1rem;
     align-items: start;
 }
 
 .catalogo-container {
-    /* flex: 1; */
     min-width: 0;
 }
 
@@ -15,72 +13,50 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: .75rem;
+    gap: 0.75rem;
     margin-bottom: 10px;
     flex-wrap: wrap;
 }
 
 .publicar-subasta-button {
-    display: flex;
-    align-items: center;
-    gap: .5rem;
-
-    & ion-icon {
-        font-size: 1.25rem;
-    }
+    gap: 0.5rem;
+}
+.publicar-subasta-button ion-icon {
+    font-size: 1.25rem;
 }
 
 .catalogo-cards-container {
     display: grid;
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(min(100%, 300px), 1fr)
-    );
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
     gap: 1rem;
-
     width: 100%;
     max-width: 400px;
 }
+.catalogo-cards-container:has(> :nth-child(2)) { max-width: 816px; }
+.catalogo-cards-container:has(> :nth-child(3)) { max-width: 1232px; }
+.catalogo-cards-container:has(> :nth-child(4)) { max-width: 1648px; }
 
-/* 2 cards */
-.catalogo-cards-container:has(> :nth-child(2)) {
-    max-width: 816px;
+.filtros-container {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background-color: rgba(29, 78, 216, .045);
+    border-radius: var(--border-radius);
+    padding: 1rem;
 }
-
-/* 3 cards */
-.catalogo-cards-container:has(> :nth-child(3)) {
-    max-width: 1232px;
-}
-
-/* 4+ cards */
-.catalogo-cards-container:has(> :nth-child(4)) {
-    max-width: 1648px;
+.filtros-container .filtro-titulo {
+    font-weight: 500;
 }
 
 .filtros-header {
     display: flex;
     justify-content: space-between;
 }
-
-.filtros-container {
-    margin-top: 4px;
-    display: flex;
-    flex-direction: column;
-    gap: .75rem;
-
-    background-color: rgba(29, 78, 216, .045);
-    border-radius: var(--border-radius);
-    padding: 1rem;
-
-    & .filtro-titulo {
-        font-weight: 500;
-    }
-}
-
 .categorias-container {
     display: flex;
     flex-direction: column;
-    gap: .25rem;
+    gap: 0.25rem;
     justify-content: center;
 }
 
@@ -88,50 +64,37 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: .25rem;
-    & input {
-        min-width: 0;
-        width: 100%;
-        max-width: 100px;
-
-        outline: none;
-        border: 1px solid var(--border-color);
-        font-size: 1rem;
-        padding: .5rem;
-        border-radius: var(--border-radius);
-        background: none;
-        font-family: 'Inter', sans-serif;
-    }
+    gap: 0.25rem;
 }
-
-.form-select {
+.rango-precio-container input {
+    min-width: 0;
     width: 100%;
-    padding: .5rem;
-    font-size: 1rem;
+    max-width: 100px;
+    outline: none;
     border: 1px solid var(--border-color);
-    border-radius: 3px;
-    background-color: transparent;
-    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: var(--border-radius);
+    background: transparent;
+    transition: border-color 0.25s ease;
+}
+.rango-precio-container input:focus {
+    border-color: var(--primary);
 }
 
 @media (max-width: 768px) {
     main {
         grid-template-columns: 1fr;
-        padding: .75rem;
     }
-
     .filtros-container {
         width: 100%;
     }
-
     .rango-precio-container input {
         max-width: none;
     }
 }
-
 @media (max-width: 480px) {
     .publicar-subasta-button {
         width: 100%;
-        justify-content: center;
     }
 }

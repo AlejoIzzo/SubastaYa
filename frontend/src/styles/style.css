@@ -1,32 +1,50 @@
 :root {
-    /* colors */
+    /* Base Colors */
     --text: #000;
-    --secondary-text: rgba(0,0,0,.5);
-
+    --secondary-text: rgba(0, 0, 0, 0.5);
+    
     --primary: #2563eb;
     --primary-hover: #1d4ed8;
     --primary-active: #1e40af;
     --primary-shadow: rgba(37, 99, 235, 0.25);
-
-    --primary-soft: rgba(29, 78, 216, .50);
-    --primary-soft-hover: rgba(29, 78, 216, .15);
-    --primary-soft-active: rgba(29, 78, 216, .35);
+    
+    --primary-soft: rgba(29, 78, 216, 0.50);
+    --primary-soft-hover: rgba(29, 78, 216, 0.15);
+    --primary-soft-active: rgba(29, 78, 216, 0.35);
 
     --surface: #f5f5f5;
-    --surface-secondary: #b8b8b89a;
+    --surface-hover: #e5e5e5;
+    --surface-secondary: rgba(184, 184, 184, 0.6);
     --card: #fff;
 
-    /* border */
+    /* Semantic / Status Colors */
+    --success: #10b981;
+    --success-hover: #059669;
+    --success-bg: rgba(16, 185, 129, 0.15);
+    
+    --danger: #dc3333;
+    --danger-hover: #b43333;
+    --danger-bg: rgba(220, 51, 51, 0.15);
+    
+    --warning: #e17600;
+    --warning-bg: rgba(225, 118, 0, 0.15);
+    
+    --info: #465474;
+    --info-bg: rgba(70, 84, 116, 0.15);
+    
+    --neutral: #979797;
+    --neutral-bg: rgba(151, 151, 151, 0.15);
+
+    /* UI Measurements */
     --border-radius: 0.5rem;
-    --border-color: rgba(0,0,0,.25);
+    --border-color: rgba(0, 0, 0, 0.25);
 }
 
-/* === overrides / boilerplate */
-
+/* === Overrides & Boilerplate === */
 * {
-  box-sizing: border-box; /* Ensures padding/border don't affect width */
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html {
@@ -34,23 +52,21 @@ html {
 }
 
 body, input, button, select, option, textarea {
-    font-family: Inter, sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 body {
     background-color: var(--surface);
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth; /* Enables smooth page scrolling */
-  }
+    html {
+        scroll-behavior: smooth;
+    }
 }
-
-
 
 button {
     border: none;
@@ -60,119 +76,274 @@ button {
     font-size: inherit;
 }
 
-/* Ocultar spin buttons de input type number */
-/* Chrome, Safari, Edge, Opera */
+/* Hide spin buttons on number inputs */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
-/* Firefox */
 input[type=number] {
-  -moz-appearance: textfield;
-  appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
 }
 
-
-/* === custom utility classes === */
-
-.hidden {
-    display: none !important;
+/* === Layout Globals === */
+main {
+    padding: 1rem;
+}
+@media screen and (max-width: 768px) {
+    main { padding: 0.75rem; }
 }
 
-.danger-text {
-    color: rgb(220, 51, 51) !important;
+.pagina-titulo {
+    color: var(--primary);
+    margin-bottom: 0.25rem;
 }
+.pagina-titulo h1 { font-weight: 500; }
+hr { color: var(--border-color); }
 
-.icon-link {
-    text-decoration: none;
+/* === Utilities === */
+.hidden { display: none !important; }
+.text-danger { color: var(--danger) !important; }
+.text-success { color: var(--success) !important; }
+
+/* === Buttons & Links === */
+.icon-link, .icon-button {
     color: var(--primary-text);
-    font-size: 2rem;
-    transition: .25s;
-
-    &:hover {
-        color: var(--primary-hover)
-    }
-    &:active {
-        color: var(--primary-active);
-    }
-
-    /* remover espacio vacio debajo de icono */
+    transition: 0.25s ease;
     display: inline-block;
     line-height: 0;
+    text-decoration: none;
+}
+.icon-link { font-size: 2rem; }
+.icon-button { font-size: 1.25rem; }
+
+.icon-link:hover, 
+.icon-button:hover, 
+.text-link:hover { 
+    color: var(--primary-hover); 
+}
+.icon-link:active, 
+.icon-button:active, 
+.text-link:active { 
+    color: var(--primary-active); 
 }
 
 .text-link {
     text-decoration: none;
-    transition: .25s;
-
-    &:hover {
-        color: var(--primary-hover)
-    }
-    &:active {
-        color: var(--primary-active);
-    }
+    transition: 0.25s ease;
 }
 
-.icon-button {
-    transition: .25s;
-    font-size: 1.25rem;
-
-
-    &:hover {
-        color: var(--primary-hover)
-    }
-    &:active {
-        color: var(--primary-active);
-    }
-
-    /* remover espacio vacio debajo de icono */
-    display: inline-block;
-    line-height: 0;
+.text-button, .primary-text-button {
+    font-family: inherit;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    border-radius: var(--border-radius);
+    padding: 0.5rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .text-button {
     border: 1px solid var(--primary);
-    border-radius: var(--border-radius);
-    padding: .5rem;
-    font-family: "Inter", sans-serif;
-    transition: .25s;
     color: var(--primary);
-
-    &:hover {
-        color: white;
-        background-color: var(--primary)
-    }
-    &:active {
-        background-color: var(--primary-active);
-    }
 }
+.text-button:hover {
+    color: white;
+    background-color: var(--primary);
+}
+.text-button:active { background-color: var(--primary-active); }
 
 .primary-text-button {
-    font-family: "Inter", sans-serif;
-    transition: .25s;
-
-    border-radius: var(--border-radius);
-    padding: .5rem;
     background-color: var(--primary);
-    color: var(--surface);
+    color: var(--card);
     font-weight: 600;
-    text-decoration: none;
-
-    &:hover {
-        background-color: var(--primary-hover);
-    }
-    &:active {
-        background-color: var(--primary-active);
-    }
+}
+.primary-text-button:hover { background-color: var(--primary-hover); }
+.primary-text-button:active { background-color: var(--primary-active); }
+.primary-text-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
-/* Página 404 */
+/* === Global UI Components === */
 
-/* si la página tiene error, sobre-escribir display */
-main:has(.not-found) {
-    display: block !important;
+/* Stat Cards */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.5rem;
 }
+.card, .tabla-section, .tablas-section {
+    min-width: 0;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--card);
+}
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+}
+.card-header ion-icon {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+.card-value {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 600;
+}
+
+/* Forms */
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: var(--card);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.form-header h2 { font-weight: 500; }
+.form-header ion-icon {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+.form-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.form-field-group {
+    display: flex;
+    gap: 0.5rem;
+}
+.form-field-group > * { flex: 1; }
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+.form-label { font-weight: 500; }
+.form-input, .form-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    font-size: 1rem;
+    outline: none;
+    background-color: transparent;
+    transition: border-color 0.25s ease;
+    cursor: auto;
+}
+select.form-select { cursor: pointer; }
+.form-input:focus, .form-select:focus { border-color: var(--primary); }
+.form-input.error, .form-select.error { border-color: var(--danger); }
+.field-error { color: var(--danger); }
+
+@media screen and (max-width: 768px) {
+    .form-field-group { flex-direction: column; }
+}
+
+/* Tables */
+.tabla-container {
+    width: 100%;
+    overflow-x: auto;
+}
+.tabla {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+}
+.tabla-section-header, .tablas-section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+.tabla-section-header ion-icon {
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+.tabla thead th { border-bottom: 1px solid var(--border-color); }
+.tabla th, .tabla td {
+    padding: 0.75rem 1rem;
+    text-align: left;
+}
+.tabla th { font-weight: 600; }
+.tabla tbody tr:hover { background: var(--surface-hover); }
+.empty-message { margin-top: 0.5rem; }
+
+/* Status Tags & States */
+.card-status-tag, 
+.puja-estado {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: 1px solid transparent;
+    width: fit-content;
+    z-index: 99;
+}
+.card-status-tag ion-icon, 
+.puja-estado ion-icon { font-size: 1rem; }
+
+.tag-activa {
+    background-color: var(--success-bg);
+    border-color: var(--success);
+    color: var(--success);
+}
+.tag-activa * { color: var(--success); }
+
+.tag-finalizada, .puja-estado.lider {
+    background-color: var(--primary-soft-hover);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+.tag-finalizada *, .puja-estado.lider * { color: var(--primary); }
+
+.tag-desierta, .puja-estado.sin-pujas {
+    background-color: var(--neutral-bg);
+    border-color: var(--neutral);
+    color: var(--neutral);
+}
+.tag-desierta *, .puja-estado.sin-pujas * { color: var(--neutral); }
+
+.tag-programada {
+    background-color: var(--info-bg);
+    border-color: var(--info);
+    color: var(--info);
+}
+.tag-programada * { color: var(--info); }
+
+.puja-estado.superado {
+    background-color: var(--danger-bg);
+    border-color: var(--danger);
+    color: var(--danger);
+}
+.puja-estado.superado * { color: var(--danger); }
+
+.puja-estado.otro-lider {
+    background-color: var(--warning-bg);
+    border-color: var(--warning);
+    color: var(--warning);
+}
+.puja-estado.otro-lider * { color: var(--warning); }
+
+/* Pages */
+main:has(.not-found) { display: block !important; }
 .not-found {
     min-height: 60vh;
     display: flex;
@@ -181,28 +352,22 @@ main:has(.not-found) {
     justify-content: center;
     text-align: center;
 }
-
 .not-found-title {
     font-size: 4rem;
     font-weight: 500;
     margin: 0;
 }
+.not-found-description { margin-bottom: 0.75rem; }
 
-.not-found-description {
-    margin-bottom: .75rem;
-}
-
+/* Pagination */
 .paginacion {
     margin-top: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    & button {
-        display: flex;
-        align-items: center;
-    }
-    & button:enabled {
-        color: var(--primary)
-    }
 }
+.paginacion button {
+    display: flex;
+    align-items: center;
+}
+.paginacion button:enabled { color: var(--primary); }

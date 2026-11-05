@@ -95,6 +95,7 @@ export function renderSubastaState(subasta: SubastaDetalleDTO, usuario: UsuarioD
             timerLabel.classList.add("hidden");
 
             estadoLabel.textContent = "SUBASTA FINALIZADA";
+            estadoLabel.classList.add("estado-finalizada");
             estadoLabel.classList.remove("hidden");
 
             subastaResultadoContainer.classList.remove("hidden");
@@ -118,7 +119,8 @@ export function renderSubastaState(subasta: SubastaDetalleDTO, usuario: UsuarioD
             timer.dataset.timerActivo = "false";
             timer.classList.add("hidden");
             timerLabel.classList.add("hidden");
-
+            
+            estadoLabel.classList.add("estado-desierta");
             estadoLabel.textContent = "SUBASTA DESIERTA";
             estadoLabel.classList.remove("hidden");
 
