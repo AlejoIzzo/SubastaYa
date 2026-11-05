@@ -79,8 +79,11 @@ main {
 .tabla-container th,
 .tabla-container td {
     padding: .75rem 1rem;
+    text-align: center;
+}
+.tabla-container .row-subasta-nombre,
+.tabla-container .subasta-nombre-header {
     text-align: left;
-
 }
 
 .tabla-container th {
@@ -94,6 +97,97 @@ main {
 .empty-message {
     margin-top: .5rem;
 }
+
+.card-status-tag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .25rem;
+    z-index: 99;
+    
+    padding: .25rem;
+    border-radius: var(--border-radius);
+    font-weight: 700;
+
+    width: fit-content;
+    margin: auto;
+
+    font-size: .85rem;
+    border: 1px solid black;
+
+    &.tag-finalizada {
+        background-color: rgba(29, 78, 216, .25);    
+        border-color: rgba(29, 78, 216, 1);
+        & * {color: rgba(29, 78, 216, 1);}
+    }
+
+    &.tag-activa {
+        background-color: rgba(16, 185, 129, .25);
+        border-color: rgb(16, 185, 129);
+        & * {color: rgb(16, 185, 129);}
+    }
+
+    &.tag-desierta {
+        background-color: rgba(151, 151, 151, 0.25);
+        border-color: rgb(151, 151, 151);
+        & * {color: rgb(151, 151, 151);}
+    }
+
+    &.tag-programada {
+        background-color: rgba(70, 84, 116, 0.25);
+        border-color: rgb(70, 84, 116);
+        & * {color: rgb(70, 84, 116);}
+    }
+}
+.card-status-tag-icon {
+    font-size: 1rem;
+}
+
+
+#usuario-puja-estado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .25rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+
+    width: fit-content;
+    margin: auto;
+
+    transition:
+        background-color 200ms ease,
+        color 200ms ease,
+        border-color 200ms ease;
+
+    font-size: .85rem;
+    & ion-icon {
+        font-size: 1rem;
+    }
+}
+
+.puja-estado.lider {
+    background-color: rgba(29, 78, 216, .15);
+    border: 1px solid rgba(29, 78, 216, 1);
+    color: rgba(29, 78, 216, 1);
+}
+.puja-estado.superado {
+    background-color: rgba(225, 0, 14, 0.15);
+    border: 1px solid rgb(225, 0, 14);
+    color: rgb(225, 0, 14)
+}
+.puja-estado.otro-lider {
+    background-color: rgba(225, 118, 0, 0.15);
+    border: 1px solid rgb(225, 118, 0);
+    color: rgb(225, 118, 0)
+}
+.puja-estado.sin-pujas {
+    background-color: rgba(151, 151, 151, 0.15);
+    border: 1px solid rgb(151, 151, 151);
+    color: rgb(151, 151, 151)
+}
+
 
 @media screen and (max-width: 1000px) {
     .cards-container {

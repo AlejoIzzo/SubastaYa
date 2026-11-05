@@ -73,7 +73,7 @@
                     <table class="tabla" id="mis-subastas-tabla">
                         <thead>
                             <tr>
-                                <th>Producto</th>
+                                <th class="subasta-nombre-header">Producto</th>
                                 <th>Puja líder</th>
                                 <th>Cantidad de pujas</th>
                                 <th>Estado</th>
@@ -94,7 +94,7 @@
                     <table class="tabla hidden" id="mis-pujas-tabla">
                         <thead>
                             <tr>
-                                <th>Subasta</th>
+                                <th class="subasta-nombre-header">Subasta</th>
                                 <th>Tu ultima puja</th>
                                 <th>Puja líder</th>
                                 <th>Estado</th>
@@ -124,7 +124,12 @@
             <td class="row-subasta-nombre"></td>
             <td class="row-puja-lider"></td>
             <td class="row-cantidad-pujas"></td>
-            <td class="row-subasta-estado"></td>
+            <td class="row-subasta-estado">
+                <div class="card-status-tag">
+                    <ion-icon name="" class="card-status-tag-icon"></ion-icon>
+                    <p class="card-status-tag-text"></p>
+                </div>
+            </td>
             <td class="row-timer"></td>
         </tr>
     </template>
@@ -134,7 +139,12 @@
             <td class="row-subasta-nombre"></td>
             <td class="row-puja-usuario"></td>
             <td class="row-puja-lider"></td>
-            <td class="row-usuario-estado"></td>
+            <td class="row-usuario-estado">
+                <div id="usuario-puja-estado" class="puja-estado lider">
+                    <ion-icon name="alert-circle-outline" id="puja-estado-icon"></ion-icon>
+                    <p id="puja-estado-texto"></p>
+                </div>
+            </td>
             <td class="row-timer"></td>
         </tr>
     </template>

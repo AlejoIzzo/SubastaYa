@@ -164,7 +164,6 @@ main {
     background-color: rgba(151, 151, 151, 0.15);
     border: 1px solid rgb(151, 151, 151);
     color: rgb(151, 151, 151)
-
 }
 
 .pujas-container {
@@ -252,7 +251,7 @@ main {
     }
     & button:hover {
         /* sobre escribir hover effect */
-        background-color: var(--primary) !important; 
+        background-color: #10b981 !important; 
     }
     &:hover #form-tooltip-text {
         /* Mostrar tooltip cuando el formulario esta desactivado y se hace hover */
@@ -294,6 +293,11 @@ main {
     min-width: 0;
     flex: 1;
     font-size: 20px;
+
+    background-color: #10b981;
+    &:hover {
+        background-color: #059669;
+    }
 }
 
 .form-error-container {
