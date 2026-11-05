@@ -74,6 +74,10 @@ namespace SubastaYa.Application.Services
                 throw new DominioException("Ya eres el postor líder con la oferta más alta. No puedes ofertar contra ti mismo.");
 
             //Validación del Monto Ofertado
+            if (dto.Monto <= 0)
+                throw new DominioException("El monto a pujar debe ser mayor a cero");
+
+
             decimal montoMinimoRequerido = pujaLiderActual != null
                 ? pujaLiderActual.Monto + subasta.IncrementoMinimo
                 : subasta.PrecioBase;
@@ -93,7 +97,7 @@ namespace SubastaYa.Application.Services
 
             if (billeteraComprador.SaldoDisponible < dto.Monto)
             {
-                throw new SaldoInsuficienteException(
+                throw new DominioException(
                     $"Saldo disponible insuficiente. Dispones de ${billeteraComprador.SaldoDisponible:N2} " +
                     $"y la puja requiere congelar ${dto.Monto:N2}."
                 );

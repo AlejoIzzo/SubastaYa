@@ -8,7 +8,6 @@ namespace SubastaYa.Application.DTOs
         public int CompradorId { get; set; }
 
         [Required(ErrorMessage = "El monto de la puja es obligatorio.")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "El monto debe ser mayor a cero.")]
         public decimal Monto { get; set; }
     }
 }

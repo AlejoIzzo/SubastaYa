@@ -26,7 +26,7 @@ export function createSubastaCard(dto: SubastaCatalogoDTO) {
     categoria.textContent = dto.categoriaNombre
     titulo.textContent = dto.titulo
     if (dto.estado == "ACTIVA" || dto.estado == "PROGRAMADA") {
-        pujaActualLabel.textContent = dto.cantidadPujas == 0 ? "Precio base" : "Puja líder actual"
+        pujaActualLabel.textContent = dto.cantidadPujas == 0 ? "Precio base" : "Puja líder"
     } else {
         pujaActualLabel.textContent = dto.cantidadPujas == 0 ? "Precio base" : "Puja ganadora"
     }

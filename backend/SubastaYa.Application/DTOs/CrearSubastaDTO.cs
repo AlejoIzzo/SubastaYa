@@ -16,7 +16,6 @@ namespace SubastaYa.Application.DTOs
         [Required]
         public int CategoriaId { get; set; }
         [Required]
-        [Range(0.01, double.MaxValue)]
         public decimal PrecioBase { get; set; }
         [Required]
         public string UrlImagen { get; set; } = string.Empty;
@@ -26,7 +25,6 @@ namespace SubastaYa.Application.DTOs
         [Required]
         public int VendedorId { get; set; }
         [Required]
-        [Range(0.01, double.MaxValue)]
         public decimal IncrementoMinimo { get; set; }
     }
 }

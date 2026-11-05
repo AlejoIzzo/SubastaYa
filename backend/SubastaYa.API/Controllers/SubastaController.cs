@@ -51,11 +51,20 @@ namespace SubastaYa.API.Controllers
                     actionName: nameof(GetSubastaById),
                     routeValues: new { id = subastaCreadaDTO.Id },
                     value: subastaCreadaDTO
-                ); 
-            } catch (DominioException ex)
+                );
+            } catch (RecursoNoEncontradoException ex)
             {
-                return BadRequest(new
+                return NotFound(new
                 {
+                    status = 404,
+                    error = "Not Found",
+                    message = ex.Message
+                });
+            } catch (DominioException ex) {
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, new
+                {
+                    status = 422,
+                    error = "Unprocessable Entity",
                     message = ex.Message
                 });
             }

@@ -64,10 +64,26 @@ namespace SubastaYa.API.Controllers
                 var billeteraActualizada = await _billeteraService.CargarSaldoAsync(billeteraId, dto.Monto);
                 return Ok(billeteraActualizada);
             }
+            catch (RecursoNoEncontradoException ex)
+            {
+                return NotFound(new
+                {
+                    status = 404,
+                    error = "Not Found",
+                    message = ex.Message
+                });
+
+            }
             catch (DominioException ex)
             {
-                return BadRequest(new { message = ex.Message });
-            }
+                return StatusCode(StatusCodes.Status422UnprocessableEntity, new
+                {
+                    status = 422,
+                    error = "Unprocessable Entity",
+                    message = ex.Message
+                });
+
+            }            
         }
     }
 }

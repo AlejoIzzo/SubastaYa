@@ -86,31 +86,19 @@ namespace SubastaYa.API.Controllers
                     message = ex.Message
                 });
             }
-            catch (SaldoInsuficienteException ex)
+            catch (DominioException ex)
             {
-                // Registrar intento de puja rechazado por saldo insuficiente (RUN-05 / Sección 3.4 del TP)
+                // Registrar intento de puja rechazado por validación de negocio (saldo insuficiente, monto menor al mínimo RUN-06, subasta inactiva, etc.)
                 await _pujaService.RegistrarAuditoriaRechazoAsync(subastaId, dto.CompradorId, dto.Monto, "PUJA_RECHAZADA_NEGOCIO", ex.Message);
 
-                // Entidad no procesable: Petición bien formada que viola la solvencia económica (HTTP 422)
+                // Entidad no procesable: Petición bien formada que viola una regla de negocio
                 return StatusCode(StatusCodes.Status422UnprocessableEntity, new
                 {
                     status = 422,
                     error = "Unprocessable Entity",
                     message = ex.Message
                 });
-            }
-            catch (DominioException ex)
-            {
-                // Registrar intento de puja rechazado por validación de negocio (monto menor al mínimo RUN-06, subasta inactiva, etc.)
-                await _pujaService.RegistrarAuditoriaRechazoAsync(subastaId, dto.CompradorId, dto.Monto, "PUJA_RECHAZADA_NEGOCIO", ex.Message);
 
-                // Errores de validación de negocio (HTTP 400)
-                return BadRequest(new
-                {
-                    status = 400,
-                    error = "Bad Request",
-                    message = ex.Message
-                });
             }
         }
     }
