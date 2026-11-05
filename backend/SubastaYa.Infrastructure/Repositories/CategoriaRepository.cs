@@ -28,5 +28,9 @@ namespace SubastaYa.Infrastructure.Repositories
                 }).ToListAsync();
         }
 
+        public async Task<Categoria?> GetCategoriaById(int id)
+        {
+            return await _context.Categorias.FirstOrDefaultAsync(c => c.Id == id);
+        }
     }
 }

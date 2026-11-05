@@ -44,7 +44,7 @@ namespace SubastaYa.Application.Services
 
             Billetera? billetera = await _billeteraRepository.GetByIdAsync(billeteraId);
             if (billetera == null)
-                throw new DominioException($"No se encontró la billetera con id ${billeteraId}");
+                throw new RecursoNoEncontradoException($"No se encontró la billetera con id ${billeteraId}");
 
             // Actualización de saldos
             billetera.SaldoTotal += monto;

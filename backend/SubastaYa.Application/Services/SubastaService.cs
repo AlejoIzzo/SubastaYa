@@ -13,14 +13,26 @@ namespace SubastaYa.Application.Services
     public class SubastaService : ISubastaService
     {
         private readonly ISubastaRepository _subastaRepository;
-        public SubastaService(ISubastaRepository subastaRepository)
+        private readonly ICategoriaRepository _categoriaRepository;
+        private readonly IUsuarioRepository _usuarioRepository;
+        public SubastaService(ISubastaRepository subastaRepository, ICategoriaRepository categoriaRepository, IUsuarioRepository usuarioRepository)
         {
             _subastaRepository = subastaRepository;
+            _categoriaRepository = categoriaRepository;
+            _usuarioRepository = usuarioRepository;
         }
 
         public async Task<SubastaCreadaDTO> CrearAsync(CrearSubastaDTO dto)
         {
             DateTime now = DateTime.UtcNow;
+
+            Categoria? categoria = await _categoriaRepository.GetCategoriaById(dto.CategoriaId);
+            if (categoria == null)
+                throw new RecursoNoEncontradoException($"No se encontró la categoría con id {dto.CategoriaId}");
+
+            Usuario? vendedor = await _usuarioRepository.GetByIdAsync(dto.VendedorId);
+            if (vendedor == null)
+                throw new RecursoNoEncontradoException($"No se encontró al usuario vendedor con id {dto.VendedorId}");
 
             // Si no se envía FechaInicio, asumir que la subasta inicia inmediatamente como ACTIVA
             DateTime fechaInicio = dto.FechaInicio ?? now;

@@ -8,5 +8,6 @@ namespace SubastaYa.Application.Interfaces
     public interface ICategoriaRepository
     {
         Task<IEnumerable<CategoriaDTO>> GetAllCategoriasDTO();
+        Task<Categoria?> GetCategoriaById(int id);
     }
 }
