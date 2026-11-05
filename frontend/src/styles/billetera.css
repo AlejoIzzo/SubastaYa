@@ -185,6 +185,13 @@ main {
     margin-top: .5rem;
 }
 
+.monto-positivo {
+    color: #059669;
+}
+
+.monto-negativo {
+    color: red;
+}
 @media screen and (max-width: 768px) {
     main {
         padding: .75rem;

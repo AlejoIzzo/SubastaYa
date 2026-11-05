@@ -74,22 +74,27 @@ function createTransaccionFila(transaccion: TransaccionDTO) {
         descripcion.textContent = `Liberación por puja superada`
         subasta.textContent = transaccion.subastaTitulo
         monto.textContent = `+ $ ${formatNumber(transaccion.monto)}`
+        monto.classList.add("monto-positivo")
     } else if (transaccion.tipo == "RETENCION") {
         descripcion.textContent = `Retención por puja`
         subasta.textContent = transaccion.subastaTitulo
         monto.textContent = `- $ ${formatNumber(transaccion.monto)}`
+        monto.classList.add("monto-negativo")
     } else if (transaccion.tipo == "DEPOSITO") {
         descripcion.textContent = `Deposito de saldo`
         subasta.textContent = " - "
         monto.textContent = `+ $ ${formatNumber(transaccion.monto)}`
+        monto.classList.add("monto-positivo")
     } else if (transaccion.tipo == "COBRO") {
         descripcion.textContent = `Cobro por producto subastado`
         subasta.textContent = transaccion.subastaTitulo
         monto.textContent = `+ $ ${formatNumber(transaccion.monto)}`
+        monto.classList.add("monto-positivo")
     } else if (transaccion.tipo == "PAGO") {
         descripcion.textContent = `Pago por subasta ganada`
         subasta.textContent = transaccion.subastaTitulo
         monto.textContent = `- $ ${formatNumber(transaccion.monto)}`
+        monto.classList.add("monto-negativo")
     }
     return clone
 }
