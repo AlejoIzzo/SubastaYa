@@ -68,6 +68,10 @@ main {
     flex-direction: column;
     gap: .75rem;
 
+    background-color: rgba(29, 78, 216, .045);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+
     & .filtro-titulo {
         font-weight: 500;
     }

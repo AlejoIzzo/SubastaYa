@@ -16,6 +16,9 @@ export function createSubastaCard(dto: SubastaCatalogoDTO) {
     const img = clone.querySelector("#img")! as HTMLImageElement
     const tiempoLabel = clone.querySelector(".tiempo-label")! 
     const tiempo = clone.querySelector(".tiempo")! as HTMLElement
+    const cardStatusTag = clone.querySelector(".card-status-tag")! as HTMLElement
+    const cardStatusTagText = clone.querySelector(".card-status-tag-text")! as HTMLElement
+    const cardStatusTagIcon = clone.querySelector(".card-status-tag-icon")! as HTMLElement
 
     container.dataset.id = String(dto.id)
     container.setAttribute("href", `subasta.html?id=${dto.id}`)
@@ -41,9 +44,7 @@ export function createSubastaCard(dto: SubastaCatalogoDTO) {
     });
     
     if (dto.cantidadPujas > 0)
-        pujaContador.textContent = `${dto.cantidadPujas} ${dto.cantidadPujas > 1 ? "Pujas" : "Puja"}`
-    else
-        pujaContador.textContent = "Sin pujas"
+        pujaContador.textContent = ` (${dto.cantidadPujas} ${dto.cantidadPujas > 1 ? "Pujas)" : "Puja)"}`
 
     // guardar data en el elemento del timer para poder acceder en la función updateTimers()
     tiempo.dataset.estado = dto.estado
@@ -52,14 +53,33 @@ export function createSubastaCard(dto: SubastaCatalogoDTO) {
     tiempo.dataset.timerActivo = "true"
 
     if (dto.estado == "ACTIVA") {
+        container.classList.add("card-activa")
         tiempoLabel.textContent = "Termina en"
-    }
-    else if (dto.estado == "PROGRAMADA") {
+
+        cardStatusTag.classList.add("tag-activa")
+        cardStatusTagText.textContent = "ACTIVA"
+        cardStatusTagIcon.setAttribute("name", "ellipse")
+    } else if (dto.estado == "PROGRAMADA") {
+        container.classList.add("card-programada")
         tiempoLabel.textContent = "Comienza en"
-    }
-    else if (dto.estado == "FINALIZADA" || dto.estado == "DESIERTA") {
-        tiempoLabel.textContent = capitalize(dto.estado)
+
+        cardStatusTag.classList.add("tag-programada")
+        cardStatusTagText.textContent = "PROGRAMADA"
+        cardStatusTagIcon.setAttribute("name", "calendar-outline")
+    } else if (dto.estado == "FINALIZADA") {
+        container.classList.add("card-finalizada")
         tiempo.dataset.timerActivo = "false"
+
+        cardStatusTag.classList.add("tag-finalizada")
+        cardStatusTagText.textContent = "FINALIZADA"
+        cardStatusTagIcon.setAttribute("name", "trophy-outline")
+    } else if (dto.estado == "DESIERTA") {
+        container.classList.add("card-desierta")
+        tiempo.dataset.timerActivo = "false"
+        
+        cardStatusTag.classList.add("tag-desierta")
+        cardStatusTagText.textContent = "DESIERTA"
+        cardStatusTagIcon.setAttribute("name", "remove-circle-outline")
     }
 
     return clone
